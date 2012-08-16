@@ -1,0 +1,224 @@
+//
+//  TimelineViewController.m
+//  Timeline
+//
+//  Created by Alessandro Boron on 14/08/2012.
+//  Copyright (c) 2012 Alessandro Boron. All rights reserved.
+//
+
+#import "TimelineViewController.h"
+#import "NewNoteViewController.h"
+#import "Event.h"
+#import "SampleNote.h"
+#import "TimelineViewCell.h"
+#import "NoteCell.h"
+#import "AppDelegate.h"
+
+#define FONT_SIZE 16.0f
+#define CELL_CONTENT_WIDTH 245.0f
+#define CELL_CONTENT_MARGIN 10.0f
+#define CELL_CONTENT_MARGIN_X 25.0f
+#define CELL_CONTENT_MARGIN_Y 35.0f
+
+@interface TimelineViewController ()
+
+@property (weak, nonatomic) IBOutlet UITableView *contentTableView;
+@property (strong, nonatomic) NSMutableArray *contentArray;
+
+- (CGSize)sizeOfText:(NSString *)text;
+
+@end
+
+@implementation TimelineViewController
+
+@synthesize contentTableView = _contentTableView;
+@synthesize contentArray = _contentArray;
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	// Do any additional setup after loading the view.
+    
+    //Set the background for the timeline view
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"timelineBackground.png"]];
+    
+    //Set a clear view to remove the line separator when the cells are empty
+    UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 10)];
+    v.backgroundColor = [UIColor clearColor];
+    [self.contentTableView setTableFooterView:v];
+}
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+#pragma mark -
+#pragma mark Lazy Instantiation
+
+- (NSMutableArray *)eventsArray{
+    if (!_contentArray) {
+        _contentArray = [[NSMutableArray alloc] init];
+    }
+    return _contentArray;
+}
+
+#pragma mark -
+#pragma mark Segue Method
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    
+    if ([segue.identifier isEqualToString:@"newNoteIdentifier"]) {
+        
+        NewNoteViewController *nnvc = (NewNoteViewController *) segue.destinationViewController;
+        nnvc.delegate = self;
+        nnvc.baseEvent = nil;
+    }
+}
+
+#pragma mark -
+#pragma mark ModalViewControllerDelegate
+
+- (void)dismissModalViewController{
+    //Dismiss the presented view controller
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)addEventItem:(id)sender toBaseEvent:(BaseEvent *)baseEvent{
+    //Dismiss the presented view controller
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    //If baseEvent not exist make it
+    if (baseEvent==nil) {
+        //New BaseEvent
+        Event *event = [[Event alloc] initEventWithLocation:((AppDelegate *)[[UIApplication sharedApplication] delegate]).userLocation date:[NSDate date] shared:NO creator:nil];
+        //Add the object to the base event
+        [event.eventItems addObject:sender];
+        
+        //Insert the object at the beginning of the array
+        [self.eventsArray insertObject:event atIndex:0];
+        
+        //Update the TableView
+        [self.contentTableView reloadData];
+    }
+}
+
+#pragma mark -
+#pragma mark Private Methods
+
+//This method is used to get the size of a string based on the font used
+- (CGSize)sizeOfText:(NSString *)text{
+    
+    //Set the constraint where the text is put
+    CGSize constraint = CGSizeMake(CELL_CONTENT_WIDTH - (CELL_CONTENT_MARGIN * 2), 20000.0f);
+    
+    //Compute the size of the text
+    CGSize size = [text sizeWithFont:[UIFont systemFontOfSize:FONT_SIZE] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+    
+    return size;
+}
+
+#pragma mark -
+#pragma mark UITableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return [self.contentArray count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    Event *event = [self.contentArray objectAtIndex:indexPath.row];
+    
+    //Get the object at the specified index path
+    id objectInTimeline = [event.eventItems objectAtIndex:0];
+    
+#warning if > one element shows a folder else the rest
+    if ([event.eventItems count]) {
+        
+    }
+
+    
+    TimelineViewCell *cell = nil;
+    
+    //If the cell will contain a note
+    if ([objectInTimeline isMemberOfClass:[SampleNote class]]) {
+        
+        cell = [tableView dequeueReusableCellWithIdentifier:@"noteCellIndentifier"];
+        
+        //Get the size of the text in order to set the label frame
+        CGSize size = [self sizeOfText:((SampleNote *)objectInTimeline).noteText];
+        
+        //Set the text
+        ((NoteCell *)cell).contentLabel.text  = ((SampleNote *)objectInTimeline).noteText;
+
+        //Set the new frame for the cell label
+        [((NoteCell *)cell).contentLabel setFrame:CGRectMake(CELL_CONTENT_MARGIN_X, CELL_CONTENT_MARGIN_Y, CELL_CONTENT_WIDTH - (CELL_CONTENT_MARGIN * 2), MAX(size.height, 70.0f))];
+    }
+    //No of the above specified objects
+    else{
+         cell = [tableView dequeueReusableCellWithIdentifier:@"timelineCellIndentifier"];
+    }
+    
+    if (cell) {
+        cell.timestampLabel.text = [Utility dateTimeDescriptionWithLocaleIdentifier:[NSDate date]];
+    }
+    
+    return cell;
+    
+}
+
+#pragma mark - 
+#pragma mark UITableViewDelegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    Event *event = [self.contentArray objectAtIndex:indexPath.row];
+    
+    //Get the object at the specified index path
+    id objectInTimeline = [event.eventItems objectAtIndex:0];
+    
+    //Get the object in timeline
+    //id objectInTimeline = [self.contentArray objectAtIndex:indexPath.row];
+    
+    //If the object is a Note
+    if ([objectInTimeline isMemberOfClass:[SampleNote class]]) {
+        
+        //Get the size of the text
+        CGSize size = [self sizeOfText:((SampleNote *)objectInTimeline).noteText];
+        
+        //Get the height for the row
+        CGFloat height = MAX(size.height, 70.0f);
+        
+        return height + (CELL_CONTENT_MARGIN * 2) + CELL_CONTENT_MARGIN_Y;
+    }
+    else{
+        return 70.0;
+    }
+    
+    /*
+    else if ([objectInTimeline isMemberOfClass:[SamplePicture class]]){
+        
+    }
+    */
+}
+
+@end
