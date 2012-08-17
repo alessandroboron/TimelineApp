@@ -15,11 +15,11 @@
 #import "AppDelegate.h"
 
 #define FONT_SIZE 16.0f
-#define CELL_CONTENT_WIDTH 245.0f
+#define CELL_CONTENT_WIDTH 235.0f
 #define CELL_CONTENT_MARGIN 10.0f
-#define CELL_CONTENT_MARGIN_X 25.0f
+#define CELL_CONTENT_MARGIN_X 35.0f
 #define CELL_CONTENT_MARGIN_Y 35.0f
-
+#define CELL_HEIGHT 75.0f
 @interface TimelineViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *contentTableView;
@@ -49,7 +49,7 @@
 	// Do any additional setup after loading the view.
     
     //Set the background for the timeline view
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"timelineBackground.png"]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"timelineBackground2.png"]];
     
     //Set a clear view to remove the line separator when the cells are empty
     UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 10)];
@@ -151,36 +151,56 @@
     //Get the object at the specified index path
     id objectInTimeline = [event.eventItems objectAtIndex:0];
     
-#warning if > one element shows a folder else the rest
-    if ([event.eventItems count]) {
-        
-    }
-
-    
     TimelineViewCell *cell = nil;
     
-    //If the cell will contain a note
-    if ([objectInTimeline isMemberOfClass:[SampleNote class]]) {
+    if ([event.eventItems count]>1) {
         
-        cell = [tableView dequeueReusableCellWithIdentifier:@"noteCellIndentifier"];
-        
-        //Get the size of the text in order to set the label frame
-        CGSize size = [self sizeOfText:((SampleNote *)objectInTimeline).noteText];
-        
-        //Set the text
-        ((NoteCell *)cell).contentLabel.text  = ((SampleNote *)objectInTimeline).noteText;
-
-        //Set the new frame for the cell label
-        [((NoteCell *)cell).contentLabel setFrame:CGRectMake(CELL_CONTENT_MARGIN_X, CELL_CONTENT_MARGIN_Y, CELL_CONTENT_WIDTH - (CELL_CONTENT_MARGIN * 2), MAX(size.height, 70.0f))];
+        cell = [tableView dequeueReusableCellWithIdentifier:@"folderCellIndentifier"];
     }
-    //No of the above specified objects
     else{
-         cell = [tableView dequeueReusableCellWithIdentifier:@"timelineCellIndentifier"];
+        
+        //If the cell will contain a note
+        if ([objectInTimeline isMemberOfClass:[SampleNote class]]) {
+            
+            cell = [tableView dequeueReusableCellWithIdentifier:@"noteCellIndentifier"];
+            
+            //Get the size of the text in order to set the label frame
+            CGSize size = [self sizeOfText:((SampleNote *)objectInTimeline).noteText];
+            
+            //Set the text
+            ((NoteCell *)cell).contentLabel.text  = ((SampleNote *)objectInTimeline).noteText;
+            
+            //Set the new frame for the cell label
+            [((NoteCell *)cell).contentLabel setFrame:CGRectMake(CELL_CONTENT_MARGIN_X, CELL_CONTENT_MARGIN_Y, CELL_CONTENT_WIDTH - (CELL_CONTENT_MARGIN * 2), MAX(size.height, CELL_HEIGHT))];
+           
+            UIEdgeInsets insets;
+            insets.top = 37;
+            insets.left = 0;
+            insets.bottom = 37;
+            insets.right = 0;
+            
+            UIImage *backgroundImg = [[UIImage imageNamed:@"cellContainer.png"] resizableImageWithCapInsets:insets];
+           
+            UIImageView *iv = [[UIImageView alloc] initWithImage:backgroundImg];
+           
+            cell.backgroundView.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, CELL_CONTENT_WIDTH, MAX(size.height, CELL_HEIGHT));
+            cell.backgroundView = iv;
+          
+        }
+        //No of the above specified objects
+        else{
+            cell = [tableView dequeueReusableCellWithIdentifier:@"timelineCellIndentifier"];
+        }
     }
     
     if (cell) {
-        cell.timestampLabel.text = [Utility dateTimeDescriptionWithLocaleIdentifier:[NSDate date]];
+       cell.timestampLabel.text = [Utility dateTimeDescriptionWithLocaleIdentifier:event.date];
     }
+    
+    //Set the cell not selectable
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+   
     
     return cell;
     
@@ -196,6 +216,9 @@
     //Get the object at the specified index path
     id objectInTimeline = [event.eventItems objectAtIndex:0];
     
+    
+    CGFloat height;
+    
     //Get the object in timeline
     //id objectInTimeline = [self.contentArray objectAtIndex:indexPath.row];
     
@@ -206,14 +229,11 @@
         CGSize size = [self sizeOfText:((SampleNote *)objectInTimeline).noteText];
         
         //Get the height for the row
-        CGFloat height = MAX(size.height, 70.0f);
+        height = MAX(size.height, CELL_HEIGHT) + (CELL_CONTENT_MARGIN * 2) + CELL_CONTENT_MARGIN_Y;
         
-        return height + (CELL_CONTENT_MARGIN * 2) + CELL_CONTENT_MARGIN_Y;
+        //return height + (CELL_CONTENT_MARGIN * 2) + CELL_CONTENT_MARGIN_Y;
     }
-    else{
-        return 70.0;
-    }
-    
+    return height;
     /*
     else if ([objectInTimeline isMemberOfClass:[SamplePicture class]]){
         

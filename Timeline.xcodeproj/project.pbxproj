@@ -27,7 +27,6 @@
 		D226D1F415DAD38200227FAF /* PictureViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D226D1F315DAD38200227FAF /* PictureViewCell.m */; };
 		D226D1FC15DBAB2E00227FAF /* TimelineViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D226D1FB15DBAB2D00227FAF /* TimelineViewCell.m */; };
 		D226D20015DBAD3000227FAF /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = D226D1FF15DBAD2F00227FAF /* Utility.m */; };
-		D226D20415DBB59800227FAF /* timelineBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = D226D20315DBB59800227FAF /* timelineBackground.png */; };
 		D226D20A15DBDC9C00227FAF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D226D20915DBDC9C00227FAF /* CoreLocation.framework */; };
 		D285B53815D5301D00AFC1C7 /* 111-user.png in Resources */ = {isa = PBXBuildFile; fileRef = D285B53015D5301D00AFC1C7 /* 111-user.png */; };
 		D285B53915D5301D00AFC1C7 /* 111-user@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D285B53115D5301D00AFC1C7 /* 111-user@2x.png */; };
@@ -47,6 +46,8 @@
 		D285B56D15D550FD00AFC1C7 /* EventItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D285B56C15D550FD00AFC1C7 /* EventItem.m */; };
 		D285B57115D5536800AFC1C7 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = D285B57015D5536800AFC1C7 /* NSString+MD5.m */; };
 		D285B58215D6749500AFC1C7 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D285B58115D6749500AFC1C7 /* SettingsViewController.m */; };
+		D294066315DD1ED700574FCD /* container.png in Resources */ = {isa = PBXBuildFile; fileRef = D294066215DD1ED700574FCD /* container.png */; };
+		D294066615DE6EF200574FCD /* cellContainer in Resources */ = {isa = PBXBuildFile; fileRef = D294066515DE6EF200574FCD /* cellContainer */; };
 		D2CD815E15D2AEC000094D72 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2CD815D15D2AEC000094D72 /* UIKit.framework */; };
 		D2CD816015D2AEC000094D72 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2CD815F15D2AEC000094D72 /* Foundation.framework */; };
 		D2CD816215D2AEC100094D72 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2CD816115D2AEC000094D72 /* CoreGraphics.framework */; };
@@ -54,6 +55,9 @@
 		D2CD816A15D2AEC100094D72 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D2CD816915D2AEC100094D72 /* main.m */; };
 		D2CD816E15D2AEC100094D72 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D2CD816D15D2AEC100094D72 /* AppDelegate.m */; };
 		D2CD817115D2AEC100094D72 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2CD816F15D2AEC100094D72 /* MainStoryboard.storyboard */; };
+		D2E622B415DCF5B0009FCEBB /* timelineBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = D2E622B315DCF5B0009FCEBB /* timelineBackground.png */; };
+		D2E622B615DCF5E4009FCEBB /* folder.png in Resources */ = {isa = PBXBuildFile; fileRef = D2E622B515DCF5E4009FCEBB /* folder.png */; };
+		D2E622B815DCFAFF009FCEBB /* timelineBackground2.png in Resources */ = {isa = PBXBuildFile; fileRef = D2E622B715DCFAFF009FCEBB /* timelineBackground2.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -84,7 +88,6 @@
 		D226D1FB15DBAB2D00227FAF /* TimelineViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TimelineViewCell.m; path = TimelineViewCell/TimelineViewCell/TimelineViewCell.m; sourceTree = "<group>"; };
 		D226D1FE15DBAD2E00227FAF /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utility.h; path = Utility/Utility.h; sourceTree = "<group>"; };
 		D226D1FF15DBAD2F00227FAF /* Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Utility.m; path = Utility/Utility.m; sourceTree = "<group>"; };
-		D226D20315DBB59800227FAF /* timelineBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = timelineBackground.png; sourceTree = "<group>"; };
 		D226D20915DBDC9C00227FAF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		D285B53015D5301D00AFC1C7 /* 111-user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "111-user.png"; sourceTree = "<group>"; };
 		D285B53115D5301D00AFC1C7 /* 111-user@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "111-user@2x.png"; sourceTree = "<group>"; };
@@ -115,6 +118,8 @@
 		D285B57015D5536800AFC1C7 /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+MD5.m"; path = "Categories/NSString+MD5.m"; sourceTree = "<group>"; };
 		D285B58015D6749500AFC1C7 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingsViewController.h; path = "View Controllers/SettingsViewController/SettingsViewController.h"; sourceTree = "<group>"; };
 		D285B58115D6749500AFC1C7 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingsViewController.m; path = "View Controllers/SettingsViewController/SettingsViewController.m"; sourceTree = "<group>"; };
+		D294066215DD1ED700574FCD /* container.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = container.png; sourceTree = "<group>"; };
+		D294066515DE6EF200574FCD /* cellContainer */ = {isa = PBXFileReference; lastKnownFileType = file; name = cellContainer; path = TimelineBackground/cellContainer; sourceTree = "<group>"; };
 		D2CD815915D2AEC000094D72 /* Timeline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Timeline.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2CD815D15D2AEC000094D72 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D2CD815F15D2AEC000094D72 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -126,6 +131,9 @@
 		D2CD816C15D2AEC100094D72 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D2CD816D15D2AEC100094D72 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		D2CD817015D2AEC100094D72 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
+		D2E622B315DCF5B0009FCEBB /* timelineBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = timelineBackground.png; sourceTree = "<group>"; };
+		D2E622B515DCF5E4009FCEBB /* folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = folder.png; sourceTree = "<group>"; };
+		D2E622B715DCFAFF009FCEBB /* timelineBackground2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = timelineBackground2.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -228,18 +236,13 @@
 			name = Utility;
 			sourceTree = "<group>";
 		};
-		D226D20215DBB59800227FAF /* TimelineBackgorund */ = {
-			isa = PBXGroup;
-			children = (
-				D226D20315DBB59800227FAF /* timelineBackground.png */,
-			);
-			path = TimelineBackgorund;
-			sourceTree = "<group>";
-		};
 		D285B52F15D5301D00AFC1C7 /* images */ = {
 			isa = PBXGroup;
 			children = (
-				D226D20215DBB59800227FAF /* TimelineBackgorund */,
+				D294066515DE6EF200574FCD /* cellContainer */,
+				D294066215DD1ED700574FCD /* container.png */,
+				D2E622B215DCF5B0009FCEBB /* TimelineBackground */,
+				D2E622B015DCF580009FCEBB /* Timeline */,
 				D226D1C315DA9BE500227FAF /* TimelineMenu */,
 				D285B53015D5301D00AFC1C7 /* 111-user.png */,
 				D285B53115D5301D00AFC1C7 /* 111-user@2x.png */,
@@ -428,6 +431,23 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		D2E622B015DCF580009FCEBB /* Timeline */ = {
+			isa = PBXGroup;
+			children = (
+				D2E622B515DCF5E4009FCEBB /* folder.png */,
+			);
+			path = Timeline;
+			sourceTree = "<group>";
+		};
+		D2E622B215DCF5B0009FCEBB /* TimelineBackground */ = {
+			isa = PBXGroup;
+			children = (
+				D2E622B715DCFAFF009FCEBB /* timelineBackground2.png */,
+				D2E622B315DCF5B0009FCEBB /* timelineBackground.png */,
+			);
+			path = TimelineBackground;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -502,7 +522,11 @@
 				D226D1DB15DA9BE500227FAF /* video@2x.png in Resources */,
 				D226D1DC15DA9BE500227FAF /* zoom.png in Resources */,
 				D226D1DD15DA9BE500227FAF /* zoom@2x.png in Resources */,
-				D226D20415DBB59800227FAF /* timelineBackground.png in Resources */,
+				D2E622B415DCF5B0009FCEBB /* timelineBackground.png in Resources */,
+				D2E622B615DCF5E4009FCEBB /* folder.png in Resources */,
+				D2E622B815DCFAFF009FCEBB /* timelineBackground2.png in Resources */,
+				D294066315DD1ED700574FCD /* container.png in Resources */,
+				D294066615DE6EF200574FCD /* cellContainer in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

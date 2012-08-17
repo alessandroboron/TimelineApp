@@ -15,6 +15,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *domainTextField;
 @property (weak, nonatomic) IBOutlet UITextField *userTextField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
+@property (weak, nonatomic) IBOutlet UIImageView *serverStatusImageView;
 
 @end
 
@@ -24,15 +25,7 @@
 @synthesize domainTextField = _domainTextField;
 @synthesize userTextField = _userTextField;
 @synthesize passwordTextField = _passwordTextField;
-
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
+@synthesize serverStatusImageView = _serverStatusImageView;
 
 - (void)viewDidLoad
 {

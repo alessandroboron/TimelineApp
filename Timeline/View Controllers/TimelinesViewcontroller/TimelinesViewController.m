@@ -78,6 +78,7 @@
         
         TimelineViewController *tvc =  (TimelineViewController *)segue.destinationViewController;
         tvc.navigationItem.title = ((Timeline *)[self.timelinesArray objectAtIndex:indexPath.row]).title;
+#warning pass the array with the information for the associated timeline 
     }
 }
 
