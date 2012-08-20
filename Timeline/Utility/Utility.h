@@ -18,4 +18,20 @@
 
 //This method is used to show an alert view with custom title, message and cancel button
 + (void)showAlertViewWithTitle:(NSString *)title message:(NSString *)message cancelButtonTitle:(NSString *)cancelButtonTitle;
+
+//This Method is used to get the setting default for key
++ (NSString *)settingField:(NSString *)setting;
+
+//This method is used to check if app settings are filled out
++ (BOOL)isSettingStored;
+
+//This method is used to check the connectivity of the xmpp server
++ (BOOL)isXMPPServerConnected;
+
+//This method is used to check the authentication on the xmpp server
++ (BOOL)isUserAuthenticatedOnXMPPServer;
+
+//This method is used to check if the device 
++ (BOOL)isHostReachable;
+
 @end

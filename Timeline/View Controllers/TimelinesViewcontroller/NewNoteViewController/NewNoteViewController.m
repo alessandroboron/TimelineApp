@@ -45,6 +45,9 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
+    //Set the background image for the navigation bar
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"navigationBarBackground.png"] forBarMetrics:UIBarMetricsDefault];
+    
     //Register itself as observer when the content TextView changes
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentTextViewDidChange:) name:UITextViewTextDidChangeNotification object:nil];
     

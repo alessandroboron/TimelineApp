@@ -8,6 +8,9 @@
 
 #import "Utility.h"
 #import "NSString+MD5.h"
+#import "AppDelegate.h"
+#import "XMPPRequestController.h"
+#import "Reachability.h"
 
 @implementation Utility
 
@@ -50,5 +53,79 @@
     [av show];
     
 }
+
+//This Method is used to get the setting default for key
++ (NSString *)settingField:(NSString *)setting{
+    
+    //Get the shared default object
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    return [defaults objectForKey:setting];
+}
+
+//This method is used to check if app settings are filled out
++ (BOOL)isSettingStored{
+    
+    BOOL filled = YES;
+    
+    if ([self settingField:kXMPPServerIdentifier] == nil) {
+        return NO;
+    }
+    else if ([self settingField:kXMPPDomainIdentifier] == nil) {
+        return NO;
+    }
+    else if ([self settingField:kXMPPUserIdentifier] == nil) {
+        return NO;
+    }
+    else if ([self settingField:kXMPPPassIdentifier] == nil) {
+        return NO;
+    }
+    
+    return filled;
+}
+
+//This method is used to check the connectivity of the xmpp server
++ (BOOL)isXMPPServerConnected{
+    
+    BOOL connected = false;
+    
+    AppDelegate *appDelegate = (AppDelegate *) [[UIApplication sharedApplication] delegate];
+    
+    if ([appDelegate.xmppRequestController.xmppStream isConnected]) {
+        connected = true;
+    }
+    
+    return connected;
+}
+
+//This method is used to check the authentication on the xmpp server
++ (BOOL)isUserAuthenticatedOnXMPPServer{
+    
+    BOOL auth = false;
+    
+    AppDelegate *appDelegate = (AppDelegate *) [[UIApplication sharedApplication] delegate];
+    
+    if ([appDelegate.xmppRequestController.xmppStream isAuthenticated]) {
+        auth = true;
+    }
+    
+    return auth;
+}
+
+//This method is used to check if the device
++ (BOOL)isHostReachable{
+    
+    BOOL reachable = NO;
+    
+    Reachability *r = [Reachability reachabilityWithHostname:@"www.google.com"];
+    NetworkStatus ns = [r currentReachabilityStatus];
+    
+    if (!(ns == NotReachable)) {
+        reachable = YES;
+    }
+    
+    return reachable;
+}
+
 
 @end

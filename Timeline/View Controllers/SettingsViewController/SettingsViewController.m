@@ -27,15 +27,34 @@
 @synthesize passwordTextField = _passwordTextField;
 @synthesize serverStatusImageView = _serverStatusImageView;
 
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+   
+    //Set the background image for the navigation bar
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"navigationBarBackground.png"] forBarMetrics:UIBarMetricsDefault];
+    
+    //Set the background color for the view
+    self.view.backgroundColor = [UIColor colorWithRed:211.0/255 green:218.0/255 blue:224.0/255 alpha:1.0];
+   
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateConnectivityStatus:) name:@"XMPPConnectivityDidUpdateNotification" object:nil];
+        
+    //If the settings are defined fill the fields
+    if ([Utility isSettingStored]) {
+        
+        self.serverTextField.text = [Utility settingField:kXMPPServerIdentifier];
+        self.domainTextField.text = [Utility settingField:kXMPPDomainIdentifier];
+        self.userTextField.text = [Utility settingField:kXMPPUserIdentifier];
+        self.passwordTextField.text = [Utility settingField:kXMPPPassIdentifier];
+    }
+    
+    if ([Utility isXMPPServerConnected] && [Utility isUserAuthenticatedOnXMPPServer]) {
+        self.serverStatusImageView.image = [UIImage imageNamed:@"greenButton.png"];
+    }
 }
 
 - (void)viewDidUnload
@@ -51,11 +70,43 @@
 }
 
 #pragma mark -
+#pragma mark XMPPConnectivityDidUpdateNotification
+
+//This method is used to update the connectivity status image in response to the status of the server
+- (void)updateConnectivityStatus:(NSNotification *)notification{
+    
+    NSNumber *status = [notification.userInfo objectForKey:@"connectivityStatus"];
+    
+    if ([status boolValue]) {
+        self.serverStatusImageView.image = [UIImage imageNamed:@"greenButton.png"];
+    }
+    else{
+        self.serverStatusImageView.image = [UIImage imageNamed:@"redButton.png"];
+    }
+}
+
+#pragma mark -
 #pragma mark UITextFieldDelegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     //Look in the view hierarchy for a textfield that is the first responder and force it to resign
     [self.tableView endEditing:YES];
+    
+    //If all the fields are filled out write the settings
+    if (self.serverTextField.text.length != 0 && self.domainTextField.text.length != 0 && self.userTextField.text.length != 0 && self.passwordTextField.text.length != 0) {
+        
+        //Write the settings
+        [[NSUserDefaults standardUserDefaults] setObject:self.serverTextField.text forKey:kXMPPServerIdentifier];
+        [[NSUserDefaults standardUserDefaults] setObject:self.domainTextField.text forKey:kXMPPDomainIdentifier];
+        [[NSUserDefaults standardUserDefaults] setObject:self.userTextField.text forKey:kXMPPUserIdentifier];
+        [[NSUserDefaults standardUserDefaults] setObject:self.passwordTextField.text forKey:kXMPPPassIdentifier];
+        
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        //Notify that settings are changed in order to connect using the new settings
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"XMPPSettingsDidChangeNotification" object:nil];
+    }
+    
     return YES;
 }
 

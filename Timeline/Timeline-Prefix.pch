@@ -14,3 +14,8 @@
 #endif
 
 #import "Utility.h"
+
+#define kXMPPServerIdentifier   @"XMPP_SERVER"
+#define kXMPPDomainIdentifier   @"XMPP_DOMAIN"
+#define kXMPPUserIdentifier     @"XMPP_USER"
+#define kXMPPPassIdentifier     @"XMPP_PASSWORD"

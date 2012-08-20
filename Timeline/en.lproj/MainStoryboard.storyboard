@@ -643,8 +643,8 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Insert server name" textAlignment="center" minimumFontSize="17" id="8ug-BX-iSt">
-                                                    <rect key="frame" x="92" y="5" width="200" height="31"/>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Insert server name" minimumFontSize="17" id="8ug-BX-iSt">
+                                                    <rect key="frame" x="130" y="5" width="162" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
@@ -674,8 +674,8 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Insert domain name" textAlignment="center" minimumFontSize="17" id="Ake-7s-WOX">
-                                                    <rect key="frame" x="92" y="5" width="200" height="31"/>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Insert domain name" minimumFontSize="17" id="Ake-7s-WOX">
+                                                    <rect key="frame" x="130" y="5" width="162" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
@@ -705,8 +705,8 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Insert user name" textAlignment="center" minimumFontSize="17" id="vBy-ZU-baa">
-                                                    <rect key="frame" x="92" y="5" width="200" height="31"/>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Insert user name" minimumFontSize="17" id="vBy-ZU-baa">
+                                                    <rect key="frame" x="130" y="5" width="162" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
@@ -736,11 +736,11 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Insert password" textAlignment="center" minimumFontSize="17" id="VDD-du-aRb">
-                                                    <rect key="frame" x="92" y="5" width="200" height="31"/>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Insert password" minimumFontSize="17" id="VDD-du-aRb">
+                                                    <rect key="frame" x="130" y="5" width="162" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
+                                                    <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                                     <connections>
                                                         <outlet property="delegate" destination="Enz-Ds-6j2" id="pso-nN-jej"/>
                                                     </connections>
@@ -767,8 +767,8 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="grk-5V-Cqh">
-                                                    <rect key="frame" x="132" y="4" width="35" height="35"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="center" image="redButton.png" id="grk-5V-Cqh">
+                                                    <rect key="frame" x="130" y="6" width="30" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                             </subviews>
@@ -977,6 +977,7 @@
         <image name="groups.png" width="32" height="21"/>
         <image name="note.png" width="22" height="28"/>
         <image name="picture.png" width="26" height="22"/>
+        <image name="redButton.png" width="20" height="20"/>
         <image name="settings.png" width="26" height="26"/>
         <image name="timelines.png" width="27" height="19"/>
         <image name="video.png" width="20" height="25"/>

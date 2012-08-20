@@ -49,8 +49,11 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    //Set the background for the timeline view
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"timelineBackground2.png"]];
+    //Set the background image for the navigation bar
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"navigationBarBackground.png"] forBarMetrics:UIBarMetricsDefault];
+    
+    //Set the background color for the view
+    self.view.backgroundColor = [UIColor colorWithRed:211.0/255 green:218.0/255 blue:224.0/255 alpha:1.0];
     
     //Set a clear view to remove the line separator when the cells are empty
     UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 10)];

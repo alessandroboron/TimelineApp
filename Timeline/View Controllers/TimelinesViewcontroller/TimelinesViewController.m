@@ -11,6 +11,7 @@
 #import "Timeline.h"
 #import "TimelineViewController/TimelineViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "Reachability.h"
 
 @interface TimelinesViewController ()
 
@@ -34,14 +35,20 @@
 {
     [super viewDidLoad];
 
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"navigationBarBackground.png"] forBarMetrics:UIBarMetricsDefault];
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
-    
-    self.timelinesArray = [NSMutableArray arrayWithObjects:[[Timeline alloc] initTimelineWithTitle:@"My Experience" creator:@"Alessandro" shared:NO],[[Timeline alloc] initTimelineWithTitle:@"Our Experience" creator:@"Alessandro" shared:YES], nil];
+   
+  //  if ([Utility isHostReachable] && [Utility isSettingStored]) {
+        
+  //  }
+  //  else{
+        self.timelinesArray = [NSMutableArray arrayWithObjects:[[Timeline alloc] initTimelineWithTitle:@"My Experience" creator:@"Alessandro" shared:NO],[[Timeline alloc] initTimelineWithTitle:@"Our Experience" creator:@"Alessandro" shared:YES], nil];
+   // }
 }
 
 - (void)viewDidUnload
