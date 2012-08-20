@@ -20,6 +20,7 @@
 #define CELL_CONTENT_MARGIN_X 35.0f
 #define CELL_CONTENT_MARGIN_Y 35.0f
 #define CELL_HEIGHT 75.0f
+
 @interface TimelineViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *contentTableView;

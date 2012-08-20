@@ -187,10 +187,6 @@
                                             <rect key="frame" x="0.0" y="0.0" width="270" height="74"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="053-we-SLA" userLabel="timelineImageView">
-                                                    <rect key="frame" x="4" y="0.0" width="12" height="70"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                </imageView>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" id="1EE-cU-Uoy">
                                                     <rect key="frame" x="35" y="35" width="235" height="35"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -199,7 +195,7 @@
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="NrS-KX-IZD">
-                                                    <rect key="frame" x="160" y="12" width="100" height="21"/>
+                                                    <rect key="frame" x="160" y="8" width="100" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
                                                     <color key="textColor" red="1" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -210,7 +206,6 @@
                                         </view>
                                         <connections>
                                             <outlet property="contentLabel" destination="1EE-cU-Uoy" id="HBm-uU-9CQ"/>
-                                            <outlet property="tImageView" destination="053-we-SLA" id="KuA-Dy-PvY"/>
                                             <outlet property="timestampLabel" destination="NrS-KX-IZD" id="wIr-Fk-JHO"/>
                                         </connections>
                                     </tableViewCell>
@@ -221,10 +216,6 @@
                                             <rect key="frame" x="0.0" y="0.0" width="270" height="199"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="SVY-fo-ivd" userLabel="timelineImageView">
-                                                    <rect key="frame" x="4" y="0.0" width="12" height="200"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" id="bAQ-6P-7Mm" userLabel="pictureImageView">
                                                     <rect key="frame" x="20" y="5" width="250" height="190"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -240,10 +231,6 @@
                                             <rect key="frame" x="0.0" y="0.0" width="270" height="199"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="JxE-rK-afJ" userLabel="timelineImageView">
-                                                    <rect key="frame" x="4" y="0.0" width="12" height="200"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" id="xXl-8l-tZz" userLabel="videoImageView">
                                                     <rect key="frame" x="20" y="5" width="250" height="190"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -268,10 +255,6 @@
                                             <rect key="frame" x="0.0" y="0.0" width="270" height="99"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="w0H-or-5tf">
-                                                    <rect key="frame" x="4" y="0.0" width="12" height="100"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="folder.png" id="KQy-C8-08e" userLabel="folderImage">
                                                     <rect key="frame" x="20" y="35" width="250" height="60"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -481,32 +464,42 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Shared:" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" id="1Vb-QG-31N">
-                                <rect key="frame" x="20" y="71" width="75" height="24"/>
+                                <rect key="frame" x="20" y="70" width="75" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" text="Groups:" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" id="ScM-mW-1h2">
+                                <rect key="frame" x="20" y="120" width="78" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Insert Timeline Name" minimumFontSize="17" id="19E-23-R8e">
-                                <rect key="frame" x="90" y="16" width="210" height="31"/>
+                                <rect key="frame" x="103" y="16" width="197" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <segmentedControl contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="9jM-uk-39Z">
-                                <rect key="frame" x="103" y="68" width="197" height="30"/>
+                                <rect key="frame" x="103" y="66" width="197" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <segments>
                                     <segment title="No"/>
                                     <segment title="Yes"/>
                                 </segments>
+                                <connections>
+                                    <action selector="segmentedControlValueChanged:" destination="CV8-g4-M7n" eventType="valueChanged" id="T5u-QT-VdL"/>
+                                </connections>
                             </segmentedControl>
-                            <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="rIf-ZP-8Ki">
-                                <rect key="frame" x="20" y="123" width="280" height="273"/>
+                            <tableView clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="rIf-ZP-8Ki">
+                                <rect key="frame" x="20" y="155" width="280" height="235"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="newGroupIdentifier" id="x7S-RF-6mS">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="groupIdentifier" id="x7S-RF-6mS">
                                         <rect key="frame" x="0.0" y="22" width="280" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -516,6 +509,10 @@
                                         </view>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="CV8-g4-M7n" id="dwt-sj-mad"/>
+                                    <outlet property="delegate" destination="CV8-g4-M7n" id="PRD-Bk-3du"/>
+                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
@@ -526,8 +523,18 @@
                                 <action selector="cancelButtonPressed:" destination="CV8-g4-M7n" id="Z6f-5O-XMj"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="TKC-7E-gsW"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="TKC-7E-gsW">
+                            <connections>
+                                <action selector="doneButtonPressed:" destination="CV8-g4-M7n" id="FmN-ar-nRh"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="groupsLabel" destination="ScM-mW-1h2" id="bb7-Zt-ceM"/>
+                        <outlet property="groupsTableView" destination="rIf-ZP-8Ki" id="cKN-aJ-woD"/>
+                        <outlet property="sharedSegmentedControl" destination="9jM-uk-39Z" id="MXA-zx-sc6"/>
+                        <outlet property="timelineTitleTextField" destination="19E-23-R8e" id="1m1-c8-bFi"/>
+                    </connections>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="2145" y="-1364"/>
@@ -761,7 +768,7 @@
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="grk-5V-Cqh">
-                                                    <rect key="frame" x="132" y="3" width="35" height="35"/>
+                                                    <rect key="frame" x="132" y="4" width="35" height="35"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                             </subviews>
@@ -1001,13 +1008,18 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NewTimelineViewController.h"/>
             <relationships>
                 <relationship kind="action" name="cancelButtonPressed:"/>
+                <relationship kind="action" name="doneButtonPressed:"/>
+                <relationship kind="action" name="segmentedControlValueChanged:"/>
+                <relationship kind="outlet" name="groupsLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="groupsTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="sharedSegmentedControl" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="timelineTitleTextField" candidateClass="UITextField"/>
             </relationships>
         </class>
         <class className="NoteCell" superclassName="TimelineViewCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NoteCell.h"/>
             <relationships>
                 <relationship kind="outlet" name="contentLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="tImageView" candidateClass="UIImageView"/>
             </relationships>
         </class>
         <class className="PictureViewCell" superclassName="UITableViewCell">

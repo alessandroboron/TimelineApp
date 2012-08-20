@@ -11,7 +11,6 @@
 
 @interface NoteCell : TimelineViewCell
 
-@property (weak, nonatomic) IBOutlet UIImageView *tImageView;
 @property (weak, nonatomic) IBOutlet UILabel *contentLabel;
 
 @end

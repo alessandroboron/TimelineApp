@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ModalViewControllerDelegate.h"
 
-@interface NewTimelineViewController : UIViewController
+@interface NewTimelineViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, weak) id<ModalViewControllerDelegate> delegate;
 

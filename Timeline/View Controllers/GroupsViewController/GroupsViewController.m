@@ -99,7 +99,7 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)performTask:(id)sender{
+- (void)addGroup:(id)sender{
     //Dismiss the modal view controller
     [self dismissViewControllerAnimated:YES completion:nil];
     

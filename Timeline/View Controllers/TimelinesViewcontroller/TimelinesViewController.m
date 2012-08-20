@@ -41,7 +41,7 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     
-    self.timelinesArray = [NSArray arrayWithObjects:[[Timeline alloc] initTimelineWithTitle:@"My Experience" creator:@"Alessandro" shared:NO],[[Timeline alloc] initTimelineWithTitle:@"Our Experience" creator:@"Alessandro" shared:YES], nil];
+    self.timelinesArray = [NSMutableArray arrayWithObjects:[[Timeline alloc] initTimelineWithTitle:@"My Experience" creator:@"Alessandro" shared:NO],[[Timeline alloc] initTimelineWithTitle:@"Our Experience" creator:@"Alessandro" shared:YES], nil];
 }
 
 - (void)viewDidUnload

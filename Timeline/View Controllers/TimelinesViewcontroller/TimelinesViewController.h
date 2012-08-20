@@ -11,6 +11,6 @@
 
 @interface TimelinesViewController : UITableViewController <ModalViewControllerDelegate>
 
-@property (strong,nonatomic) NSArray *timelinesArray;
+@property (strong,nonatomic) NSMutableArray *timelinesArray;
 
 @end

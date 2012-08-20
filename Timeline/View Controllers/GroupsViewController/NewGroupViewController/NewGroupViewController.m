@@ -63,8 +63,14 @@
 
 - (IBAction)doneButtonPressed:(id)sender{
     
-    //Tells the delegate that a new group has been created and send it
-    [self.delegate addGroup:self.groupNameTextField.text];
+    //Check if the group name is not blank otherwise show an error message
+    if (self.groupNameTextField.text.length == 0) {
+        [Utility showAlertViewWithTitle:@"New Group Error" message:@"The group name cannot be blank." cancelButtonTitle:@"Dismiss"];
+    }
+    else{
+        //Tells the delegate that a new group has been created and send it
+        [self.delegate addGroup:self.groupNameTextField.text];
+    }
 }
 
 - (IBAction)didTapInView:(UITapGestureRecognizer *)recognizer{

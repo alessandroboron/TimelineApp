@@ -47,7 +47,8 @@
 		D285B57115D5536800AFC1C7 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = D285B57015D5536800AFC1C7 /* NSString+MD5.m */; };
 		D285B58215D6749500AFC1C7 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D285B58115D6749500AFC1C7 /* SettingsViewController.m */; };
 		D294066315DD1ED700574FCD /* container.png in Resources */ = {isa = PBXBuildFile; fileRef = D294066215DD1ED700574FCD /* container.png */; };
-		D294066615DE6EF200574FCD /* cellContainer in Resources */ = {isa = PBXBuildFile; fileRef = D294066515DE6EF200574FCD /* cellContainer */; };
+		D294738A15E159180016A093 /* cellContainer.png in Resources */ = {isa = PBXBuildFile; fileRef = D294738815E159180016A093 /* cellContainer.png */; };
+		D294738B15E159180016A093 /* cellContainer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D294738915E159180016A093 /* cellContainer@2x.png */; };
 		D2CD815E15D2AEC000094D72 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2CD815D15D2AEC000094D72 /* UIKit.framework */; };
 		D2CD816015D2AEC000094D72 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2CD815F15D2AEC000094D72 /* Foundation.framework */; };
 		D2CD816215D2AEC100094D72 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2CD816115D2AEC000094D72 /* CoreGraphics.framework */; };
@@ -119,7 +120,8 @@
 		D285B58015D6749500AFC1C7 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingsViewController.h; path = "View Controllers/SettingsViewController/SettingsViewController.h"; sourceTree = "<group>"; };
 		D285B58115D6749500AFC1C7 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingsViewController.m; path = "View Controllers/SettingsViewController/SettingsViewController.m"; sourceTree = "<group>"; };
 		D294066215DD1ED700574FCD /* container.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = container.png; sourceTree = "<group>"; };
-		D294066515DE6EF200574FCD /* cellContainer */ = {isa = PBXFileReference; lastKnownFileType = file; name = cellContainer; path = TimelineBackground/cellContainer; sourceTree = "<group>"; };
+		D294738815E159180016A093 /* cellContainer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cellContainer.png; sourceTree = "<group>"; };
+		D294738915E159180016A093 /* cellContainer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cellContainer@2x.png"; sourceTree = "<group>"; };
 		D2CD815915D2AEC000094D72 /* Timeline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Timeline.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2CD815D15D2AEC000094D72 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D2CD815F15D2AEC000094D72 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -239,7 +241,6 @@
 		D285B52F15D5301D00AFC1C7 /* images */ = {
 			isa = PBXGroup;
 			children = (
-				D294066515DE6EF200574FCD /* cellContainer */,
 				D294066215DD1ED700574FCD /* container.png */,
 				D2E622B215DCF5B0009FCEBB /* TimelineBackground */,
 				D2E622B015DCF580009FCEBB /* Timeline */,
@@ -442,6 +443,8 @@
 		D2E622B215DCF5B0009FCEBB /* TimelineBackground */ = {
 			isa = PBXGroup;
 			children = (
+				D294738815E159180016A093 /* cellContainer.png */,
+				D294738915E159180016A093 /* cellContainer@2x.png */,
 				D2E622B715DCFAFF009FCEBB /* timelineBackground2.png */,
 				D2E622B315DCF5B0009FCEBB /* timelineBackground.png */,
 			);
@@ -526,7 +529,8 @@
 				D2E622B615DCF5E4009FCEBB /* folder.png in Resources */,
 				D2E622B815DCFAFF009FCEBB /* timelineBackground2.png in Resources */,
 				D294066315DD1ED700574FCD /* container.png in Resources */,
-				D294066615DE6EF200574FCD /* cellContainer in Resources */,
+				D294738A15E159180016A093 /* cellContainer.png in Resources */,
+				D294738B15E159180016A093 /* cellContainer@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

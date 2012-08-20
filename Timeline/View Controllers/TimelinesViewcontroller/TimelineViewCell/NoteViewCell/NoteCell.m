@@ -10,7 +10,6 @@
 
 @implementation NoteCell
 
-@synthesize tImageView = _tImageView;
 @synthesize contentLabel = _contentLabel;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier

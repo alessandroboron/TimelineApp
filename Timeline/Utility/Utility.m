@@ -17,6 +17,7 @@
     return [string MD5];
 }
 
+//This method is used to get the string rapresentation of a date formatted in a certain way
 + (NSString *)dateTimeDescriptionWithLocaleIdentifier:(NSDate *)date{
     
     //Initialize the date formatter
@@ -37,6 +38,17 @@
     
     //Return the date string
     return timeStamp;
+}
+
+//This method is used to show an alert view with custom title, message and cancel button
++ (void)showAlertViewWithTitle:(NSString *)title message:(NSString *)message cancelButtonTitle:(NSString *)cancelButtonTitle{
+    
+    //Init the alert view
+    UIAlertView *av = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:cancelButtonTitle otherButtonTitles:nil];
+    
+    //Show the alert view
+    [av show];
+    
 }
 
 @end
