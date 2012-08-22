@@ -6,11 +6,16 @@
 //  Copyright (c) 2012 Alessandro Boron. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
 #import "GroupsViewController.h"
 #import "NewGroupViewController/NewGroupViewController.h"
-#import <QuartzCore/QuartzCore.h>
+#import "GroupMembers/GroupMembersViewController.h"
+#import "XMPPRequestController.h"
+#import "Space.h"
 
 @interface GroupsViewController ()
+
+@property (strong, nonatomic) NSMutableArray *groupsArray;
 
 @end
 
@@ -30,15 +35,25 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     //Set the background image for the navigation bar
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"navigationBarBackground.png"] forBarMetrics:UIBarMetricsDefault];
+    
+    //Register itself as observer for the XMPPRequestController in order to update the spacelist and attributes
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSpaceList:) name:@"SpaceListDidUpdateNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSpaces:) name:@"SpacesDidUpdateNotification" object:nil];
+    
+    
+    //If Online and Authenticathed retrieve groups
+    if ([Utility isHostReachable] && [Utility isUserAuthenticatedOnXMPPServer]) {
+        
+        XMPPRequestController *rc = [Utility xmppRequestController];
+        
+        [rc spacesListRequest];
+    }
 }
 
 - (void)viewDidUnload
@@ -85,12 +100,33 @@
     //If the group details is tapped
     else if ([segue.identifier isEqualToString:@"groupMemberSegue"]){
         
-        UITableViewController *tvc = (UITableViewController *)segue.destinationViewController;
+        //Get the destination view controller
+        GroupMembersViewController *tvc = (GroupMembersViewController *)segue.destinationViewController;
 
+        //Get the index of the cell tapped
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         
-        tvc.navigationItem.title = [[NSString alloc] initWithFormat:@"%@ Members",[self.groupsArray objectAtIndex:indexPath.row]];
+        //Set the title with the name of the group
+        tvc.navigationItem.title = [[NSString alloc] initWithFormat:@"%@ Members",[[self.groupsArray objectAtIndex:indexPath.row] spaceName]];
+        
+        //Set the members array
+        tvc.members = [[self.groupsArray objectAtIndex:indexPath.row] spaceUsers];
     }
+}
+
+#pragma mark -
+#pragma mark Notification Methods (XMPPRequestController)
+
+- (void)updateSpaceList:(NSNotification *)notification{
+    
+    self.groupsArray = [notification.userInfo objectForKey:@"userInfo"];
+    [self.tableView reloadData];
+    
+}
+
+- (void)updateSpaces:(NSNotification *)notification{
+    
+    [self.tableView reloadData];
 }
 
 #pragma mark -
@@ -139,8 +175,11 @@
     
     // Configure the cell...
     
+    Space *sp = [self.groupsArray objectAtIndex:indexPath.row];
+    
     cell.imageView.image = [UIImage imageNamed:@"groups.png"];
-    cell.textLabel.text = [self.groupsArray objectAtIndex:indexPath.row];
+    cell.textLabel.text = sp.spaceName;
+    cell.detailTextLabel.text = [sp spaceTypeString];
     
     return cell;
 }
@@ -155,22 +194,6 @@
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }   
       
-}
-
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here. Create and push another view controller.
-    
-    //[tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
 }
 
 @end

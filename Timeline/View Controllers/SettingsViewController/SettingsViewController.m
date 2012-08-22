@@ -17,6 +17,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
 @property (weak, nonatomic) IBOutlet UIImageView *serverStatusImageView;
 
+- (void)setUserDefaultsAndNotify;
+
 @end
 
 @implementation SettingsViewController
@@ -95,19 +97,32 @@
     //If all the fields are filled out write the settings
     if (self.serverTextField.text.length != 0 && self.domainTextField.text.length != 0 && self.userTextField.text.length != 0 && self.passwordTextField.text.length != 0) {
         
-        //Write the settings
-        [[NSUserDefaults standardUserDefaults] setObject:self.serverTextField.text forKey:kXMPPServerIdentifier];
-        [[NSUserDefaults standardUserDefaults] setObject:self.domainTextField.text forKey:kXMPPDomainIdentifier];
-        [[NSUserDefaults standardUserDefaults] setObject:self.userTextField.text forKey:kXMPPUserIdentifier];
-        [[NSUserDefaults standardUserDefaults] setObject:self.passwordTextField.text forKey:kXMPPPassIdentifier];
+        [self setUserDefaultsAndNotify];
+    }
+    
+    if (self.serverTextField.text.length == 0 || self.domainTextField.text.length == 0 || self.userTextField.text.length == 0 || self.passwordTextField.text.length == 0 || [Utility isXMPPServerConnected]) {
         
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        //Notify that settings are changed in order to connect using the new settings
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"XMPPSettingsDidChangeNotification" object:nil];
+        [self setUserDefaultsAndNotify];
     }
     
     return YES;
+}
+
+#pragma mark -
+#pragma Private Methods
+
+- (void)setUserDefaultsAndNotify{
+    
+    //Write the settings
+    [[NSUserDefaults standardUserDefaults] setObject:self.serverTextField.text forKey:kXMPPServerIdentifier];
+    [[NSUserDefaults standardUserDefaults] setObject:self.domainTextField.text forKey:kXMPPDomainIdentifier];
+    [[NSUserDefaults standardUserDefaults] setObject:self.userTextField.text forKey:kXMPPUserIdentifier];
+    [[NSUserDefaults standardUserDefaults] setObject:self.passwordTextField.text forKey:kXMPPPassIdentifier];
+    
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    //Notify that settings are changed in order to connect using the new settings
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"XMPPSettingsDidChangeNotification" object:nil];
 }
 
 #pragma mark - Table view delegate

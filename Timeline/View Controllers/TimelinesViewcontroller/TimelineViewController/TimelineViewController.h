@@ -11,4 +11,6 @@
 
 @interface TimelineViewController : UIViewController <ModalViewControllerDelegate>
 
+@property (strong, nonatomic) NSMutableArray *eventsArray;
+
 @end

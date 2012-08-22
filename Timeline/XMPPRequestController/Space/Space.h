@@ -34,9 +34,10 @@ typedef enum {
 
 @property (strong, nonatomic) NSString *spaceId;
 @property (strong ,nonatomic) NSString *spaceName;
-@property (nonatomic,assign) SpaceType spaceType;
-@property (nonatomic,assign) BOOL spacePersistence;
-@property (nonatomic,assign) BOOL subscribed;
+@property (assign, nonatomic) SpaceType spaceType;
+@property (assign, nonatomic) BOOL spacePersistence;
+@property (strong, nonatomic) NSMutableArray *spaceUsers;
+@property (assign, nonatomic) BOOL subscribed;
 
 //The disagnated initializer
 - (id)initSpaceWithId:(NSString *)spId name:(NSString *)spName type:(NSString *)spType persistence:(NSString *)spPersistence;

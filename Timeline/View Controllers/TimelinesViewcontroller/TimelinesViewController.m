@@ -37,9 +37,6 @@
 
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"navigationBarBackground.png"] forBarMetrics:UIBarMetricsDefault];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
    
@@ -63,9 +60,6 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark -
-#pragma mark Segue
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
     //If new timeline button is tapped
@@ -81,11 +75,16 @@
     
     else if ([segue.identifier isEqualToString:@"timelineDetailsSegue"]){
        
+        //Get the index path according to the cell tapped
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         
+        //Get the destination view controller
         TimelineViewController *tvc =  (TimelineViewController *)segue.destinationViewController;
+        //Set the title of the navigation bar
         tvc.navigationItem.title = ((Timeline *)[self.timelinesArray objectAtIndex:indexPath.row]).title;
-#warning pass the array with the information for the associated timeline 
+        //Set the events array for the corresponding timeline
+        tvc.eventsArray = ((Timeline *)[self.timelinesArray objectAtIndex:indexPath.row]).baseEvents;
+ 
     }
 }
 

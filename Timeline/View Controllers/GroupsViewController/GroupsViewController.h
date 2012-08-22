@@ -11,6 +11,4 @@
 
 @interface GroupsViewController : UITableViewController <ModalViewControllerDelegate>
 
-@property (strong, nonatomic) NSMutableArray *groupsArray;
-
 @end

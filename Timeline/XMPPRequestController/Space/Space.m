@@ -15,9 +15,9 @@
 //
 //
 //  Space.m
-//  CroMAR
+//  TimelineApp
 //
-//  Created by Alessandro Boron on 7/20/12.
+//  Created by Alessandro Boron on 21/08/12.
 //  Copyright (c) 2012 NTNU. All rights reserved.
 //
 
@@ -28,6 +28,7 @@
 @synthesize spaceName = _spaceName;
 @synthesize spaceType = _spaceType;
 @synthesize spacePersistence = _spacePersistence;
+@synthesize spaceUsers = _spaceUsers;
 @synthesize subscribed = _subscribed;
 
 //The designated initializer
@@ -40,6 +41,7 @@
         _spaceName = spName;
         _spaceType = [self spaceTypeFromStringValue:spType];
         _spacePersistence = [self isSpacePersistent:spPersistence];
+        _spaceUsers = [[NSMutableArray alloc] init];
         _subscribed = NO;
     }
     

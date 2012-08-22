@@ -26,6 +26,7 @@
         _tId = [Utility MD5ForString:[NSString stringWithFormat:@"%@%@%i",title,creator,shared]];
         _title = title;
         _creator = creator;
+        _baseEvents = [[NSMutableArray alloc] init];
         _shared = shared;
     }
     

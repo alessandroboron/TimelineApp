@@ -9,11 +9,11 @@
 #import "XMPPRequestController.h"
 #import "Space.h"
 //#import "XMPPPubSub.h"
-//#import "WatchItValue.h"
-//#import "watchIt.h"
+#import "WatchItValue.h"
+#import "watchIt.h"
+#import "User.h"
 
-
-#define kXMPPResourceIdentifier @"CroMAR"
+#define kXMPPResourceIdentifier @"TimelineAPP"
 #define kXMPPPortIdentifier     5222
 
 
@@ -199,8 +199,9 @@
     [self.xmppStream sendElement:iq];
      
 }
-
+*/
 #pragma mark Space Manager Methods
+
 
 //This method is used to retrieve all the spaces for the user 
 - (void)spacesListRequest{
@@ -288,23 +289,24 @@
         NSString *nodeName = [element attributeStringValueForName:@"name"];
         
         //Create the space
-        Space *sp = [[Space alloc] initSpaceWithId:nodeId name:nodeName type:SpaceTypeUnknown persistence:nil];
+        Space *sp = [[Space alloc] initSpaceWithId:nodeId name:nodeName type:@"" persistence:nil];
         //Store the space in the array
         [self.spacesArray  addObject:sp];
-        //Release the local space
-        [sp release];
+        
     }
-    //Set the user info dictionary to send with the notification
-    NSDictionary *userInfoDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:self.spacesArray,@"userInfo", nil];
-    //Send the space array to the spacepopovercontroller
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"NSSpaceListDidUpdateNotification" object:nil userInfo:userInfoDictionary];
-    //Release the local user info dictionary
-    [userInfoDictionary release];
     
-    //Walk-through the spaces
-    for (Space *sp in self.spacesArray) {
-        //Get the additional info for the space
-        [self spaceWithIdRequest:sp.spaceId];
+    if ([self.spacesArray count]>0) {
+        //Set the user info dictionary to send with the notification
+        NSDictionary *userInfoDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:[self.spacesArray copy],@"userInfo", nil];
+        
+        //Send the space array to the spacepopovercontroller
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"SpaceListDidUpdateNotification" object:nil userInfo:userInfoDictionary];
+        
+        //Walk-through the spaces
+        for (Space *sp in self.spacesArray) {
+            //Get the additional info for the space
+            [self spaceWithIdRequest:sp.spaceId];
+        }
     }
 }
 
@@ -327,6 +329,9 @@
     //Get the 'item' elements child of 'query'
     NSArray *field = [spacesXElement elementsForName:@"field"];
     
+    //The array where storing the members of the group
+    NSArray *values = nil;
+    
     //Walk through the fields
     for (NSXMLElement *element in field) {
         //Get the attribute value
@@ -341,6 +346,11 @@
         else if ([attributeValue isEqualToString:@"spaces#persistent"]) {
             nodePersistence = childValue;
         }
+        //If the attribute is the list of users for that space
+        else if ([attributeValue isEqualToString:@"spaces#members"]) {
+            //Get the 'value' elements child of 'field'
+            values = [element elementsForName:@"value"];
+        }
     }
    
     //Walk throug the spaces
@@ -349,11 +359,15 @@
             //Set space type and persistence
             sp.spaceType = [sp spaceTypeFromStringValue:nodeType];
             sp.spacePersistence = [sp isSpacePersistent:nodePersistence];
+            //Set the members of the space
+            for (NSXMLElement *member in values) {
+                [sp.spaceUsers addObject:[[User alloc]initUserWithUsername:[member stringValue]]];
+            }
         }
     }
    
     //Send the notification
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"NSSpacesDidLoad" object:nil userInfo:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SpacesDidUpdateNotification" object:nil userInfo:nil];
 }
 
 //This method is used to request the subscription for a node to the xmpp server
@@ -529,27 +543,22 @@
                 CLLocation *loc = [[CLLocation alloc] initWithLatitude:[latitude doubleValue] longitude:[longitude doubleValue]];
                 
                 //Initialize the watchIt data
-                WatchIt *wi = [[WatchIt alloc] initWatchItDataWithUser:user values:[values copy] timestamp:[Utility dateFromTimestampString:timestamp pachube:YES] infoTitle:@"WatchIt" infoLocation:loc infoTags:[tags copy] infoMediaType:InfoMediaTypeWatchit infoRating:0];
+                WatchIt *wi = [[WatchIt alloc] initWatchItDataWithUser:user values:[values copy] timestamp:[Utility dateFromTimestampString:timestamp] infoTitle:@"WatchIt" infoLocation:loc infoTags:[tags copy] infoMediaType:InfoMediaTypeWatchit infoRating:0];
                 
-                //Release of the local variable
-                [loc release];
-                [values release];
-                [tags release];
-                
+                                
                 //Send the data
                 NSDictionary *userInfo = [NSDictionary dictionaryWithObject:wi forKey:@"userInfo"];
-                [wi release];
                 
                 //Send the data
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"NSSpaceServiceDidLoadObjectsNotification" object:nil userInfo:userInfo];
             }
         }
         if (!infoPresent) {
-            [Utility showAlert:@"Mirror Space Service" withMessage:@"Datatype not recognized by CroMAR." andDismissButton:@"Close"];
+            [Utility showAlertViewWithTitle:@"Mirror Space Service" message:@"Datatype not recognized by TimelineApp." cancelButtonTitle:@"Dismiss"];
         }
     }
     else{
-        [Utility showAlert:@"Mirror Space Service" withMessage:@"No information present in the selected space." andDismissButton:@"Close"];
+        [Utility showAlertViewWithTitle:@"Mirror Space Service" message:@"No information present in the selected space." cancelButtonTitle:@"Dismiss"];
     }
 }
 
@@ -564,11 +573,11 @@
     NSString *valueString = [value stringValue];
     
     //Initialize the value object
-    WatchItValue *v = [[[WatchItValue alloc] initValueWithType:valueType value:valueString unit:valueUnit] autorelease];
+    WatchItValue *v = [[WatchItValue alloc] initValueWithType:valueType value:valueString unit:valueUnit];
     
     return v;
 }
-*/
+
 #pragma mark -
 #pragma mark XMPPControllerDelegate
 
@@ -610,7 +619,6 @@
     
     //Send the notification with the status
     [[NSNotificationCenter defaultCenter] postNotificationName:@"XMPPConnectivityDidUpdateNotification" object:nil userInfo:connectivityStatus];
-    
 }
 
 //If the user is not authenticated on the server

@@ -43,6 +43,43 @@
     return timeStamp;
 }
 
++ (NSString *)normalizeDate:(NSString *)date{
+    
+    //Split the string using the separator "."
+    NSArray *splittedTimestamp = [date componentsSeparatedByString:@"T"];
+    
+    //Remove the timezone
+    NSArray *splittedSeconds= [((NSString *)[splittedTimestamp objectAtIndex:1]) componentsSeparatedByString:@"."];
+    
+    NSArray *splittedTimezone = [((NSString *)[splittedTimestamp objectAtIndex:1]) componentsSeparatedByString:@"+"];
+    
+    //Add the +0000 Timezone
+    NSString *dateString = [NSString stringWithFormat:@"%@ %@ +%@",[splittedTimestamp objectAtIndex:0],[splittedSeconds objectAtIndex:0],[splittedTimezone objectAtIndex:1]];
+    
+    //Return the new timestamp string
+    return dateString;
+}
+
+//This method is used to get a date object from a timestamp string
++ (NSDate *)dateFromTimestampString:(NSString *)timestamp{
+    
+    //Initialize the date formatter
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    
+    //Set the date format
+    
+    //Pachube Date Format "2010-06-25T11:54:17.463771Z"
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss ZZZ"];
+    timestamp = [self normalizeDate:timestamp];
+    
+    //Set the locale 'EN' for the date formatter
+    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"EN"]];
+    //Get the date object from a string date
+    NSDate *date = [dateFormatter dateFromString:timestamp];
+    
+    return date;
+}
+
 //This method is used to show an alert view with custom title, message and cancel button
 + (void)showAlertViewWithTitle:(NSString *)title message:(NSString *)message cancelButtonTitle:(NSString *)cancelButtonTitle{
     
@@ -127,5 +164,12 @@
     return reachable;
 }
 
+//This method is used to get the XMPPRequestController;
++ (XMPPRequestController *)xmppRequestController{
+    
+    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    return delegate.xmppRequestController;
+}
 
 @end

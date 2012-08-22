@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class XMPPRequestController;
+
 @interface Utility : NSObject
 
 //This method is used to get a MD5 representation of a string
@@ -15,6 +17,9 @@
 
 //This method is used to get the string rapresentation of a date formatted in a certain way
 + (NSString *)dateTimeDescriptionWithLocaleIdentifier:(NSDate *)date;
+
+//This method is used to get a date object from a timestamp string
++ (NSDate *)dateFromTimestampString:(NSString *)timestamp;
 
 //This method is used to show an alert view with custom title, message and cancel button
 + (void)showAlertViewWithTitle:(NSString *)title message:(NSString *)message cancelButtonTitle:(NSString *)cancelButtonTitle;
@@ -33,5 +38,8 @@
 
 //This method is used to check if the device 
 + (BOOL)isHostReachable;
+
+//This method is used to get the XMPPRequestController;
++ (XMPPRequestController *)xmppRequestController;
 
 @end

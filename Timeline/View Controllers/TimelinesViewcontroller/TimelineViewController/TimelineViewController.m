@@ -10,6 +10,7 @@
 #import "NewNoteViewController.h"
 #import "Event.h"
 #import "SampleNote.h"
+#import "watchIt.h"
 #import "TimelineViewCell.h"
 #import "NoteCell.h"
 #import "AppDelegate.h"
@@ -24,7 +25,6 @@
 @interface TimelineViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *contentTableView;
-@property (strong, nonatomic) NSMutableArray *contentArray;
 
 - (CGSize)sizeOfText:(NSString *)text;
 
@@ -33,7 +33,7 @@
 @implementation TimelineViewController
 
 @synthesize contentTableView = _contentTableView;
-@synthesize contentArray = _contentArray;
+@synthesize eventsArray = _eventsArray;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -72,15 +72,17 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+
 #pragma mark -
 #pragma mark Lazy Instantiation
 
 - (NSMutableArray *)eventsArray{
-    if (!_contentArray) {
-        _contentArray = [[NSMutableArray alloc] init];
+    if (!_eventsArray) {
+        _eventsArray = [[NSMutableArray alloc] init];
     }
-    return _contentArray;
+    return _eventsArray;
 }
+
 
 #pragma mark -
 #pragma mark Segue Method
@@ -109,8 +111,11 @@
     
     //If baseEvent not exist make it
     if (baseEvent==nil) {
-        //New BaseEvent
-        Event *event = [[Event alloc] initEventWithLocation:((AppDelegate *)[[UIApplication sharedApplication] delegate]).userLocation date:[NSDate date] shared:NO creator:nil];
+        Event *event = nil;
+        if (![sender isMemberOfClass:[WatchIt class]]) {
+            //New BaseEvent
+            event = [[Event alloc] initEventWithLocation:((AppDelegate *)[[UIApplication sharedApplication] delegate]).userLocation date:[NSDate date] shared:NO creator:nil];
+        }
         //Add the object to the base event
         [event.eventItems addObject:sender];
         
@@ -145,12 +150,12 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return [self.contentArray count];
+    return [self.eventsArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    Event *event = [self.contentArray objectAtIndex:indexPath.row];
+    Event *event = [self.eventsArray objectAtIndex:indexPath.row];
     
     //Get the object at the specified index path
     id objectInTimeline = [event.eventItems objectAtIndex:0];
@@ -215,7 +220,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    Event *event = [self.contentArray objectAtIndex:indexPath.row];
+    Event *event = [self.eventsArray objectAtIndex:indexPath.row];
     
     //Get the object at the specified index path
     id objectInTimeline = [event.eventItems objectAtIndex:0];
