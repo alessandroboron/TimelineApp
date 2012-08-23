@@ -11,6 +11,7 @@
 #import "AppDelegate.h"
 #import "XMPPRequestController.h"
 #import "Reachability.h"
+#import "MBProgressHUD.h"
 
 @implementation Utility
 
@@ -170,6 +171,24 @@
     AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     return delegate.xmppRequestController;
+}
+
+#pragma mark -
+#pragma mark MBProgressHUD Methods
+
+//Used to show the activity indicator on the screen
++ (void)showActivityIndicatorWithView:(UIView *)theView label:(NSString *)label{
+    
+    //Show the activity indicator on the screen with the label "Retrieving Info"
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:theView animated:YES];
+    hud.labelText = label;
+}
+
+//Used to hide the activity indicator on the screen
++ (void)dismissActivityIndicator:(UIView *)theView{
+    
+    // Add at start of requestFinished AND requestFailed
+    [MBProgressHUD hideHUDForView:theView animated:YES];
 }
 
 @end

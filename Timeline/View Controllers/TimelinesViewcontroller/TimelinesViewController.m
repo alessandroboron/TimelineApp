@@ -12,15 +12,23 @@
 #import "TimelineViewController/TimelineViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Reachability.h"
+#import "Space.h"
+#import "XMPPRequestController.h"
 
 @interface TimelinesViewController ()
+
+@property (strong, nonatomic) NSMutableArray *timelinesAppArray;
 
 @end
 
 @implementation TimelinesViewController
 
 @synthesize timelinesArray = _timelinesArray;
+@synthesize timelinesAppArray = _timelinesAppArray;
 
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -35,7 +43,14 @@
 {
     [super viewDidLoad];
 
+    //Set the background for the view
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"navigationBarBackground.png"] forBarMetrics:UIBarMetricsDefault];
+    
+    //Register itself as observer for the XMPPRequestController in order to update the spacelist and attributes
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSpaceList:) name:@"SpaceListDidUpdateNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSpaces:) name:@"SpacesDidUpdateNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissAI:) name:@"SpacesFetchingErrorNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchTimelines:) name:@"SpacesServiceDidConnectNotification" object:nil];
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
@@ -44,8 +59,11 @@
         
   //  }
   //  else{
-        self.timelinesArray = [NSMutableArray arrayWithObjects:[[Timeline alloc] initTimelineWithTitle:@"My Experience" creator:@"Alessandro" shared:NO],[[Timeline alloc] initTimelineWithTitle:@"Our Experience" creator:@"Alessandro" shared:YES], nil];
+    /*
+    self.timelinesArray = [NSMutableArray arrayWithObjects:[[Timeline alloc] initTimelineWithTitle:@"My Experience" creator:@"Alessandro" shared:NO],[[Timeline alloc] initTimelineWithTitle:@"Our Experience" creator:@"Alessandro" shared:YES], nil];
+     */
    // }
+    
 }
 
 - (void)viewDidUnload
@@ -85,6 +103,87 @@
         //Set the events array for the corresponding timeline
         tvc.eventsArray = ((Timeline *)[self.timelinesArray objectAtIndex:indexPath.row]).baseEvents;
  
+    }
+}
+
+#pragma mark -
+#pragma mark Lazy Instantiation
+
+- (NSMutableArray *)timelinesArray{
+    if (!_timelinesArray) {
+        _timelinesArray = [[NSMutableArray alloc] init];
+    }
+    return _timelinesArray;
+}
+
+#pragma mark -
+#pragma mark Notification Methods (XMPPRequestController)
+
+- (void)updateSpaceList:(NSNotification *)notification{
+    
+    //If the view is loaded and shown
+    if (self.isViewLoaded && self.view.window) {
+        
+        //Get the spaces list
+        self.timelinesAppArray = [notification.userInfo objectForKey:@"userInfo"];
+       
+        //Get the XMPPRequestController
+        XMPPRequestController *rc = [Utility xmppRequestController];
+        
+        //Walk-through the spaces
+        for (Space *sp in self.timelinesAppArray) {
+            //Get the info for that space
+            [rc spaceWithIdRequest:sp.spaceId];
+        }
+    }
+}
+
+- (void)updateSpaces:(NSNotification *)notification{
+    
+    //If the view is loaded and shown
+    if (self.isViewLoaded && self.view.window) {
+        
+        //Get the space from the notification
+        Space *sp = [notification.userInfo objectForKey:@"userInfo"];
+        //Get the request number
+        int requestNumber = [[notification.userInfo objectForKey:@"requestNumber"] integerValue];
+       
+        //Set the space shared = NO
+        BOOL shared = NO;
+        
+        //If the space has more than one member it has to be considered shared
+        if ([sp.spaceUsers count]>1) {
+            shared = YES;
+        }
+        //Map the space object in a timeline object
+        [self.timelinesArray addObject:[[Timeline alloc] initTimelineWithTitle:sp.spaceName creator:nil shared:shared]];
+        
+        //Update the tableview
+        [self.tableView reloadData];
+        
+        //If the request number is equal 1 it means that is the last request thereby the activity indicator can be dismissed
+        if (requestNumber==1) {
+            [Utility dismissActivityIndicator:self.tableView];
+            nodeIdRequestNumber=0;
+            
+        }
+    }
+}
+
+//This method is used to dismiss the activity indicator when an error occurr
+- (void)dismissAI:(NSNotification *)notification{
+    [Utility dismissActivityIndicator:self.tableView];
+}
+
+- (void)fetchTimelines:(NSNotification *)notification{
+    
+    //If Online and Authenticathed retrieve groups
+    if ([Utility isHostReachable] && [Utility isUserAuthenticatedOnXMPPServer]) {
+        
+        XMPPRequestController *rc = [Utility xmppRequestController];
+        
+        [rc spacesListRequest];
+        [Utility showActivityIndicatorWithView:self.tableView label:@"Loading Timelines"];
     }
 }
 

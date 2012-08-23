@@ -50,7 +50,6 @@
 		D294066315DD1ED700574FCD /* container.png in Resources */ = {isa = PBXBuildFile; fileRef = D294066215DD1ED700574FCD /* container.png */; };
 		D294738A15E159180016A093 /* cellContainer.png in Resources */ = {isa = PBXBuildFile; fileRef = D294738815E159180016A093 /* cellContainer.png */; };
 		D294738B15E159180016A093 /* cellContainer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D294738915E159180016A093 /* cellContainer@2x.png */; };
-		D294738F15E232570016A093 /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = D294738E15E232570016A093 /* Group.m */; };
 		D294739315E232910016A093 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = D294739215E232910016A093 /* User.m */; };
 		D29473A815E2355E0016A093 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = D294739915E2355E0016A093 /* DDAbstractDatabaseLogger.m */; };
 		D29473A915E2355E0016A093 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = D294739B15E2355E0016A093 /* DDASLLogger.m */; };
@@ -102,6 +101,7 @@
 		D2B0A46115E4E82D00150CC6 /* GroupMembersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B0A46015E4E82D00150CC6 /* GroupMembersViewController.m */; };
 		D2B0A46615E4ECDC00150CC6 /* user.png in Resources */ = {isa = PBXBuildFile; fileRef = D2B0A46415E4ECDC00150CC6 /* user.png */; };
 		D2B0A46715E4ECDC00150CC6 /* user@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2B0A46515E4ECDC00150CC6 /* user@2x.png */; };
+		D2B0A47015E4F98600150CC6 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B0A46F15E4F98600150CC6 /* MBProgressHUD.m */; };
 		D2CD815E15D2AEC000094D72 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2CD815D15D2AEC000094D72 /* UIKit.framework */; };
 		D2CD816015D2AEC000094D72 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2CD815F15D2AEC000094D72 /* Foundation.framework */; };
 		D2CD816215D2AEC100094D72 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2CD816115D2AEC000094D72 /* CoreGraphics.framework */; };
@@ -179,8 +179,6 @@
 		D294066215DD1ED700574FCD /* container.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = container.png; sourceTree = "<group>"; };
 		D294738815E159180016A093 /* cellContainer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cellContainer.png; sourceTree = "<group>"; };
 		D294738915E159180016A093 /* cellContainer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cellContainer@2x.png"; sourceTree = "<group>"; };
-		D294738D15E232570016A093 /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Group.h; path = Model/Group/Group.h; sourceTree = "<group>"; };
-		D294738E15E232570016A093 /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Group.m; path = Model/Group/Group.m; sourceTree = "<group>"; };
 		D294739115E232910016A093 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = Model/User/User.h; sourceTree = "<group>"; };
 		D294739215E232910016A093 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = User.m; path = Model/User/User.m; sourceTree = "<group>"; };
 		D294739815E2355E0016A093 /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDAbstractDatabaseLogger.h; sourceTree = "<group>"; };
@@ -281,6 +279,8 @@
 		D2B0A46015E4E82D00150CC6 /* GroupMembersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GroupMembersViewController.m; path = "View Controllers/GroupsViewController/GroupMembers/GroupMembersViewController.m"; sourceTree = "<group>"; };
 		D2B0A46415E4ECDC00150CC6 /* user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user.png; sourceTree = "<group>"; };
 		D2B0A46515E4ECDC00150CC6 /* user@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user@2x.png"; sourceTree = "<group>"; };
+		D2B0A46E15E4F98600150CC6 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		D2B0A46F15E4F98600150CC6 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		D2CD815915D2AEC000094D72 /* Timeline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Timeline.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2CD815D15D2AEC000094D72 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D2CD815F15D2AEC000094D72 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -512,7 +512,6 @@
 				D285B56615D550A300AFC1C7 /* BaseEvent */,
 				D285B56A15D550D200AFC1C7 /* Event */,
 				D285B56E15D5510100AFC1C7 /* EventItem */,
-				D294739015E2325D0016A093 /* Group */,
 				D294739415E232980016A093 /* User */,
 			);
 			name = Model;
@@ -571,15 +570,6 @@
 				D285B58115D6749500AFC1C7 /* SettingsViewController.m */,
 			);
 			name = SettingsViewController;
-			sourceTree = "<group>";
-		};
-		D294739015E2325D0016A093 /* Group */ = {
-			isa = PBXGroup;
-			children = (
-				D294738D15E232570016A093 /* Group.h */,
-				D294738E15E232570016A093 /* Group.m */,
-			);
-			name = Group;
 			sourceTree = "<group>";
 		};
 		D294739415E232980016A093 /* User */ = {
@@ -873,6 +863,15 @@
 			name = GroupMembers;
 			sourceTree = "<group>";
 		};
+		D2B0A46D15E4F98600150CC6 /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				D2B0A46E15E4F98600150CC6 /* MBProgressHUD.h */,
+				D2B0A46F15E4F98600150CC6 /* MBProgressHUD.m */,
+			);
+			path = MBProgressHUD;
+			sourceTree = "<group>";
+		};
 		D2CD814E15D2AEC000094D72 = {
 			isa = PBXGroup;
 			children = (
@@ -908,6 +907,7 @@
 		D2CD816315D2AEC100094D72 /* Timeline */ = {
 			isa = PBXGroup;
 			children = (
+				D2B0A46D15E4F98600150CC6 /* MBProgressHUD */,
 				D2CD816C15D2AEC100094D72 /* AppDelegate.h */,
 				D2CD816D15D2AEC100094D72 /* AppDelegate.m */,
 				D2CD816F15D2AEC100094D72 /* MainStoryboard.storyboard */,
@@ -1071,7 +1071,6 @@
 				D226D1F415DAD38200227FAF /* PictureViewCell.m in Sources */,
 				D226D1FC15DBAB2E00227FAF /* TimelineViewCell.m in Sources */,
 				D226D20015DBAD3000227FAF /* Utility.m in Sources */,
-				D294738F15E232570016A093 /* Group.m in Sources */,
 				D294739315E232910016A093 /* User.m in Sources */,
 				D29473A815E2355E0016A093 /* DDAbstractDatabaseLogger.m in Sources */,
 				D29473A915E2355E0016A093 /* DDASLLogger.m in Sources */,
@@ -1115,6 +1114,7 @@
 				D244B49415E4CA0A0015A14A /* WatchItValue.m in Sources */,
 				D244B49515E4CA0A0015A14A /* watchIt.m in Sources */,
 				D2B0A46115E4E82D00150CC6 /* GroupMembersViewController.m in Sources */,
+				D2B0A47015E4F98600150CC6 /* MBProgressHUD.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

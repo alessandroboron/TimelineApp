@@ -42,4 +42,10 @@
 //This method is used to get the XMPPRequestController;
 + (XMPPRequestController *)xmppRequestController;
 
+//Used to show the activity indicator on the screen
++ (void)showActivityIndicatorWithView:(UIView *)theView label:(NSString *)label;
+
+//Used to hide the activity indicator on the screen
++ (void)dismissActivityIndicator:(UIView *)theView;
+
 @end

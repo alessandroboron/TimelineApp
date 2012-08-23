@@ -16,6 +16,7 @@
 @interface GroupsViewController ()
 
 @property (strong, nonatomic) NSMutableArray *groupsArray;
+@property (strong, nonatomic) NSMutableArray *groupsAppArray;
 
 @end
 
@@ -45,6 +46,7 @@
     //Register itself as observer for the XMPPRequestController in order to update the spacelist and attributes
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSpaceList:) name:@"SpaceListDidUpdateNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSpaces:) name:@"SpacesDidUpdateNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissAI:) name:@"SpacesFetchingErrorNotification" object:nil];
     
     
     //If Online and Authenticathed retrieve groups
@@ -53,6 +55,7 @@
         XMPPRequestController *rc = [Utility xmppRequestController];
         
         [rc spacesListRequest];
+        [Utility showActivityIndicatorWithView:self.tableView label:@"Loading Groups"];
     }
 }
 
@@ -61,6 +64,10 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -119,14 +126,50 @@
 
 - (void)updateSpaceList:(NSNotification *)notification{
     
-    self.groupsArray = [notification.userInfo objectForKey:@"userInfo"];
-    [self.tableView reloadData];
-    
+    //If the view is loaded and shown
+    if (self.isViewLoaded && self.view.window) {
+        
+        //Get the spaces list
+        self.groupsAppArray = [notification.userInfo objectForKey:@"userInfo"];
+        
+        //Get the XMPPRequestController
+        XMPPRequestController *rc = [Utility xmppRequestController];
+        
+        //Walk-through the spaces
+        for (Space *sp in self.groupsAppArray) {
+            //Get the info for that space
+            [rc spaceWithIdRequest:sp.spaceId];
+        }
+    }
 }
 
 - (void)updateSpaces:(NSNotification *)notification{
     
-    [self.tableView reloadData];
+    //If the view is loaded and shown
+    if (self.isViewLoaded && self.view.window) {
+        
+        //Get the space from the notification
+        Space *sp = [notification.userInfo objectForKey:@"userInfo"];
+        //Get the request number
+        int requestNumber = [[notification.userInfo objectForKey:@"requestNumber"] integerValue];
+        
+        //Map the space object in a timeline object
+        [self.groupsArray addObject:sp];
+        
+        //Update the tableview
+        [self.tableView reloadData];
+        
+        //If the request number is equal 1 it means that is the last request thereby the activity indicator can be dismissed
+        if (requestNumber==1) {
+            [Utility dismissActivityIndicator:self.tableView];
+            nodeIdRequestNumber=0;
+        }
+    }
+}
+
+//This method is used to dismiss the activity indicator when an error occurr
+- (void)dismissAI:(NSNotification *)notification{
+    [Utility dismissActivityIndicator:self.tableView];
 }
 
 #pragma mark -

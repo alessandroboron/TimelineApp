@@ -62,7 +62,6 @@
 #define kSpacesLocalHost        @"spaces.sandbox"
 
 
-
 @interface XMPPRequestController ()
 
 @property (nonatomic,retain) NSString *xmppHost;
@@ -120,7 +119,6 @@
         _xmppPassword = [Utility settingField:kXMPPPassIdentifier];
         _xmppSpacesHost = [NSString stringWithFormat:@"spaces.%@",self.xmppDomain];
         _xmppPubsubHost = [NSString stringWithFormat:@"pubsub.%@",self.xmppDomain];
-        _spacesArray = [[NSMutableArray alloc] init] ;
         
         //Register itself as observer in order to set connection parameters when the change
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsDidChange:) name:@"XMPPSettingsDidChangeNotification" object:nil];
@@ -128,6 +126,13 @@
     }
     
     return self;
+}
+
+- (NSMutableArray *)spacesArray{
+    if (!_spacesArray) {
+        _spacesArray = [[NSMutableArray alloc] init];
+    }
+    return _spacesArray;
 }
 
 //This method is used to connect to the XMPP server
@@ -217,6 +222,8 @@
 //This method is user to retrieve a space according to its identifier
 - (void)spaceWithIdRequest:(NSString *)spaceId{
     
+    nodeIdRequestNumber++;
+    
     //Set the child for the IQ element
     NSXMLElement *query = [NSXMLElement elementWithName:@"query"];
     [query addAttributeWithName:@"xmlns" stringValue:kSpaceInfoWithIdRequest];
@@ -301,13 +308,17 @@
         
         //Send the space array to the spacepopovercontroller
         [[NSNotificationCenter defaultCenter] postNotificationName:@"SpaceListDidUpdateNotification" object:nil userInfo:userInfoDictionary];
-        
+       
+        /*
         //Walk-through the spaces
         for (Space *sp in self.spacesArray) {
             //Get the additional info for the space
             [self spaceWithIdRequest:sp.spaceId];
         }
+         */
+        
     }
+    self.spacesArray = nil;
 }
 
 //This method is used to retrieve the info for all the nodes
@@ -353,6 +364,8 @@
         }
     }
    
+    
+    /*
     //Walk throug the spaces
     for (Space *sp in self.spacesArray) {
         if ([sp.spaceId isEqualToString:nodeId] && [sp.spaceName isEqualToString:nodeName]) {
@@ -365,9 +378,20 @@
             }
         }
     }
+    */
+    
+    Space *sp = [[Space alloc] initSpaceWithId:nodeId name:nodeName type:nodeType persistence:nodePersistence];
+    
+    for (NSXMLElement *member in values) {
+        [sp.spaceUsers addObject:[[User alloc]initUserWithUsername:[member stringValue]]];
+    }
    
+    NSNumber *reqNumber = [NSNumber numberWithInt:nodeIdRequestNumber--];
+    
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:sp,@"userInfo",reqNumber,@"requestNumber", nil];
+    
     //Send the notification
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"SpacesDidUpdateNotification" object:nil userInfo:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SpacesDidUpdateNotification" object:nil userInfo:userInfo];
 }
 
 //This method is used to request the subscription for a node to the xmpp server
@@ -619,6 +643,7 @@
     
     //Send the notification with the status
     [[NSNotificationCenter defaultCenter] postNotificationName:@"XMPPConnectivityDidUpdateNotification" object:nil userInfo:connectivityStatus];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SpacesServiceDidConnectNotification" object:nil];
 }
 
 //If the user is not authenticated on the server
@@ -721,9 +746,18 @@
             NSLog(@"Error Code: %@, %@",[error attributeStringValueForName:@"code"],[error description]);
         }
         
+        else if ([iqId isEqualToString:kSpaceListId]){
+            NSXMLElement *error = [iq childErrorElement];
+            NSLog(@"Space Info Error: %@, %@",[error attributeStringValueForName:@"code"],[error description]);
+            [Utility showAlertViewWithTitle:@"Mirror Space Service" message:@"Error getting the spaces list." cancelButtonTitle:@"Dismiss"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"SpacesFetchingErrorNotification" object:nil];
+        }
+        
         else if ([iqId isEqualToString:kSpaceInfoWithId]){
             NSXMLElement *error = [iq childErrorElement];
             NSLog(@"Space Info Error: %@, %@",[error attributeStringValueForName:@"code"],[error description]);
+            [Utility showAlertViewWithTitle:@"Mirror Space Service" message:@"Error getting attributes for the space." cancelButtonTitle:@"Dismiss"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"SpacesFetchingErrorNotification" object:nil];
         }
         
         else if ([iqId isEqualToString:kPubsubSubscriptionIdentifier]){

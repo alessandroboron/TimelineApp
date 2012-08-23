@@ -12,9 +12,11 @@
 
 @class Space;
 
+static int nodeIdRequestNumber=0;
+
 @interface XMPPRequestController : NSObject <XMPPRequestControllerDelegate>
 
-@property (nonatomic, retain) XMPPStream *xmppStream;
+@property (nonatomic, strong) XMPPStream *xmppStream;
 
 //Connection Methods
 
