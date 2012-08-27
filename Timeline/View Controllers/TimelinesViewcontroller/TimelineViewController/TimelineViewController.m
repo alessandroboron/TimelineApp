@@ -30,6 +30,7 @@
 
 - (CGSize)sizeOfText:(NSString *)text;
 - (IBAction)showInfoDetails:(UILongPressGestureRecognizer *)recognizer;
+- (void)sortInfoByTimestamp;
 
 @end
 
@@ -162,6 +163,9 @@
     //Insert the object at the beginning of the array
     [self.eventsArray insertObject:event atIndex:0];
     
+    //Order the array based on the date
+    [self sortInfoByTimestamp];
+    
     //Update the TableView
     [self.contentTableView reloadData];
 }
@@ -215,6 +219,16 @@
     CGSize size = [text sizeWithFont:[UIFont systemFontOfSize:FONT_SIZE] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
     
     return size;
+}
+
+//This method is used to sort the event based on their date
+- (void)sortInfoByTimestamp{
+    
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"date" ascending:NO];
+   
+    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+    
+    [self.eventsArray sortUsingDescriptors:sortDescriptors];
 }
 
 #pragma mark -

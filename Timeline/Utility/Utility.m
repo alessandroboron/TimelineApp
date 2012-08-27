@@ -13,6 +13,12 @@
 #import "Reachability.h"
 #import "MBProgressHUD.h"
 
+@interface Utility ()
+
++ (BOOL)isDateFromPreviousVersionOfCroMAR:(NSString *)timestamp;
+
+@end
+
 @implementation Utility
 
 //This method is used to get a MD5 representation of a string
@@ -67,18 +73,54 @@
     return timeStamp;
 }
 
-+ (NSString *)normalizeDate:(NSString *)date{
+//This method is used to get the string representation of a date formatted to be sent through XMPP
++ (NSString *)dateDescriptionForXMPPServerWithDate:(NSDate *)date{
+    
+    //Initialize the date formatter
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    //Format "2012-08-21T12:56:48+00:00">
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ssZZZ"];
+    
+    //Get the local timezone
+    NSTimeZone *localTimezone = [NSTimeZone localTimeZone];
+    //Set the date formatter according to the local timezone
+    [dateFormatter setTimeZone:localTimezone];
+    
+    //Set the locale 'EN' for the date formatter
+    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"EN"]];
+    
+    //Convert the date object to a string. Date UTC Timezone -> String Local Timezone
+    NSString *timeStamp = [dateFormatter stringFromDate:date];
+    
+    NSArray *timestampComponent = [timeStamp componentsSeparatedByString:@" "];
+    
+    NSString *tStamp = [NSString stringWithFormat:@"%@T%@",[timestampComponent objectAtIndex:0],[timestampComponent objectAtIndex:1]];
+    //Return the date string
+    return tStamp;
+}
+
++ (NSString *)normalizeDate:(NSString *)date watchIt:(BOOL)watchIt{
     
     //Split the string using the separator "."
     NSArray *splittedTimestamp = [date componentsSeparatedByString:@"T"];
     
-    //Remove the timezone
-    NSArray *splittedSeconds= [((NSString *)[splittedTimestamp objectAtIndex:1]) componentsSeparatedByString:@"."];
+    NSString *dateString;
     
-    NSArray *splittedTimezone = [((NSString *)[splittedTimestamp objectAtIndex:1]) componentsSeparatedByString:@"+"];
-    
-    //Add the +0000 Timezone
-    NSString *dateString = [NSString stringWithFormat:@"%@ %@ +%@",[splittedTimestamp objectAtIndex:0],[splittedSeconds objectAtIndex:0],[splittedTimezone objectAtIndex:1]];
+    if (watchIt) {
+        //Remove the milliseconds
+        NSArray *splittedSeconds= [((NSString *)[splittedTimestamp objectAtIndex:1]) componentsSeparatedByString:@"."];
+        
+        NSArray *splittedTimezone = [((NSString *)[splittedSeconds objectAtIndex:1]) componentsSeparatedByString:@"+"];
+        
+        //Add the +ZZZZ Timezone
+        dateString = [NSString stringWithFormat:@"%@ %@ +%@",[splittedTimestamp objectAtIndex:0],[splittedSeconds objectAtIndex:0],[splittedTimezone objectAtIndex:1]];
+    }
+    else{
+        NSArray *splittedTimezone = [((NSString *)[splittedTimestamp objectAtIndex:1]) componentsSeparatedByString:@"+"];
+        
+        //Add the +ZZZZ Timezone
+        dateString = [NSString stringWithFormat:@"%@ %@ +%@",[splittedTimestamp objectAtIndex:0],[splittedTimezone objectAtIndex:0],[splittedTimezone objectAtIndex:1]];
+    }
     
     //Return the new timestamp string
     return dateString;
@@ -92,12 +134,65 @@
     
     //Set the date format
     
-    //Pachube Date Format "2010-06-25T11:54:17.463771Z"
+    //Date Format "2010-06-25T11:54:17zzzz"
     [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss ZZZ"];
-    timestamp = [self normalizeDate:timestamp];
+    
+    if (![self isDateFromPreviousVersionOfCroMAR:timestamp]) {
+        //timestamp = [self normalizeDate:timestamp];
+    }
     
     //Set the locale 'EN' for the date formatter
     [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"EN"]];
+   
+    //Get the date object from a string date
+    NSDate *date = [dateFormatter dateFromString:timestamp];
+    
+    return date;
+}
+
+//This method is used to get a date object from a timestamp string
++ (NSDate *)dateFromTimestamp:(NSString *)timestamp watchIT:(BOOL)watchIt{
+    
+    //Initialize the date formatter
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    
+    //Set the date format
+    
+    //Date Format "2010-06-25 11:54:17 ZZZZ"
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss ZZZ"];
+    
+   
+    timestamp = [self normalizeDate:timestamp watchIt:watchIt];
+    
+        
+    //Set the locale 'EN' for the date formatter
+    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"EN"]];
+    
+    //Get the date object from a string date
+    NSDate *date = [dateFormatter dateFromString:timestamp];
+    
+    return date;
+}
+
+//This method is used to get a date object from a timestamp string
++ (NSDate *)dateFromCroMARTimestampString:(NSString *)timestamp{
+    
+    //Initialize the date formatter
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    
+    //Set the date format
+    
+    //Date Format "2010-06-25T11:54:17zzzz"
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss ZZZ"];
+    
+    //Get the local timezone
+    NSTimeZone *localTimezone = [NSTimeZone localTimeZone];
+    //Set the date formatter according to the local timezone
+    [dateFormatter setTimeZone:localTimezone];
+    
+    //Set the locale 'EN' for the date formatter
+    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"EN"]];
+    
     //Get the date object from a string date
     NSDate *date = [dateFormatter dateFromString:timestamp];
     
@@ -227,6 +322,23 @@
     CGSize size = [text sizeWithFont:[UIFont systemFontOfSize:fontSize] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
     
     return size;
+}
+
+#pragma mark -
+#pragma mark Private Methods
+
++ (BOOL)isDateFromPreviousVersionOfCroMAR:(NSString *)timestamp{
+    
+    BOOL ret = YES;
+    
+    NSArray *timestampComponents = [timestamp componentsSeparatedByString:@"T"];
+    
+    if ([timestampComponents count]) {
+        ret = NO;
+    }
+    
+    return ret;
+    
 }
 
 @end

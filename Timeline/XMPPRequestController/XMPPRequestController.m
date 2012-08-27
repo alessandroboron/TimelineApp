@@ -262,6 +262,71 @@
 }
 
 
+//This method is used to send an event(eventItem) to the XMPP stream
+- (void)sendEventItem:(id)eventItem toSpaceWithId:(NSString *)spaceId;{
+    
+    Event *event = (Event *)eventItem;
+    
+    //Set the XML stanza
+    NSXMLElement *pubsub = [NSXMLElement elementWithName:@"pubsub" xmlns:kPubsubRequest];
+    
+    NSXMLElement *publish = [NSXMLElement elementWithName:@"publish"];
+    [publish addAttributeWithName:@"node" stringValue:[NSString stringWithFormat:@"%@%@",kPubsubNodeIdentifier,spaceId]];
+    
+    [pubsub addChild:publish];
+    
+    NSXMLElement *item = [NSXMLElement elementWithName:@"item"];
+    
+
+    
+    NSXMLElement *eventXML = [NSXMLElement elementWithName:@"event"];
+    [eventXML addAttributeWithName:@"xmlns" stringValue:@"mirror:application:timeline:item"];
+    [eventXML addAttributeWithName:@"xmlns:cdt" stringValue:@"mirror:common:datatypes"];
+    [eventXML addAttributeWithName:@"xmlns:xsi" stringValue:@"http://www.w3.org/2001/XMLSchema-instance"];
+    [eventXML addAttributeWithName:@"xsi:schemaLocation" stringValue:@"mirror:application:timeline:item http://data.mirror-demo.eu/application/timeline/item-0.1.xsd"];
+    [eventXML addAttributeWithName:@"modelVersion" stringValue:@"0.1"];
+    [eventXML addAttributeWithName:@"cdmVersion" stringValue:@"1.0"];
+    [eventXML addAttributeWithName:@"publisher" stringValue:[self.xmppStream.myJID full]];
+    
+    [item addChild:eventXML];
+    
+    [publish addChild:item];
+    
+    NSXMLElement *creationInfo = [NSXMLElement elementWithName:@"creationInfo"];
+    
+    NSXMLElement *cdtDate = [NSXMLElement elementWithName:@"cdt:date" stringValue:[Utility dateDescriptionForXMPPServerWithDate:event.date]];
+    NSXMLElement *cdtPerson = [NSXMLElement elementWithName:@"cdt:person" stringValue:[NSString stringWithFormat:@"%@@%@",self.xmppUser,self.xmppDomain]];
+    
+    [creationInfo addChild:cdtDate];
+    [creationInfo addChild:cdtPerson];
+    
+    [eventXML addChild:creationInfo];
+    
+    NSXMLElement *subject = nil;
+    NSXMLElement *body = nil;
+    NSXMLElement *location = nil;
+    
+    if ([[event.eventItems objectAtIndex:0] isMemberOfClass:[SampleNote class]]) {
+        subject = [NSXMLElement elementWithName:@"subject" stringValue:((SampleNote *)[event.eventItems objectAtIndex:0]).noteTitle];
+        body = [NSXMLElement elementWithName:@"body" stringValue:((SampleNote *)[event.eventItems objectAtIndex:0]).noteText];
+        location = [NSXMLElement elementWithName:@"location"];
+        [location addAttributeWithName:@"latitude" stringValue:[NSString stringWithFormat:@"%f",event.location.coordinate.latitude]];
+        [location addAttributeWithName:@"longitude" stringValue:[NSString stringWithFormat:@"%f",event.location.coordinate.longitude]];
+#warning create attachment element for picture, video, sound
+    }
+    
+    [eventXML addChild:subject];
+    [eventXML addChild:body];
+    [eventXML addChild:location];
+    
+    XMPPIQ *iq = [XMPPIQ iqWithType:@"set" to:[XMPPJID jidWithString:kPubsubHost] elementID:kPubsubPublishIdentifier child:pubsub];
+    
+    NSLog(@"IQ PUBSUB: %@",[iq description]);
+    
+    //Send the IQ Stanza to the stream
+    [self.xmppStream sendElement:iq];
+}
+
 #pragma mark -
 #pragma mark Private Methods
 
@@ -489,6 +554,12 @@
     
     if ([itemArray count]>0) {
         
+        NSString *eventDate;
+        NSString *eventCreator;
+        NSString *eventLatitude;
+        NSString *eventLongitude;
+        SampleNote *sn = nil;
+        
         //Walk-through the items
         for (NSXMLElement *item in itemArray) {
             
@@ -500,27 +571,29 @@
                 
                 infoPresent = YES;
                 
-                //Gry the genericSensorData element
+                //Get the genericSensorData element
                 NSXMLElement *data = [item elementForName:@"genericSensorData"];
                 
                 //Get the timestamp
-                NSString *timestamp = [data attributeStringValueForName:@"timestamp"];
+               // NSString *timestamp = [data attributeStringValueForName:@"timestamp"];
+                eventDate = [data attributeStringValueForName:@"timestamp"];
                 
                 //Get the publisher of the data
-                NSString *publisher = [data attributeStringValueForName:@"publisher"];
-                
+                //NSString *publisher = [data attributeStringValueForName:@"publisher"];
+                eventCreator = [[[data attributeStringValueForName:@"publisher"] componentsSeparatedByString:@"/"] objectAtIndex:0];
                 //Get the user
-                NSString *user = (NSString *)[[publisher componentsSeparatedByString:@"@"] objectAtIndex:0];
+                //NSString *user = (NSString *)[[publisher componentsSeparatedByString:@"@"] objectAtIndex:0];
                 
                 //Get the location element
                 NSXMLElement *location = [data elementForName:@"location"];
                 
                 //Get the latitude string
-                NSString *latitude = [location attributeStringValueForName:@"latitude"];
-                
+               // NSString *latitude = [location attributeStringValueForName:@"latitude"];
+                eventLatitude = [location attributeStringValueForName:@"latitude"];
                 //Get the longitude string
-                NSString *longitude = [location attributeStringValueForName:@"longitude"];
-                
+               // NSString *longitude = [location attributeStringValueForName:@"longitude"];
+                eventLongitude = [location attributeStringValueForName:@"longitude"];
+               
                 //Get the name of its child
                 NSString *valueName = [[[data children] objectAtIndex:1] name];
                 
@@ -550,15 +623,15 @@
                 }
                 
                 //Init the location object
-                CLLocation *loc = [[CLLocation alloc] initWithLatitude:[latitude doubleValue] longitude:[longitude doubleValue]];
-                /*
-                //Initialize the watchIt data
-                WatchIt *wi = [[WatchIt alloc] initWatchItDataWithUser:user values:[values copy] timestamp:[Utility dateFromTimestampString:timestamp] infoTitle:@"WatchIt" infoLocation:loc infoTags:[tags copy] infoMediaType:InfoMediaTypeWatchit infoRating:0];
-                */
-                SampleNote *sn = [[SampleNote alloc] initSampleNoteWithTitle:@"WatchIt" text:valuesString eventItemCreator:user];
+                //CLLocation *loc = [[CLLocation alloc] initWithLatitude:[latitude doubleValue] longitude:[longitude doubleValue]];
+                
+                
+                sn = [[SampleNote alloc] initSampleNoteWithTitle:@"WatchIt" text:valuesString eventItemCreator:eventCreator];
+                
+                CLLocation *loc = [[CLLocation alloc] initWithLatitude:[eventLatitude doubleValue] longitude:[eventLongitude doubleValue]];
                 
                 //New BaseEvent
-                Event *event = [[Event alloc] initEventWithLocation:loc date:[Utility dateFromTimestampString:timestamp] shared:NO creator:user];
+                Event *event = [[Event alloc] initEventWithLocation:loc date:[Utility dateFromTimestamp:eventDate watchIT:YES] shared:NO creator:eventCreator];
                 
                 //Add the object to the base event
                 [event.eventItems addObject:sn];
@@ -568,11 +641,86 @@
                 
                 //Send the data
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"EventDidLoadNotification" object:nil userInfo:userInfo];
+
             }
+           
             //If the information is a recommendation from CroMAR
             else if ([itemName isEqualToString:@"recommendation"]){
+                infoPresent = YES;
                 
+                //Get the recommendation element
+                NSXMLElement *recommendation = [item elementForName:@"recommendation"];
+                
+                NSXMLElement *creationInfo = [recommendation elementForName:@"creationInfo"];
+                
+                eventDate = [[creationInfo elementForName:@"cdt:date"] stringValue];
+                
+                eventCreator = [[creationInfo elementForName:@"cdt:person"] stringValue];
+                
+                NSXMLElement *location = [recommendation elementForName:@"location"];
+                eventLatitude = [location attributeStringValueForName:@"latitude"];
+                eventLongitude = [location attributeStringValueForName:@"longitude"];
+                
+                NSString *notebody = [[recommendation elementForName:@"noteBody"] stringValue];
+                
+                sn = [[SampleNote alloc] initSampleNoteWithTitle:@"CroMAR" text:notebody eventItemCreator:eventCreator];
+                
+                CLLocation *loc = [[CLLocation alloc] initWithLatitude:[eventLatitude doubleValue] longitude:[eventLongitude doubleValue]];
+                
+                //New BaseEvent
+                Event *event = [[Event alloc] initEventWithLocation:loc date:[Utility dateFromCroMARTimestampString:eventDate] shared:NO creator:eventCreator];
+                
+                //Add the object to the base event
+                [event.eventItems addObject:sn];
+                
+                //Send the data
+                NSDictionary *userInfo = [NSDictionary dictionaryWithObject:event forKey:@"userInfo"];
+                
+                //Send the data
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"EventDidLoadNotification" object:nil userInfo:userInfo];
+
             }
+            
+            //If the information comes from the timelineApp
+            else if ([itemName isEqualToString:@"event"]){
+                infoPresent = YES;
+            
+                //Get the event element
+                NSXMLElement *eventXML = [item elementForName:@"event"];
+            
+                //Get the creation info element
+                NSXMLElement *creationInfo = [eventXML elementForName:@"creationInfo"];
+                
+                eventDate = [[creationInfo elementForName:@"cdt:date"] stringValue];
+                
+                eventCreator = [[creationInfo elementForName:@"cdt:person"] stringValue];
+                
+                NSXMLElement *location = [eventXML elementForName:@"location"];
+                eventLatitude = [location attributeStringValueForName:@"latitude"];
+                eventLongitude = [location attributeStringValueForName:@"longitude"];
+                
+                NSString *subject = [[eventXML elementForName:@"subject"] stringValue];
+                NSString *body = [[eventXML elementForName:@"body"] stringValue];
+           
+                sn = [[SampleNote alloc] initSampleNoteWithTitle:subject text:body eventItemCreator:eventCreator];
+                
+                CLLocation *loc = [[CLLocation alloc] initWithLatitude:[eventLatitude doubleValue] longitude:[eventLongitude doubleValue]];
+                
+                //New BaseEvent
+                Event *event = [[Event alloc] initEventWithLocation:loc date:[Utility dateFromTimestamp:eventDate watchIT:NO] shared:NO creator:eventCreator];
+                
+                //Add the object to the base event
+                [event.eventItems addObject:sn];
+                
+                //Send the data
+                NSDictionary *userInfo = [NSDictionary dictionaryWithObject:event forKey:@"userInfo"];
+                
+                //Send the data
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"EventDidLoadNotification" object:nil userInfo:userInfo];
+            
+            }
+            
+                         
         }
         if (!infoPresent) {
             [Utility showAlertViewWithTitle:@"Mirror Space Service" message:@"Datatype not recognized by TimelineApp." cancelButtonTitle:@"Dismiss"];
@@ -708,7 +856,7 @@
         }
         
         else if([iqId isEqualToString:kPubsubPublishIdentifier]){
-            [Utility showAlertViewWithTitle:@"Mirror Space Service" message:@"Note shared with success." cancelButtonTitle:@"Dismiss"];
+            [Utility showAlertViewWithTitle:@"Mirror Space Service" message:@"Event shared with success." cancelButtonTitle:@"Dismiss"];
         }
         
         else if ([iqId isEqualToString:kPubsubSubscriberIdentifier]){
@@ -763,6 +911,8 @@
         }
         
         else if([iqId isEqualToString:kPubsubPublishIdentifier]){
+            NSXMLElement *error = [iq childErrorElement];
+            NSLog(@"Subscription Error: %@, %@",[error attributeStringValueForName:@"code"],[error description]);
              [Utility showAlertViewWithTitle:@"Mirror Space Service" message:@"Note sharing went wrong. Please try again." cancelButtonTitle:@"Dismiss"];
             
         }
@@ -807,70 +957,7 @@
     
     NSLog(@"MSG: %@",[message description]);
 }
-
-#pragma mark -
-#pragma mark XMPPRequestControllerDelegate
-
-/*
-
-//This method is used to send a note to the XMPP stream
-- (void)sendNote:(id)note toSpace:(Space *)space{
-   
-    //Get the note
-    Note *n = (Note *)note;
-    
-    //Set the XML stanza
-    NSXMLElement *pubsub = [NSXMLElement elementWithName:@"pubsub" xmlns:kPubsubRequest];
-    
-    NSXMLElement *publish = [NSXMLElement elementWithName:@"publish"];
-    [publish addAttributeWithName:@"node" stringValue:[NSString stringWithFormat:@"%@%@",kPubsubNodeIdentifier,space.spaceId]];
-    
-    [pubsub addChild:publish];
-    
-    NSXMLElement *item = [NSXMLElement elementWithName:@"item"];
-    
-    NSXMLElement *recommendation = [NSXMLElement elementWithName:@"recommendation"];
-    [recommendation addAttributeWithName:@"xmlns:xsi" stringValue:@"http://www.w3.org/2001/XMLSchema-instance"];
-    [recommendation addAttributeWithName:@"xsi:schemaLocation" stringValue:@"mirror:application:cromar:recommendation http://data.mirror-demo.eu/application/cromar/recommendation-0.1.xsd"];
-    [recommendation addAttributeWithName:@"xmlns" stringValue:@"mirror:application:cromar:recommendation"];
-    [recommendation addAttributeWithName:@"xmlns:cdt" stringValue:@"mirror:common:datatypes"];
-    [recommendation addAttributeWithName:@"modelVersion" stringValue:@"0.1"];
-    [recommendation addAttributeWithName:@"cdmVersion" stringValue:@"1.0"];
-    [recommendation addAttributeWithName:@"publisher" stringValue:[self.xmppStream.myJID full]];
-    
-    [item addChild:recommendation];
-    
-    [publish addChild:item];
-    
-    NSXMLElement *creationInfo = [NSXMLElement elementWithName:@"creationInfo"];
-    
-    NSXMLElement *cdtDate = [NSXMLElement elementWithName:@"cdt:date" stringValue:[n.date description]];
-    NSXMLElement *cdtPerson = [NSXMLElement elementWithName:@"cdt:person" stringValue:[NSString stringWithFormat:@"%@@%@",self.xmppUser,self.xmppDomain]];
-    
-    [creationInfo addChild:cdtDate];
-    [creationInfo addChild:cdtPerson];
-    
-    [recommendation addChild:creationInfo];
-    
-    NSXMLElement *location = [NSXMLElement elementWithName:@"location"];
-    [location addAttributeWithName:@"latitude" stringValue:[NSString stringWithFormat:@"%f",n.gpsLocation.latitude]];
-    [location addAttributeWithName:@"longitude" stringValue:[NSString stringWithFormat:@"%f",n.gpsLocation.longitude]];
-    
-    [recommendation addChild:location];
-    
-    NSXMLElement *noteBody = [NSXMLElement elementWithName:@"noteBody" stringValue:n.contentString];
-    
-    [recommendation addChild:noteBody];
-    
-    XMPPIQ *iq = [XMPPIQ iqWithType:@"set" to:[XMPPJID jidWithString:kPubsubHost] elementID:kPubsubPublishIdentifier child:pubsub];
-    
-    NSLog(@"IQ PUBSUB: %@",[iq description]);
-    
-    //Send the IQ Stanza to the stream
-    [self.xmppStream sendElement:iq];
-}
  
- */
 
 #pragma mark -
 #pragma mark Server Status

@@ -14,6 +14,8 @@
 #import "Event.h"
 #import "NewNoteViewController.h"
 #import "SampleNote.h"
+#import "ShareEventViewController.h"
+#import "XMPPRequestController.h"
 
 #define FONT_SIZE 16.0f
 #define CELL_CONTENT_WIDTH 265.0f
@@ -31,6 +33,7 @@
 
 
 - (IBAction)doneButtonPressed:(id)sender;
+- (IBAction)shareButtonPressed:(id)sender;
 - (void)performReverseGeocoding;
 
 @end
@@ -98,6 +101,18 @@
         nnvc.delegate = self;
         nnvc.baseEvent = self.event;
     }
+    else if ([segue.identifier isEqualToString:@"shareEventIdentifier"]){
+        UINavigationController *navController = (UINavigationController *)segue.destinationViewController;
+        
+        //Set the background of the navigation bar
+        [navController.navigationBar setBackgroundImage:[UIImage imageNamed:@"navigationBarBackground.png"] forBarMetrics:UIBarMetricsDefault];
+        //Get the controller to show
+        ShareEventViewController *sevc = (ShareEventViewController *) [navController.viewControllers objectAtIndex:0];
+        //Set the delegate
+        sevc.delegate = self;
+        //Set the sharing delegate
+        sevc.sharingDelegate = self;
+    }
 }
 
 #pragma mark -
@@ -106,6 +121,16 @@
 - (IBAction)doneButtonPressed:(id)sender{
     
     [self.delegate dismissModalViewControllerAndUpdate];
+}
+
+- (IBAction)shareButtonPressed:(id)sender{
+    
+    if ([Utility isHostReachable] && [Utility isUserAuthenticatedOnXMPPServer]) {
+        [self performSegueWithIdentifier:@"shareEventIdentifier" sender:self];
+    }
+    else{
+        [Utility showAlertViewWithTitle:@"Mirror Space Service" message:@"Not connected to the Mirror Space Service" cancelButtonTitle:@"Dismiss"];
+    }
 }
 
 #pragma mark -
@@ -150,8 +175,16 @@
         [self.event.eventItems addObject:sender];
         [self.itemsTableView reloadData];
     }];
-    
-    
+}
+
+#pragma mark -
+#pragma mark SharingViewControllerDelegate
+
+- (void)shareEventToSpaceWithId:(NSString *)spaceId{
+    [self dismissViewControllerAnimated:YES completion:^{
+        XMPPRequestController *rc = [Utility xmppRequestController];
+        [rc sendEventItem:self.event toSpaceWithId:spaceId];
+    }];
 }
 
 

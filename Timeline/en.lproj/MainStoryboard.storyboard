@@ -102,9 +102,6 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <connections>
-                                    <segue destination="Yi4-LT-wOh" kind="modal" id="Gyk-Eu-39J"/>
-                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="0Jk-lQ-LFe" userLabel="videoButton">
                                 <rect key="frame" x="275" y="129" width="44" height="44"/>
@@ -117,9 +114,6 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <connections>
-                                    <segue destination="N5y-Xm-QZh" kind="modal" id="XzA-VD-phQ"/>
-                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="n9u-sK-Vhu" userLabel="audioButton">
                                 <rect key="frame" x="275" y="175" width="44" height="44"/>
@@ -132,9 +126,6 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <connections>
-                                    <segue destination="Sht-To-Zce" kind="modal" id="zxD-OK-9MC"/>
-                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="l8b-9D-kF0" userLabel="moodButton">
                                 <rect key="frame" x="275" y="221" width="44" height="44"/>
@@ -147,9 +138,6 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <connections>
-                                    <segue destination="lxK-Sz-XJR" kind="modal" id="6se-Ho-7AH"/>
-                                </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="e9g-1Y-Kcs" userLabel="zoomInButton">
                                 <rect key="frame" x="275" y="267" width="44" height="44"/>
@@ -407,13 +395,16 @@
                                 <rect key="frame" x="275" y="241" width="44" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal">
+                                <state key="normal" image="share.png">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="shareButtonPressed:" destination="ZFY-J7-MGz" eventType="touchUpInside" id="4Kh-Uz-2NE"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="gfT-Uv-51E">
                                 <rect key="frame" x="275" y="287" width="44" height="44"/>
@@ -506,10 +497,57 @@
                         <outlet property="eventLocationLabel" destination="KKA-Bu-tAL" id="mfe-Qc-3PN"/>
                         <outlet property="itemsTableView" destination="1fu-vl-aBy" id="3Yv-b7-3t9"/>
                         <outlet property="navigationBar" destination="bMv-0S-Iwn" id="a1Z-pC-3Qm"/>
+                        <segue destination="tcr-Mm-HFP" kind="modal" identifier="shareEventIdentifier" id="TNr-lb-go6"/>
                     </connections>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="2862" y="-532"/>
+        </scene>
+        <!--Share Event View Controller - Sharing-->
+        <scene sceneID="Tn4-i4-Nn6">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XkH-Ks-WSH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="0BA-4r-yn3" customClass="ShareEventViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="6mT-yw-qo4">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="vLu-zr-DIs">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="timelineCellIdentifier" id="UV1-R7-5WF">
+                                        <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="0BA-4r-yn3" id="cup-5M-NbQ"/>
+                                    <outlet property="delegate" destination="0BA-4r-yn3" id="gVt-o6-SOY"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Sharing" id="BvY-9k-cD1">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="H2C-gS-GvC">
+                            <connections>
+                                <action selector="cancelButtonPressed:" destination="0BA-4r-yn3" id="XM4-jL-9gS"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="timelinesTableView" destination="vLu-zr-DIs" id="rzr-pd-kPF"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="3935" y="-356"/>
         </scene>
         <!--New Note View Controller-->
         <scene sceneID="JNU-Nh-9Xu">
@@ -1199,6 +1237,24 @@
             </objects>
             <point key="canvasLocation" x="594" y="1350"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Shn-fm-xhT">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VLc-LW-T8q" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <navigationController id="tcr-Mm-HFP" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ZFp-CM-9MC">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="0BA-4r-yn3" kind="relationship" relationship="rootViewController" id="c5a-9a-Hzn"/>
+                    </connections>
+                </navigationController>
+            </objects>
+            <point key="canvasLocation" x="3409" y="-356"/>
+        </scene>
     </scenes>
     <resources>
         <image name="audio.png" width="12" height="24"/>
@@ -1209,6 +1265,7 @@
         <image name="picture.png" width="26" height="22"/>
         <image name="redButton.png" width="20" height="20"/>
         <image name="settings.png" width="26" height="26"/>
+        <image name="share.png" width="24" height="16"/>
         <image name="timelines.png" width="27" height="19"/>
         <image name="video.png" width="20" height="25"/>
         <image name="zoom.png" width="24" height="24"/>
@@ -1218,6 +1275,7 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EventDetailViewController.h"/>
             <relationships>
                 <relationship kind="action" name="doneButtonPressed:"/>
+                <relationship kind="action" name="shareButtonPressed:"/>
                 <relationship kind="outlet" name="eventDateLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="eventLocationLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="itemsTableView" candidateClass="UITableView"/>
@@ -1280,6 +1338,13 @@
                 <relationship kind="outlet" name="userTextField" candidateClass="UITextField"/>
             </relationships>
         </class>
+        <class className="ShareEventViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ShareEventViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="cancelButtonPressed:"/>
+                <relationship kind="outlet" name="timelinesTableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
         <class className="TimelineViewCell" superclassName="UITableViewCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/TimelineViewCell.h"/>
             <relationships>
@@ -1303,6 +1368,6 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="o1b-ga-HKZ"/>
+        <segue reference="nBJ-E9-XSk"/>
     </inferredMetricsTieBreakers>
 </document>

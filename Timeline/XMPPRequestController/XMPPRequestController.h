@@ -34,6 +34,9 @@ static int nodeIdRequestNumber=0;
 - (void)channelsForSpaceRequest:(NSString *)spaceId;
 - (void)retrieveAllItemsForSpace:(NSString *)spaceId;
 
+- (void)sendEventItem:(id)eventItem toSpaceWithId:(NSString *)spaceId;
+
+
 //Server status
 - (BOOL)isXMPPServerConnected;
 @end

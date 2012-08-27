@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "ModalViewControllerDelegate.h"
+#import "SharingViewControllerDelegate.h"
 
 @class Event;
 
-@interface EventDetailViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,ModalViewControllerDelegate>
+@interface EventDetailViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,ModalViewControllerDelegate,SharingViewControllerDelegate>
 
 @property (weak, nonatomic) id<ModalViewControllerDelegate> delegate;
 @property (strong, nonatomic) Event *event;

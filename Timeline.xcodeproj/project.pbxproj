@@ -115,6 +115,11 @@
 		D2E622B415DCF5B0009FCEBB /* timelineBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = D2E622B315DCF5B0009FCEBB /* timelineBackground.png */; };
 		D2E622B615DCF5E4009FCEBB /* folder.png in Resources */ = {isa = PBXBuildFile; fileRef = D2E622B515DCF5E4009FCEBB /* folder.png */; };
 		D2E622B815DCFAFF009FCEBB /* timelineBackground2.png in Resources */ = {isa = PBXBuildFile; fileRef = D2E622B715DCFAFF009FCEBB /* timelineBackground2.png */; };
+		D2EA0C2115EB6EF20084B587 /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = D2EA0C1D15EB6EF20084B587 /* share.png */; };
+		D2EA0C2215EB6EF20084B587 /* share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2EA0C1E15EB6EF20084B587 /* share@2x.png */; };
+		D2EA0C2315EB6EF20084B587 /* tag.png in Resources */ = {isa = PBXBuildFile; fileRef = D2EA0C1F15EB6EF20084B587 /* tag.png */; };
+		D2EA0C2415EB6EF20084B587 /* tag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2EA0C2015EB6EF20084B587 /* tag@2x.png */; };
+		D2EA0C2815EB72BC0084B587 /* ShareEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2EA0C2715EB72BC0084B587 /* ShareEventViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -299,6 +304,13 @@
 		D2E622B315DCF5B0009FCEBB /* timelineBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = timelineBackground.png; sourceTree = "<group>"; };
 		D2E622B515DCF5E4009FCEBB /* folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = folder.png; sourceTree = "<group>"; };
 		D2E622B715DCFAFF009FCEBB /* timelineBackground2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = timelineBackground2.png; sourceTree = "<group>"; };
+		D2EA0C1D15EB6EF20084B587 /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share.png; sourceTree = "<group>"; };
+		D2EA0C1E15EB6EF20084B587 /* share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share@2x.png"; sourceTree = "<group>"; };
+		D2EA0C1F15EB6EF20084B587 /* tag.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tag.png; sourceTree = "<group>"; };
+		D2EA0C2015EB6EF20084B587 /* tag@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tag@2x.png"; sourceTree = "<group>"; };
+		D2EA0C2615EB72BC0084B587 /* ShareEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareEventViewController.h; path = TimelineViewController/EventDetailViewController/ShareEventViewController/ShareEventViewController.h; sourceTree = "<group>"; };
+		D2EA0C2715EB72BC0084B587 /* ShareEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareEventViewController.m; path = TimelineViewController/EventDetailViewController/ShareEventViewController/ShareEventViewController.m; sourceTree = "<group>"; };
+		D2EA0C2E15EB89A60084B587 /* SharingViewControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SharingViewControllerDelegate.h; path = Protocols/SharingViewControllerDelegate.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -325,6 +337,10 @@
 		D226D1C315DA9BE500227FAF /* TimelineMenu */ = {
 			isa = PBXGroup;
 			children = (
+				D2EA0C1D15EB6EF20084B587 /* share.png */,
+				D2EA0C1E15EB6EF20084B587 /* share@2x.png */,
+				D2EA0C1F15EB6EF20084B587 /* tag.png */,
+				D2EA0C2015EB6EF20084B587 /* tag@2x.png */,
 				D2B0A46415E4ECDC00150CC6 /* user.png */,
 				D2B0A46515E4ECDC00150CC6 /* user@2x.png */,
 				D226D1C415DA9BE500227FAF /* 16-plus.png */,
@@ -415,6 +431,7 @@
 			children = (
 				D262252815E7A36100F55FB1 /* EventDetailViewController.h */,
 				D262252915E7A36100F55FB1 /* EventDetailViewController.m */,
+				D2EA0C2915EB72C20084B587 /* ShareEventViewController */,
 			);
 			name = EventDetailViewController;
 			sourceTree = "<group>";
@@ -464,6 +481,7 @@
 			isa = PBXGroup;
 			children = (
 				D285B55115D5457A00AFC1C7 /* ModalViewControllerDelegate.h */,
+				D2EA0C2E15EB89A60084B587 /* SharingViewControllerDelegate.h */,
 			);
 			name = Protocols;
 			sourceTree = "<group>";
@@ -947,6 +965,15 @@
 			path = TimelineBackground;
 			sourceTree = "<group>";
 		};
+		D2EA0C2915EB72C20084B587 /* ShareEventViewController */ = {
+			isa = PBXGroup;
+			children = (
+				D2EA0C2615EB72BC0084B587 /* ShareEventViewController.h */,
+				D2EA0C2715EB72BC0084B587 /* ShareEventViewController.m */,
+			);
+			name = ShareEventViewController;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1035,6 +1062,10 @@
 				D262253A15EA758100F55FB1 /* eventItemContainer.png in Resources */,
 				D262253C15EA75AF00F55FB1 /* eventItemContainer@2x.png in Resources */,
 				D262253E15EA7E9F00F55FB1 /* folderPS.png in Resources */,
+				D2EA0C2115EB6EF20084B587 /* share.png in Resources */,
+				D2EA0C2215EB6EF20084B587 /* share@2x.png in Resources */,
+				D2EA0C2315EB6EF20084B587 /* tag.png in Resources */,
+				D2EA0C2415EB6EF20084B587 /* tag@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1106,6 +1137,7 @@
 				D2B0A46115E4E82D00150CC6 /* GroupMembersViewController.m in Sources */,
 				D2B0A47015E4F98600150CC6 /* MBProgressHUD.m in Sources */,
 				D262252A15E7A36100F55FB1 /* EventDetailViewController.m in Sources */,
+				D2EA0C2815EB72BC0084B587 /* ShareEventViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1187,6 +1219,8 @@
 		D2CD817815D2AEC100094D72 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer: Simone Mora (H2E2UNTGB2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Simone Mora (H2E2UNTGB2)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Timeline/Timeline-Prefix.pch";
 				INFOPLIST_FILE = "Timeline/Timeline-Info.plist";
@@ -1195,6 +1229,8 @@
 					"\"$(SRCROOT)/Timeline/XMPPFramework/Vendor/libidin\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "A369CAD7-1BD2-4400-8551-638B5C57EA5F";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A369CAD7-1BD2-4400-8551-638B5C57EA5F";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1202,6 +1238,8 @@
 		D2CD817915D2AEC100094D72 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Simone Mora";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Simone Mora";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Timeline/Timeline-Prefix.pch";
 				INFOPLIST_FILE = "Timeline/Timeline-Info.plist";
@@ -1210,6 +1248,8 @@
 					"\"$(SRCROOT)/Timeline/XMPPFramework/Vendor/libidin\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "A7A799A9-7134-4DE4-BBCE-2DE00FA19BE9";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A7A799A9-7134-4DE4-BBCE-2DE00FA19BE9";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

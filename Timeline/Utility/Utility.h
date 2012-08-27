@@ -15,14 +15,23 @@
 //This method is used to get a MD5 representation of a string
 + (NSString *)MD5ForString:(NSString *)string;
 
-//This method is used to get the string rapresentation of a date formatted in a certain way
+//This method is used to get the string representation of a date formatted in a certain way
 + (NSString *)dateTimeDescriptionWithLocaleIdentifier:(NSDate *)date;
 
-//This method is used to get the string rapresentation of a date formatted in a certain way
+//This method is used to get the string representation of a date formatted in a certain way
 + (NSString *)dateDescriptionForEventDetailsWithDate:(NSDate *)date;
+
+//This method is used to get the string representation of a date formatted to be sent through XMPP
++ (NSString *)dateDescriptionForXMPPServerWithDate:(NSDate *)date;
 
 //This method is used to get a date object from a timestamp string
 + (NSDate *)dateFromTimestampString:(NSString *)timestamp;
+
+//This method is used to get a date object from a timestamp string
++ (NSDate *)dateFromTimestamp:(NSString *)timestamp watchIT:(BOOL)watchIt;
+
+//This method is used to get a date object from a timestamp string
++ (NSDate *)dateFromCroMARTimestampString:(NSString *)timestamp;
 
 //This method is used to show an alert view with custom title, message and cancel button
 + (void)showAlertViewWithTitle:(NSString *)title message:(NSString *)message cancelButtonTitle:(NSString *)cancelButtonTitle;
