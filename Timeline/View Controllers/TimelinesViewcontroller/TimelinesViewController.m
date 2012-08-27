@@ -78,6 +78,9 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+#pragma mark -
+#pragma mark Segue Methods
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
     //If new timeline button is tapped
@@ -100,8 +103,13 @@
         TimelineViewController *tvc =  (TimelineViewController *)segue.destinationViewController;
         //Set the title of the navigation bar
         tvc.navigationItem.title = ((Timeline *)[self.timelinesArray objectAtIndex:indexPath.row]).title;
+        //Set the timeline(space) id for the corrisponding timeline(space)
+        tvc.spaceId = ((Timeline *)[self.timelinesArray objectAtIndex:indexPath.row]).tId;
+        
+        /*
         //Set the events array for the corresponding timeline
         tvc.eventsArray = ((Timeline *)[self.timelinesArray objectAtIndex:indexPath.row]).baseEvents;
+         */
  
     }
 }
@@ -156,7 +164,7 @@
             shared = YES;
         }
         //Map the space object in a timeline object
-        [self.timelinesArray addObject:[[Timeline alloc] initTimelineWithTitle:sp.spaceName creator:nil shared:shared]];
+        [self.timelinesArray addObject:[[Timeline alloc] initTimelineWithId:sp.spaceId title:sp.spaceName creator:nil shared:shared]];
         
         //Update the tableview
         [self.tableView reloadData];

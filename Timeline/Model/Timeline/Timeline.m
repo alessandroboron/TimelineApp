@@ -33,6 +33,17 @@
     return self;
 }
 
+- (id)initTimelineWithId:(NSString *)timelineId title:(NSString *)title creator:(NSString *)creator shared:(BOOL)shared{
+    
+    self = [self initTimelineWithTitle:title creator:creator shared:shared];
+    
+    if (self) {
+        _tId = timelineId;
+    }
+    
+    return self;
+}
+
 //This method is used to return the string representation of the sharing attribute
 - (NSString *)sharedDescription{
     

@@ -28,9 +28,12 @@
 		D226D1FC15DBAB2E00227FAF /* TimelineViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D226D1FB15DBAB2D00227FAF /* TimelineViewCell.m */; };
 		D226D20015DBAD3000227FAF /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = D226D1FF15DBAD2F00227FAF /* Utility.m */; };
 		D226D20A15DBDC9C00227FAF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D226D20915DBDC9C00227FAF /* CoreLocation.framework */; };
-		D244B49315E4CA0A0015A14A /* Info.m in Sources */ = {isa = PBXBuildFile; fileRef = D244B48C15E4CA0A0015A14A /* Info.m */; };
-		D244B49415E4CA0A0015A14A /* WatchItValue.m in Sources */ = {isa = PBXBuildFile; fileRef = D244B49015E4CA0A0015A14A /* WatchItValue.m */; };
-		D244B49515E4CA0A0015A14A /* watchIt.m in Sources */ = {isa = PBXBuildFile; fileRef = D244B49215E4CA0A0015A14A /* watchIt.m */; };
+		D262252A15E7A36100F55FB1 /* EventDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D262252915E7A36100F55FB1 /* EventDetailViewController.m */; };
+		D262253615EA550500F55FB1 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D262253515EA550500F55FB1 /* AddressBook.framework */; };
+		D262253815EA676000F55FB1 /* eventDetailContainer.png in Resources */ = {isa = PBXBuildFile; fileRef = D262253715EA676000F55FB1 /* eventDetailContainer.png */; };
+		D262253A15EA758100F55FB1 /* eventItemContainer.png in Resources */ = {isa = PBXBuildFile; fileRef = D262253915EA758100F55FB1 /* eventItemContainer.png */; };
+		D262253C15EA75AF00F55FB1 /* eventItemContainer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D262253B15EA75AF00F55FB1 /* eventItemContainer@2x.png */; };
+		D262253E15EA7E9F00F55FB1 /* folderPS.png in Resources */ = {isa = PBXBuildFile; fileRef = D262253D15EA7E9F00F55FB1 /* folderPS.png */; };
 		D285B53A15D5301D00AFC1C7 /* groups.png in Resources */ = {isa = PBXBuildFile; fileRef = D285B53215D5301D00AFC1C7 /* groups.png */; };
 		D285B53B15D5301D00AFC1C7 /* groups@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D285B53315D5301D00AFC1C7 /* groups@2x.png */; };
 		D285B53C15D5301D00AFC1C7 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = D285B53415D5301D00AFC1C7 /* settings.png */; };
@@ -143,12 +146,13 @@
 		D226D1FE15DBAD2E00227FAF /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utility.h; path = Utility/Utility.h; sourceTree = "<group>"; };
 		D226D1FF15DBAD2F00227FAF /* Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Utility.m; path = Utility/Utility.m; sourceTree = "<group>"; };
 		D226D20915DBDC9C00227FAF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		D244B48B15E4CA0A0015A14A /* Info.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Info.h; sourceTree = "<group>"; };
-		D244B48C15E4CA0A0015A14A /* Info.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Info.m; sourceTree = "<group>"; };
-		D244B48F15E4CA0A0015A14A /* WatchItValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchItValue.h; sourceTree = "<group>"; };
-		D244B49015E4CA0A0015A14A /* WatchItValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchItValue.m; sourceTree = "<group>"; };
-		D244B49115E4CA0A0015A14A /* watchIt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = watchIt.h; sourceTree = "<group>"; };
-		D244B49215E4CA0A0015A14A /* watchIt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = watchIt.m; sourceTree = "<group>"; };
+		D262252815E7A36100F55FB1 /* EventDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventDetailViewController.h; path = TimelineViewController/EventDetailViewController/EventDetailViewController.h; sourceTree = "<group>"; };
+		D262252915E7A36100F55FB1 /* EventDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EventDetailViewController.m; path = TimelineViewController/EventDetailViewController/EventDetailViewController.m; sourceTree = "<group>"; };
+		D262253515EA550500F55FB1 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		D262253715EA676000F55FB1 /* eventDetailContainer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = eventDetailContainer.png; sourceTree = "<group>"; };
+		D262253915EA758100F55FB1 /* eventItemContainer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = eventItemContainer.png; sourceTree = "<group>"; };
+		D262253B15EA75AF00F55FB1 /* eventItemContainer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "eventItemContainer@2x.png"; sourceTree = "<group>"; };
+		D262253D15EA7E9F00F55FB1 /* folderPS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = folderPS.png; sourceTree = "<group>"; };
 		D285B53215D5301D00AFC1C7 /* groups.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = groups.png; sourceTree = "<group>"; };
 		D285B53315D5301D00AFC1C7 /* groups@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "groups@2x.png"; sourceTree = "<group>"; };
 		D285B53415D5301D00AFC1C7 /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
@@ -302,6 +306,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D262253615EA550500F55FB1 /* AddressBook.framework in Frameworks */,
 				D294744E15E248850016A093 /* SystemConfiguration.framework in Frameworks */,
 				D294743315E238290016A093 /* libresolv.dylib in Frameworks */,
 				D29473B715E235BD0016A093 /* Security.framework in Frameworks */,
@@ -353,6 +358,7 @@
 			children = (
 				D226D1E615DAB9F600227FAF /* TimelineViewController.h */,
 				D226D1E715DAB9F600227FAF /* TimelineViewController.m */,
+				D262252C15E7A3B600F55FB1 /* EventDetailViewController */,
 			);
 			name = TimelineViewController;
 			sourceTree = "<group>";
@@ -404,34 +410,13 @@
 			name = Utility;
 			sourceTree = "<group>";
 		};
-		D244B48A15E4CA0A0015A14A /* Info */ = {
+		D262252C15E7A3B600F55FB1 /* EventDetailViewController */ = {
 			isa = PBXGroup;
 			children = (
-				D244B48B15E4CA0A0015A14A /* Info.h */,
-				D244B48C15E4CA0A0015A14A /* Info.m */,
-				D244B48D15E4CA0A0015A14A /* WatchIt */,
+				D262252815E7A36100F55FB1 /* EventDetailViewController.h */,
+				D262252915E7A36100F55FB1 /* EventDetailViewController.m */,
 			);
-			name = Info;
-			path = Model/Info;
-			sourceTree = "<group>";
-		};
-		D244B48D15E4CA0A0015A14A /* WatchIt */ = {
-			isa = PBXGroup;
-			children = (
-				D244B49115E4CA0A0015A14A /* watchIt.h */,
-				D244B49215E4CA0A0015A14A /* watchIt.m */,
-				D244B48E15E4CA0A0015A14A /* Value */,
-			);
-			path = WatchIt;
-			sourceTree = "<group>";
-		};
-		D244B48E15E4CA0A0015A14A /* Value */ = {
-			isa = PBXGroup;
-			children = (
-				D244B48F15E4CA0A0015A14A /* WatchItValue.h */,
-				D244B49015E4CA0A0015A14A /* WatchItValue.m */,
-			);
-			path = Value;
+			name = EventDetailViewController;
 			sourceTree = "<group>";
 		};
 		D285B52F15D5301D00AFC1C7 /* images */ = {
@@ -507,7 +492,6 @@
 		D285B56115D5505300AFC1C7 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				D244B48A15E4CA0A0015A14A /* Info */,
 				D285B56215D5505C00AFC1C7 /* Timeline */,
 				D285B56615D550A300AFC1C7 /* BaseEvent */,
 				D285B56A15D550D200AFC1C7 /* Event */,
@@ -892,6 +876,7 @@
 		D2CD815C15D2AEC000094D72 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D262253515EA550500F55FB1 /* AddressBook.framework */,
 				D294744D15E248850016A093 /* SystemConfiguration.framework */,
 				D294743215E238290016A093 /* libresolv.dylib */,
 				D29473B615E235BD0016A093 /* Security.framework */,
@@ -941,6 +926,7 @@
 		D2E622B015DCF580009FCEBB /* Timeline */ = {
 			isa = PBXGroup;
 			children = (
+				D262253D15EA7E9F00F55FB1 /* folderPS.png */,
 				D2E622B515DCF5E4009FCEBB /* folder.png */,
 			);
 			path = Timeline;
@@ -949,6 +935,9 @@
 		D2E622B215DCF5B0009FCEBB /* TimelineBackground */ = {
 			isa = PBXGroup;
 			children = (
+				D262253B15EA75AF00F55FB1 /* eventItemContainer@2x.png */,
+				D262253915EA758100F55FB1 /* eventItemContainer.png */,
+				D262253715EA676000F55FB1 /* eventDetailContainer.png */,
 				D294745915E29A950016A093 /* navigationBarBackground.png */,
 				D294738815E159180016A093 /* cellContainer.png */,
 				D294738915E159180016A093 /* cellContainer@2x.png */,
@@ -1042,6 +1031,10 @@
 				D294745A15E29A950016A093 /* navigationBarBackground.png in Resources */,
 				D2B0A46615E4ECDC00150CC6 /* user.png in Resources */,
 				D2B0A46715E4ECDC00150CC6 /* user@2x.png in Resources */,
+				D262253815EA676000F55FB1 /* eventDetailContainer.png in Resources */,
+				D262253A15EA758100F55FB1 /* eventItemContainer.png in Resources */,
+				D262253C15EA75AF00F55FB1 /* eventItemContainer@2x.png in Resources */,
+				D262253E15EA7E9F00F55FB1 /* folderPS.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1110,11 +1103,9 @@
 				D294743B15E238810016A093 /* Space.m in Sources */,
 				D294743C15E238810016A093 /* XMPPRequestController.m in Sources */,
 				D294744C15E247410016A093 /* Reachability.m in Sources */,
-				D244B49315E4CA0A0015A14A /* Info.m in Sources */,
-				D244B49415E4CA0A0015A14A /* WatchItValue.m in Sources */,
-				D244B49515E4CA0A0015A14A /* watchIt.m in Sources */,
 				D2B0A46115E4E82D00150CC6 /* GroupMembersViewController.m in Sources */,
 				D2B0A47015E4F98600150CC6 /* MBProgressHUD.m in Sources */,
+				D262252A15E7A36100F55FB1 /* EventDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

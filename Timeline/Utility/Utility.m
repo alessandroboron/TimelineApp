@@ -27,7 +27,30 @@
     //Initialize the date formatter
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     
-    [dateFormatter setDateFormat:@"d/MM/yyyy HH:mm"];
+    [dateFormatter setDateFormat:@"dd/MM/yyyy HH:mm"];
+    
+    //Get the local timezone
+    NSTimeZone *localTimezone = [NSTimeZone localTimeZone];
+    //Set the date formatter according to the local timezone
+    [dateFormatter setTimeZone:localTimezone];
+    
+    //Set the locale 'EN' for the date formatter
+    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"EN"]];
+    
+    //Convert the date object to a string. Date UTC Timezone -> String Local Timezone
+    NSString *timeStamp = [dateFormatter stringFromDate:date];
+    
+    //Return the date string
+    return timeStamp;
+}
+
+//This method is used to get the string rapresentation of a date formatted in a certain way
++ (NSString *)dateDescriptionForEventDetailsWithDate:(NSDate *)date{
+    
+    //Initialize the date formatter
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    
+    [dateFormatter setDateFormat:@"dd MMM yyyy HH:mm:ss"];
     
     //Get the local timezone
     NSTimeZone *localTimezone = [NSTimeZone localTimeZone];
@@ -189,6 +212,21 @@
     
     // Add at start of requestFinished AND requestFailed
     [MBProgressHUD hideHUDForView:theView animated:YES];
+}
+
+#pragma mark -
+#pragma mark UITableView Utility Methods
+
+//This method is used to get the size of a string based on the font used
++ (CGSize)sizeOfText:(NSString *)text width:(float)width fontSize:(float)fontSize{
+    
+    //Set the constraint where the text is put
+    CGSize constraint = CGSizeMake(width, 20000.0f);
+    
+    //Compute the size of the text
+    CGSize size = [text sizeWithFont:[UIFont systemFontOfSize:fontSize] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+    
+    return size;
 }
 
 @end

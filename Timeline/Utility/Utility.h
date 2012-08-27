@@ -18,6 +18,9 @@
 //This method is used to get the string rapresentation of a date formatted in a certain way
 + (NSString *)dateTimeDescriptionWithLocaleIdentifier:(NSDate *)date;
 
+//This method is used to get the string rapresentation of a date formatted in a certain way
++ (NSString *)dateDescriptionForEventDetailsWithDate:(NSDate *)date;
+
 //This method is used to get a date object from a timestamp string
 + (NSDate *)dateFromTimestampString:(NSString *)timestamp;
 
@@ -47,5 +50,8 @@
 
 //Used to hide the activity indicator on the screen
 + (void)dismissActivityIndicator:(UIView *)theView;
+
+//This method is used to get the size of a string based on the font used
++ (CGSize)sizeOfText:(NSString *)text width:(float)width fontSize:(float)fontSize;
 
 @end

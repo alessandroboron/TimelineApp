@@ -21,6 +21,8 @@
 //The designated initializer
 - (id)initTimelineWithTitle:(NSString *)title creator:(NSString *)creator shared:(BOOL)shared;
 
+- (id)initTimelineWithId:(NSString *)timelineId title:(NSString *)title creator:(NSString *)creator shared:(BOOL)shared;
+
 //This method is used to return the string representation of the sharing attribute
 - (NSString *)sharedDescription;
 

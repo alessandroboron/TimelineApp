@@ -11,6 +11,7 @@
 
 @interface NewNoteViewController ()
 
+@property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (weak, nonatomic) IBOutlet UILabel *placeHolderLabel;
 @property (weak, nonatomic) IBOutlet UITextView *contentTextView;
 
@@ -23,6 +24,7 @@
 
 @synthesize delegate = _delegate;
 @synthesize baseEvent = _baseEvent;
+@synthesize navigationBar = _navigationBar;
 @synthesize placeHolderLabel = _placeHolderLabel;
 @synthesize contentTextView = _contentTextView;
 
@@ -46,7 +48,7 @@
 	// Do any additional setup after loading the view.
     
     //Set the background image for the navigation bar
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"navigationBarBackground.png"] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationBar setBackgroundImage:[UIImage imageNamed:@"navigationBarBackground.png"] forBarMetrics:UIBarMetricsDefault];
     
     //Register itself as observer when the content TextView changes
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentTextViewDidChange:) name:UITextViewTextDidChangeNotification object:nil];

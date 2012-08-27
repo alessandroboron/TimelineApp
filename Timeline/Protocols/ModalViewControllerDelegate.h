@@ -14,4 +14,5 @@
 @optional
 - (void)addEventItem:(id)sender toBaseEvent:(BaseEvent *)baseEvent;
 - (void)addGroup:(id)sender;
+- (void)dismissModalViewControllerAndUpdate;
 @end

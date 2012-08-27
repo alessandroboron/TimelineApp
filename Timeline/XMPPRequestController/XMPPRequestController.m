@@ -9,9 +9,9 @@
 #import "XMPPRequestController.h"
 #import "Space.h"
 //#import "XMPPPubSub.h"
-#import "WatchItValue.h"
-#import "watchIt.h"
 #import "User.h"
+#import "SampleNote.h"
+#import "Event.h"
 
 #define kXMPPResourceIdentifier @"TimelineAPP"
 #define kXMPPPortIdentifier     5222
@@ -524,25 +524,15 @@
                 //Get the name of its child
                 NSString *valueName = [[[data children] objectAtIndex:1] name];
                 
-                //Initialize the array where storing the value objects
-                NSMutableArray *values = [[NSMutableArray alloc] init];
-                
-                //Initialize the array where storing the tags
-                NSMutableArray *tags = [[NSMutableArray alloc] init];
+                NSString *valuesString;
                 
                 //If it is value (1 element)
                 if ([valueName isEqualToString:@"value"]) {
                     //Get the 'value' element
                     NSXMLElement *value = [data elementForName:@"value"];
                     
-                    //Initialize the value object
-                    WatchItValue *v = [self valueFromXMLElement:value];
-                    
-                    //Add the object to the array
-                    [values addObject:v];
-                    
-                    //Add the tag to the array
-                    [tags addObject:v.valueType];
+                    //Get the value
+                    valuesString = [self valueFromXMLElement:value];
                 }
                 
                 //If it is values (>1 elements)
@@ -552,29 +542,36 @@
                     
                     //Walk through the elements
                     for (NSXMLElement *value in valuesElement) {
-                        //Initialize the value object
-                        WatchItValue *v = [self valueFromXMLElement:value];
                         
-                        //Add the object to the array
-                        [values addObject:v];
-                        
-                        //Add the tag to the array
-                        [tags addObject:v.valueType];
+                        //Get the value
+                        valuesString = [self valueFromXMLElement:value];
+                        valuesString = [NSString stringWithFormat:@"%@-",valuesString];
                     }
                 }
                 
                 //Init the location object
                 CLLocation *loc = [[CLLocation alloc] initWithLatitude:[latitude doubleValue] longitude:[longitude doubleValue]];
-                
+                /*
                 //Initialize the watchIt data
                 WatchIt *wi = [[WatchIt alloc] initWatchItDataWithUser:user values:[values copy] timestamp:[Utility dateFromTimestampString:timestamp] infoTitle:@"WatchIt" infoLocation:loc infoTags:[tags copy] infoMediaType:InfoMediaTypeWatchit infoRating:0];
+                */
+                SampleNote *sn = [[SampleNote alloc] initSampleNoteWithTitle:@"WatchIt" text:valuesString eventItemCreator:user];
                 
-                                
-                //Send the data
-                NSDictionary *userInfo = [NSDictionary dictionaryWithObject:wi forKey:@"userInfo"];
+                //New BaseEvent
+                Event *event = [[Event alloc] initEventWithLocation:loc date:[Utility dateFromTimestampString:timestamp] shared:NO creator:user];
+                
+                //Add the object to the base event
+                [event.eventItems addObject:sn];
                 
                 //Send the data
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"NSSpaceServiceDidLoadObjectsNotification" object:nil userInfo:userInfo];
+                NSDictionary *userInfo = [NSDictionary dictionaryWithObject:event forKey:@"userInfo"];
+                
+                //Send the data
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"EventDidLoadNotification" object:nil userInfo:userInfo];
+            }
+            //If the information is a recommendation from CroMAR
+            else if ([itemName isEqualToString:@"recommendation"]){
+                
             }
         }
         if (!infoPresent) {
@@ -584,22 +581,20 @@
     else{
         [Utility showAlertViewWithTitle:@"Mirror Space Service" message:@"No information present in the selected space." cancelButtonTitle:@"Dismiss"];
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"DismissActivityIndicatorNotification" object:nil];
 }
 
 //This method is used to set a value object
-- (WatchItValue *)valueFromXMLElement:(DDXMLElement *)value{
+- (NSString *)valueFromXMLElement:(DDXMLElement *)value{
     
     //Get the type
-    NSString *valueType = [value attributeStringValueForName:@"type"];
+  //  NSString *valueType = [value attributeStringValueForName:@"type"];
     //Get the unit
-    NSString *valueUnit = [value attributeStringValueForName:@"unit"];
+ //   NSString *valueUnit = [value attributeStringValueForName:@"unit"];
     //Get the value
     NSString *valueString = [value stringValue];
-    
-    //Initialize the value object
-    WatchItValue *v = [[WatchItValue alloc] initValueWithType:valueType value:valueString unit:valueUnit];
-    
-    return v;
+#warning put unit in case WatchIt defines it
+    return [NSString stringWithFormat:@"%@",valueString];
 }
 
 #pragma mark -
@@ -763,7 +758,8 @@
         else if ([iqId isEqualToString:kPubsubSubscriptionIdentifier]){
             NSXMLElement *error = [iq childErrorElement];
             NSLog(@"Subscription Error: %@, %@",[error attributeStringValueForName:@"code"],[error description]);
-            [Utility showAlertViewWithTitle:@"Mirror Space Service" message:@"Error getting the subscription for the node." cancelButtonTitle:@"Dismiss"];            
+            [Utility showAlertViewWithTitle:@"Mirror Space Service" message:@"Error getting the subscription for the node." cancelButtonTitle:@"Dismiss"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"DismissActivityIndicatorNotification" object:nil];
         }
         
         else if([iqId isEqualToString:kPubsubPublishIdentifier]){
@@ -779,6 +775,7 @@
             NSXMLElement *error = [iq childErrorElement];
             NSLog(@"Subscription Error: %@, %@",[error attributeStringValueForName:@"code"],[error description]);
             [Utility showAlertViewWithTitle:@"Mirror Space Service" message:@"Error getting all the items for the node." cancelButtonTitle:@"Dismiss"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"DismissActivityIndicatorNotification" object:nil];
         }
             
         else{
