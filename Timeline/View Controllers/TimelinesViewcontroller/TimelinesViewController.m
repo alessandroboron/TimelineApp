@@ -206,7 +206,10 @@
             XMPPRequestController *rc = [Utility xmppRequestController];
             
             [rc spacesListRequest];
+            
+        if (self.isViewLoaded && self.view.window) {
             [Utility showActivityIndicatorWithView:self.tableView label:@"Loading Timelines"];
+        }
     }
 }
 
