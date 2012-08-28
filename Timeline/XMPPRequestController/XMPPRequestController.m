@@ -369,7 +369,7 @@
     
     if ([self.spacesArray count]>0) {
         //Set the user info dictionary to send with the notification
-        NSDictionary *userInfoDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:[self.spacesArray copy],@"userInfo", nil];
+        NSDictionary *userInfoDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:self.spacesArray,@"userInfo", nil];
         
         //Send the space array to the spacepopovercontroller
         [[NSNotificationCenter defaultCenter] postNotificationName:@"SpaceListDidUpdateNotification" object:nil userInfo:userInfoDictionary];
@@ -429,30 +429,18 @@
         }
     }
    
-    
-    /*
-    //Walk throug the spaces
-    for (Space *sp in self.spacesArray) {
-        if ([sp.spaceId isEqualToString:nodeId] && [sp.spaceName isEqualToString:nodeName]) {
-            //Set space type and persistence
-            sp.spaceType = [sp spaceTypeFromStringValue:nodeType];
-            sp.spacePersistence = [sp isSpacePersistent:nodePersistence];
-            //Set the members of the space
-            for (NSXMLElement *member in values) {
-                [sp.spaceUsers addObject:[[User alloc]initUserWithUsername:[member stringValue]]];
-            }
-        }
-    }
-    */
-    
+    //Set the space
     Space *sp = [[Space alloc] initSpaceWithId:nodeId name:nodeName type:nodeType persistence:nodePersistence];
     
+    //Set the users for the space
     for (NSXMLElement *member in values) {
         [sp.spaceUsers addObject:[[User alloc]initUserWithUsername:[member stringValue]]];
     }
    
+    //Decrease the request number
     NSNumber *reqNumber = [NSNumber numberWithInt:nodeIdRequestNumber--];
     
+    //Set the dictionary with the space
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:sp,@"userInfo",reqNumber,@"requestNumber", nil];
     
     //Send the notification

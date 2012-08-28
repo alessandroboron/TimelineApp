@@ -338,6 +338,16 @@
     }
     
     return ret;
+}
+
+//This method is used to sort the event based on an attribute and order ascending/descending
++ (void)sortArray:(NSMutableArray *)array withKey:(NSString *)key ascending:(BOOL)ascending{
+    
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:key ascending:ascending];
+    
+    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+    
+    [array sortUsingDescriptors:sortDescriptors];
     
 }
 

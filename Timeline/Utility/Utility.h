@@ -63,4 +63,7 @@
 //This method is used to get the size of a string based on the font used
 + (CGSize)sizeOfText:(NSString *)text width:(float)width fontSize:(float)fontSize;
 
+//This method is used to sort the event based on an attribute and order ascending/descending
++ (void)sortArray:(NSArray *)array withKey:(NSString *)key ascending:(BOOL)ascending;
+
 @end

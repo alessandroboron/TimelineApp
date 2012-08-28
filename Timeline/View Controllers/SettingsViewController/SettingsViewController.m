@@ -100,7 +100,8 @@
         [self setUserDefaultsAndNotify];
     }
     
-    if (self.serverTextField.text.length == 0 || self.domainTextField.text.length == 0 || self.userTextField.text.length == 0 || self.passwordTextField.text.length == 0 || [Utility isXMPPServerConnected]) {
+    //If it is connected but user defaults changes and it should disconnect
+    if ((self.serverTextField.text.length == 0 || self.domainTextField.text.length == 0 || self.userTextField.text.length == 0 || self.passwordTextField.text.length == 0) && [Utility isXMPPServerConnected]) {
         
         [self setUserDefaultsAndNotify];
     }

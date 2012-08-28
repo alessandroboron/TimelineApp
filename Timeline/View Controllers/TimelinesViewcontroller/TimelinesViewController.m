@@ -73,6 +73,19 @@
     // e.g. self.myOutlet = nil;
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    //If Online and Authenticathed retrieve groups
+    if ([Utility isHostReachable] && [Utility isUserAuthenticatedOnXMPPServer]) {
+        
+        XMPPRequestController *rc = [Utility xmppRequestController];
+        
+        [rc spacesListRequest];
+        [Utility showActivityIndicatorWithView:self.tableView label:@"Loading Timelines..."];
+    }
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -105,12 +118,6 @@
         tvc.navigationItem.title = ((Timeline *)[self.timelinesArray objectAtIndex:indexPath.row]).title;
         //Set the timeline(space) id for the corrisponding timeline(space)
         tvc.spaceId = ((Timeline *)[self.timelinesArray objectAtIndex:indexPath.row]).tId;
-        
-        /*
-        //Set the events array for the corresponding timeline
-        tvc.eventsArray = ((Timeline *)[self.timelinesArray objectAtIndex:indexPath.row]).baseEvents;
-         */
- 
     }
 }
 
@@ -131,12 +138,17 @@
     
     //If the view is loaded and shown
     if (self.isViewLoaded && self.view.window) {
+        //Set the timelines array to nil. It prevents to duplicate timelines
+        self.timelinesArray = nil;
         
         //Get the spaces list
         self.timelinesAppArray = [notification.userInfo objectForKey:@"userInfo"];
        
         //Get the XMPPRequestController
         XMPPRequestController *rc = [Utility xmppRequestController];
+        
+        //Order the array in alphabetically order
+        [Utility sortArray:self.timelinesAppArray withKey:@"spaceName" ascending:YES];
         
         //Walk-through the spaces
         for (Space *sp in self.timelinesAppArray) {
@@ -173,8 +185,11 @@
         if (requestNumber==1) {
             [Utility dismissActivityIndicator:self.tableView];
             nodeIdRequestNumber=0;
-            
+            //Set the timelinesAPPArray to nil
+            self.timelinesAppArray = nil;
         }
+        
+        
     }
 }
 
@@ -185,13 +200,13 @@
 
 - (void)fetchTimelines:(NSNotification *)notification{
     
-    //If Online and Authenticathed retrieve groups
+    //If Online and Authenticathed retrieve timelines
     if ([Utility isHostReachable] && [Utility isUserAuthenticatedOnXMPPServer]) {
         
-        XMPPRequestController *rc = [Utility xmppRequestController];
-        
-        [rc spacesListRequest];
-        [Utility showActivityIndicatorWithView:self.tableView label:@"Loading Timelines"];
+            XMPPRequestController *rc = [Utility xmppRequestController];
+            
+            [rc spacesListRequest];
+            [Utility showActivityIndicatorWithView:self.tableView label:@"Loading Timelines"];
     }
 }
 

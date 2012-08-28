@@ -47,16 +47,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSpaceList:) name:@"SpaceListDidUpdateNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSpaces:) name:@"SpacesDidUpdateNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissAI:) name:@"SpacesFetchingErrorNotification" object:nil];
-    
-    
-    //If Online and Authenticathed retrieve groups
-    if ([Utility isHostReachable] && [Utility isUserAuthenticatedOnXMPPServer]) {
-        
-        XMPPRequestController *rc = [Utility xmppRequestController];
-        
-        [rc spacesListRequest];
-        [Utility showActivityIndicatorWithView:self.tableView label:@"Loading Groups"];
-    }
 }
 
 - (void)viewDidUnload
@@ -68,6 +58,15 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    
+    //If Online and Authenticathed retrieve groups
+    if ([Utility isHostReachable] && [Utility isUserAuthenticatedOnXMPPServer]) {
+        
+        XMPPRequestController *rc = [Utility xmppRequestController];
+        
+        [rc spacesListRequest];
+        [Utility showActivityIndicatorWithView:self.tableView label:@"Loading Groups..."];
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -129,9 +128,15 @@
     //If the view is loaded and shown
     if (self.isViewLoaded && self.view.window) {
         
+        //Set the groups array to nil.It prevents to duplicate groups when the view appears
+        self.groupsArray = nil;
+        
         //Get the spaces list
         self.groupsAppArray = [notification.userInfo objectForKey:@"userInfo"];
         
+        //Order the array in alphabetically order
+        [Utility sortArray:self.groupsAppArray withKey:@"spaceName" ascending:YES];
+
         //Get the XMPPRequestController
         XMPPRequestController *rc = [Utility xmppRequestController];
         
@@ -163,6 +168,8 @@
         if (requestNumber==1) {
             [Utility dismissActivityIndicator:self.tableView];
             nodeIdRequestNumber=0;
+            //Set the groupsAppArray to nil
+            self.groupsAppArray = nil;
         }
     }
 }
