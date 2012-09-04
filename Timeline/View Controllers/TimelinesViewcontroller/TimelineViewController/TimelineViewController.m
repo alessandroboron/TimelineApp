@@ -61,6 +61,7 @@
     //Register itself as observer for the XMPP RequestController
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissAI:) name:@"DismissActivityIndicatorNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(insertEvent:) name:@"EventDidLoadNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTimelineWithEvent:) name:@"UpdateTimelineNotification" object:nil];
     
     //Set the background image for the navigation bar
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"navigationBarBackground.png"] forBarMetrics:UIBarMetricsDefault];
@@ -169,6 +170,40 @@
     
     //Update the TableView
     [self.contentTableView reloadData];
+}
+
+#pragma mark -
+#pragma mark UpdateTimelineNotification
+
+- (void)updateTimelineWithEvent:(NSNotification *)notification{
+    
+    //Get the nodeId
+    NSString *nodeId = [notification.userInfo objectForKey:@"nodeId"];
+    
+    NSString *nId = [NSString stringWithFormat:@"%@#%@",[[nodeId componentsSeparatedByString:@"#"] objectAtIndex:1],[[nodeId componentsSeparatedByString:@"#"] objectAtIndex:2]];
+    
+    //If team#xx == team#xx (spaces#team#xx)
+    if ([self.spaceId isEqualToString:nId]) {
+        //Get the event from the notification
+        Event *event = [notification.userInfo objectForKey:@"userInfo"];
+        
+        //Insert the object at the beginning of the array
+        [self.eventsArray insertObject:event atIndex:0];
+        
+        //Order the array based on the date
+        [Utility sortArray:self.eventsArray withKey:@"date" ascending:NO];
+        
+        //Get the index of the object
+        NSUInteger index = [self.eventsArray indexOfObject:event];
+        
+        //Set the insert indexpath
+        NSArray *insertIndexPath = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:index inSection:0]];
+        
+        [self.contentTableView beginUpdates];
+        //Insert the data in tableview animated
+        [self.contentTableView insertRowsAtIndexPaths:insertIndexPath withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self.contentTableView endUpdates];
+    }
 }
 
 #pragma mark -

@@ -80,7 +80,11 @@
 - (void)retrieveAllItemsInSpace:(NSString *)nodeId subId:(NSString *)subid;
 - (NSString *)subscriptionIdForIQ:(XMPPIQ *)iq;
 - (void)initSpaceDataWithIQ:(XMPPIQ *)iq;
-//- (WatchItValue *)valueFromXMLElement:(NSXMLElement *)value;
+
+
+- (void)parseSensorDataFromWatchIt:(NSXMLElement *)item node:(NSString *)node update:(BOOL)update;
+- (void)parseRecommendationFromCroMAR:(NSXMLElement *)item node:(NSString *)node update:(BOOL)update;
+- (void)parseEventItemFromTimelineApp:(NSXMLElement *)item node:(NSString *)node update:(BOOL)update;
 
 @end
 
@@ -182,12 +186,12 @@
     NSError *err = nil;
     [self.xmppStream registerWithPassword:kPassword error:&err];
 }
+*/
 
 //This method is used to subscribe to a node
 - (void)subscribeToNode:(NSString *)nodeId{
     
     //[self subscribtionForNode:nodeId];
-    
     
     NSXMLElement *subscribe = [NSXMLElement elementWithName:@"subscribe"];
     [subscribe addAttributeWithName:@"node" stringValue:[NSString stringWithFormat:@"%@%@",kPubsubNodeIdentifier,nodeId]];
@@ -204,7 +208,7 @@
     [self.xmppStream sendElement:iq];
      
 }
-*/
+
 #pragma mark Space Manager Methods
 
 
@@ -279,7 +283,7 @@
     
 
     
-    NSXMLElement *eventXML = [NSXMLElement elementWithName:@"event"];
+    NSXMLElement *eventXML = [NSXMLElement elementWithName:@"eventItem"];
     [eventXML addAttributeWithName:@"xmlns" stringValue:@"mirror:application:timeline:item"];
     [eventXML addAttributeWithName:@"xmlns:cdt" stringValue:@"mirror:common:datatypes"];
     [eventXML addAttributeWithName:@"xmlns:xsi" stringValue:@"http://www.w3.org/2001/XMLSchema-instance"];
@@ -542,11 +546,11 @@
     
     if ([itemArray count]>0) {
         
-        NSString *eventDate;
-        NSString *eventCreator;
-        NSString *eventLatitude;
-        NSString *eventLongitude;
-        SampleNote *sn = nil;
+  //      NSString *eventDate;
+  //      NSString *eventCreator;
+  //      NSString *eventLatitude;
+  //      NSString *eventLongitude;
+  //      SampleNote *sn = nil;
         
         //Walk-through the items
         for (NSXMLElement *item in itemArray) {
@@ -559,156 +563,25 @@
                 
                 infoPresent = YES;
                 
-                //Get the genericSensorData element
-                NSXMLElement *data = [item elementForName:@"genericSensorData"];
-                
-                //Get the timestamp
-               // NSString *timestamp = [data attributeStringValueForName:@"timestamp"];
-                eventDate = [data attributeStringValueForName:@"timestamp"];
-                
-                //Get the publisher of the data
-                //NSString *publisher = [data attributeStringValueForName:@"publisher"];
-                eventCreator = [[[data attributeStringValueForName:@"publisher"] componentsSeparatedByString:@"/"] objectAtIndex:0];
-                //Get the user
-                //NSString *user = (NSString *)[[publisher componentsSeparatedByString:@"@"] objectAtIndex:0];
-                
-                //Get the location element
-                NSXMLElement *location = [data elementForName:@"location"];
-                
-                //Get the latitude string
-               // NSString *latitude = [location attributeStringValueForName:@"latitude"];
-                eventLatitude = [location attributeStringValueForName:@"latitude"];
-                //Get the longitude string
-               // NSString *longitude = [location attributeStringValueForName:@"longitude"];
-                eventLongitude = [location attributeStringValueForName:@"longitude"];
-               
-                //Get the name of its child
-                NSString *valueName = [[[data children] objectAtIndex:1] name];
-                
-                NSString *valuesString;
-                
-                //If it is value (1 element)
-                if ([valueName isEqualToString:@"value"]) {
-                    //Get the 'value' element
-                    NSXMLElement *value = [data elementForName:@"value"];
-                    
-                    //Get the value
-                    valuesString = [self valueFromXMLElement:value];
-                }
-                
-                //If it is values (>1 elements)
-                else if ([valueName isEqualToString:@"values"]){
-                    //Get the 'value' children
-                    NSArray *valuesElement = [data elementsForName:@"value"];
-                    
-                    //Walk through the elements
-                    for (NSXMLElement *value in valuesElement) {
-                        
-                        //Get the value
-                        valuesString = [self valueFromXMLElement:value];
-                        valuesString = [NSString stringWithFormat:@"%@-",valuesString];
-                    }
-                }
-                
-                //Init the location object
-                //CLLocation *loc = [[CLLocation alloc] initWithLatitude:[latitude doubleValue] longitude:[longitude doubleValue]];
-                
-                
-                sn = [[SampleNote alloc] initSampleNoteWithTitle:@"WatchIt" text:valuesString eventItemCreator:eventCreator];
-                
-                CLLocation *loc = [[CLLocation alloc] initWithLatitude:[eventLatitude doubleValue] longitude:[eventLongitude doubleValue]];
-                
-                //New BaseEvent
-                Event *event = [[Event alloc] initEventWithLocation:loc date:[Utility dateFromTimestamp:eventDate watchIT:YES] shared:NO creator:eventCreator];
-                
-                //Add the object to the base event
-                [event.eventItems addObject:sn];
-                
-                //Send the data
-                NSDictionary *userInfo = [NSDictionary dictionaryWithObject:event forKey:@"userInfo"];
-                
-                //Send the data
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"EventDidLoadNotification" object:nil userInfo:userInfo];
-
+                //Parse generic sensor data
+                [self parseSensorDataFromWatchIt:item node:nil update:NO];
             }
            
             //If the information is a recommendation from CroMAR
             else if ([itemName isEqualToString:@"recommendation"]){
                 infoPresent = YES;
                 
-                //Get the recommendation element
-                NSXMLElement *recommendation = [item elementForName:@"recommendation"];
-                
-                NSXMLElement *creationInfo = [recommendation elementForName:@"creationInfo"];
-                
-                eventDate = [[creationInfo elementForName:@"cdt:date"] stringValue];
-                
-                eventCreator = [[creationInfo elementForName:@"cdt:person"] stringValue];
-                
-                NSXMLElement *location = [recommendation elementForName:@"location"];
-                eventLatitude = [location attributeStringValueForName:@"latitude"];
-                eventLongitude = [location attributeStringValueForName:@"longitude"];
-                
-                NSString *notebody = [[recommendation elementForName:@"noteBody"] stringValue];
-                
-                sn = [[SampleNote alloc] initSampleNoteWithTitle:@"CroMAR" text:notebody eventItemCreator:eventCreator];
-                
-                CLLocation *loc = [[CLLocation alloc] initWithLatitude:[eventLatitude doubleValue] longitude:[eventLongitude doubleValue]];
-                
-                //New BaseEvent
-                Event *event = [[Event alloc] initEventWithLocation:loc date:[Utility dateFromCroMARTimestampString:eventDate] shared:NO creator:eventCreator];
-                
-                //Add the object to the base event
-                [event.eventItems addObject:sn];
-                
-                //Send the data
-                NSDictionary *userInfo = [NSDictionary dictionaryWithObject:event forKey:@"userInfo"];
-                
-                //Send the data
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"EventDidLoadNotification" object:nil userInfo:userInfo];
-
+                //Parse recommendation data
+                [self parseRecommendationFromCroMAR:item node:nil update:NO];
             }
             
             //If the information comes from the timelineApp
-            else if ([itemName isEqualToString:@"event"]){
+            else if ([itemName isEqualToString:@"eventItem"]){
                 infoPresent = YES;
             
-                //Get the event element
-                NSXMLElement *eventXML = [item elementForName:@"event"];
-            
-                //Get the creation info element
-                NSXMLElement *creationInfo = [eventXML elementForName:@"creationInfo"];
-                
-                eventDate = [[creationInfo elementForName:@"cdt:date"] stringValue];
-                
-                eventCreator = [[creationInfo elementForName:@"cdt:person"] stringValue];
-                
-                NSXMLElement *location = [eventXML elementForName:@"location"];
-                eventLatitude = [location attributeStringValueForName:@"latitude"];
-                eventLongitude = [location attributeStringValueForName:@"longitude"];
-                
-                NSString *subject = [[eventXML elementForName:@"subject"] stringValue];
-                NSString *body = [[eventXML elementForName:@"body"] stringValue];
-           
-                sn = [[SampleNote alloc] initSampleNoteWithTitle:subject text:body eventItemCreator:eventCreator];
-                
-                CLLocation *loc = [[CLLocation alloc] initWithLatitude:[eventLatitude doubleValue] longitude:[eventLongitude doubleValue]];
-                
-                //New BaseEvent
-                Event *event = [[Event alloc] initEventWithLocation:loc date:[Utility dateFromTimestamp:eventDate watchIT:NO] shared:NO creator:eventCreator];
-                
-                //Add the object to the base event
-                [event.eventItems addObject:sn];
-                
-                //Send the data
-                NSDictionary *userInfo = [NSDictionary dictionaryWithObject:event forKey:@"userInfo"];
-                
-                //Send the data
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"EventDidLoadNotification" object:nil userInfo:userInfo];
-            
+                //Parse eventItem data
+                [self parseEventItemFromTimelineApp:item node:nil update:NO];
             }
-            
-                         
         }
         if (!infoPresent) {
             [Utility showAlertViewWithTitle:@"Mirror Space Service" message:@"Datatype not recognized by TimelineApp." cancelButtonTitle:@"Dismiss"];
@@ -731,6 +604,173 @@
     NSString *valueString = [value stringValue];
 #warning put unit in case WatchIt defines it
     return [NSString stringWithFormat:@"%@",valueString];
+}
+
+//This method is used to parse a WatchIt Data
+- (void)parseSensorDataFromWatchIt:(NSXMLElement *)item node:(NSString *)node update:(BOOL)update{
+    
+    //Get the genericSensorData element
+    NSXMLElement *data = [item elementForName:@"genericSensorData"];
+    
+    //Get the timestamp
+    // NSString *timestamp = [data attributeStringValueForName:@"timestamp"];
+    NSString *eventDate = [data attributeStringValueForName:@"timestamp"];
+    
+    //Get the publisher of the data
+    NSString *eventCreator = [[[data attributeStringValueForName:@"publisher"] componentsSeparatedByString:@"/"] objectAtIndex:0];
+    
+    //Get the location element
+    NSXMLElement *location = [data elementForName:@"location"];
+    
+    //Get the latitude string
+    NSString *eventLatitude = [location attributeStringValueForName:@"latitude"];
+    //Get the longitude string
+    NSString *eventLongitude = [location attributeStringValueForName:@"longitude"];
+    
+    //Get the name of its child
+    NSString *valueName = [[[data children] objectAtIndex:1] name];
+    
+    NSString *valuesString;
+    
+    //If it is value (1 element)
+    if ([valueName isEqualToString:@"value"]) {
+        //Get the 'value' element
+        NSXMLElement *value = [data elementForName:@"value"];
+        
+        //Get the value
+        valuesString = [self valueFromXMLElement:value];
+    }
+    
+    //If it is values (>1 elements)
+    else if ([valueName isEqualToString:@"values"]){
+        //Get the 'value' children
+        NSArray *valuesElement = [data elementsForName:@"value"];
+        
+        //Walk through the elements
+        for (NSXMLElement *value in valuesElement) {
+            
+            //Get the value
+            valuesString = [self valueFromXMLElement:value];
+            valuesString = [NSString stringWithFormat:@"%@-",valuesString];
+        }
+    }
+    
+    //Init the note
+    SampleNote *sn = [[SampleNote alloc] initSampleNoteWithTitle:@"WatchIt" text:valuesString eventItemCreator:eventCreator];
+    
+    //Init the location
+    CLLocation *loc = [[CLLocation alloc] initWithLatitude:[eventLatitude doubleValue] longitude:[eventLongitude doubleValue]];
+    
+    //New BaseEvent
+    Event *event = [[Event alloc] initEventWithLocation:loc date:[Utility dateFromTimestamp:eventDate watchIT:YES] shared:NO creator:eventCreator];
+    
+    //Add the object to the base event
+    [event.eventItems addObject:sn];
+    
+    //Send the data
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:event,@"userInfo",node,@"nodeId", nil];
+    
+    //If retrieving all the data from a space
+    if (!update) {
+        //Send the data
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"EventDidLoadNotification" object:nil userInfo:userInfo];
+    }
+    //If the app received a real-time notification from another app
+    else{
+        //Send the data and update the timeline
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateTimelineNotification" object:nil userInfo:userInfo];
+    }
+    
+    
+}
+
+//This method is used to parse a Recommendation from CroMAR
+- (void)parseRecommendationFromCroMAR:(NSXMLElement *)item node:(NSString *)node update:(BOOL)update{
+    
+    //Get the recommendation element
+    NSXMLElement *recommendation = [item elementForName:@"recommendation"];
+    
+    NSXMLElement *creationInfo = [recommendation elementForName:@"creationInfo"];
+    
+    NSString *eventDate = [[creationInfo elementForName:@"cdt:date"] stringValue];
+    
+    NSString *eventCreator = [[creationInfo elementForName:@"cdt:person"] stringValue];
+    
+    NSXMLElement *location = [recommendation elementForName:@"location"];
+    NSString *eventLatitude = [location attributeStringValueForName:@"latitude"];
+    NSString *eventLongitude = [location attributeStringValueForName:@"longitude"];
+    
+    NSString *notebody = [[recommendation elementForName:@"noteBody"] stringValue];
+    
+    SampleNote *sn = [[SampleNote alloc] initSampleNoteWithTitle:@"CroMAR" text:notebody eventItemCreator:eventCreator];
+    
+    CLLocation *loc = [[CLLocation alloc] initWithLatitude:[eventLatitude doubleValue] longitude:[eventLongitude doubleValue]];
+    
+    //New BaseEvent
+    Event *event = [[Event alloc] initEventWithLocation:loc date:[Utility dateFromCroMARTimestampString:eventDate] shared:NO creator:eventCreator];
+    
+    //Add the object to the base event
+    [event.eventItems addObject:sn];
+    
+    //Send the data
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:event,@"userInfo",node,@"nodeId", nil];
+    
+    //If retrieving all the data from a space
+    if (!update) {
+        //Send the data
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"EventDidLoadNotification" object:nil userInfo:userInfo];
+    }
+    //If the app received a real-time notification from another app
+    else{
+        //Send the data and update the timeline
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateTimelineNotification" object:nil userInfo:userInfo];
+    }
+}
+
+
+//This method is used to parse an eventItem from the timelineAPP
+- (void)parseEventItemFromTimelineApp:(NSXMLElement *)item node:(NSString *)node update:(BOOL)update{
+    
+    //Get the event element
+    NSXMLElement *eventXML = [item elementForName:@"eventItem"];
+    
+    //Get the creation info element
+    NSXMLElement *creationInfo = [eventXML elementForName:@"creationInfo"];
+    
+    NSString *eventDate = [[creationInfo elementForName:@"cdt:date"] stringValue];
+    
+    NSString *eventCreator = [[creationInfo elementForName:@"cdt:person"] stringValue];
+    
+    NSXMLElement *location = [eventXML elementForName:@"location"];
+    NSString *eventLatitude = [location attributeStringValueForName:@"latitude"];
+    NSString *eventLongitude = [location attributeStringValueForName:@"longitude"];
+    
+    NSString *subject = [[eventXML elementForName:@"subject"] stringValue];
+    NSString *body = [[eventXML elementForName:@"body"] stringValue];
+    
+    SampleNote *sn = [[SampleNote alloc] initSampleNoteWithTitle:subject text:body eventItemCreator:eventCreator];
+    
+    CLLocation *loc = [[CLLocation alloc] initWithLatitude:[eventLatitude doubleValue] longitude:[eventLongitude doubleValue]];
+    
+    //New BaseEvent
+    Event *event = [[Event alloc] initEventWithLocation:loc date:[Utility dateFromTimestamp:eventDate watchIT:NO] shared:NO creator:eventCreator];
+    
+    //Add the object to the base event
+    [event.eventItems addObject:sn];
+    
+    //Send the data
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:event,@"userInfo",node,@"nodeId", nil];
+    
+    //If retrieving all the data from a space
+    if (!update) {
+        //Send the data
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"EventDidLoadNotification" object:nil userInfo:userInfo];
+    }
+    //If the app received a real-time notification from another app
+    else{
+        //Send the data and update the timeline
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateTimelineNotification" object:nil userInfo:userInfo];
+    }
 }
 
 #pragma mark -
@@ -775,6 +815,7 @@
     //Send the notification with the status
     [[NSNotificationCenter defaultCenter] postNotificationName:@"XMPPConnectivityDidUpdateNotification" object:nil userInfo:connectivityStatus];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"SpacesServiceDidConnectNotification" object:nil];
+    //[self subscribeToNode:@"team#12"];
 }
 
 //If the user is not authenticated on the server
@@ -943,7 +984,44 @@
 //When received a 
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message {
     
-    NSLog(@"MSG: %@",[message description]);
+    //Get the event element
+    NSXMLElement *event = [message elementForName:@"event"];
+   
+    //Get the items element
+    NSXMLElement *items = [event elementForName:@"items"];
+    
+    //Get all the item from items
+    NSString *node = [items attributeStringValueForName:@"node"];
+    
+    //Get all the item element of items
+    NSArray *itemArray = [items elementsForName:@"item"];
+    
+    if ([itemArray count]>0) {
+        
+       //Walk-through the items
+        for (NSXMLElement *item in itemArray) {
+            
+            //Get the name of the element
+            NSString *itemName = [[[item children] objectAtIndex:0] name];
+            
+            //If it is 'genericSensorData' == WatchIt
+            if ([itemName isEqualToString:@"genericSensorData"]) {
+                //Parse the data
+                [self parseSensorDataFromWatchIt:item node:node update:YES];
+
+            }
+            //If the information is a recommendation from CroMAR
+            else if ([itemName isEqualToString:@"recommendation"]){
+                //Parse the data
+                [self parseRecommendationFromCroMAR:item node:node update:YES];
+            }
+            //If the information comes from the timelineApp
+            else if ([itemName isEqualToString:@"eventItem"]){
+                //Parse the data
+                [self parseEventItemFromTimelineApp:item node:node update:YES];
+            }
+        }
+    }
 }
  
 
