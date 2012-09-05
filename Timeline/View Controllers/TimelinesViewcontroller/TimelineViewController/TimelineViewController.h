@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ModalViewControllerDelegate.h"
 
-@interface TimelineViewController : UIViewController <ModalViewControllerDelegate>
+@interface TimelineViewController : UIViewController <ModalViewControllerDelegate, UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 
 @property (strong, nonatomic) NSMutableArray *eventsArray;
 @property (strong, nonatomic) NSString *spaceId;

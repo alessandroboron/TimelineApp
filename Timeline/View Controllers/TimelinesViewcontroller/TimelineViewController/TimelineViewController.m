@@ -6,15 +6,18 @@
 //  Copyright (c) 2012 Alessandro Boron. All rights reserved.
 //
 
+#import <MobileCoreServices/MobileCoreServices.h>
 #import "TimelineViewController.h"
 #import "NewNoteViewController.h"
 #import "Event.h"
 #import "SampleNote.h"
 #import "TimelineViewCell.h"
+#import "PictureViewCell.h"
 #import "NoteCell.h"
 #import "AppDelegate.h"
 #import "XMPPRequestController.h"
 #import "EventDetailViewController.h"
+#import "SimplePicture.h"
 
 #define FONT_SIZE 16.0f
 #define CELL_CONTENT_WIDTH 235.0f
@@ -23,13 +26,18 @@
 #define CELL_CONTENT_MARGIN_Y 35.0f
 #define CELL_HEIGHT 75.0f
 
+#define PICTURECELL_SIZE 200.0f
+
 @interface TimelineViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *contentTableView;
 @property (strong, nonatomic) NSIndexPath *indexPathForSelectedRow;
+@property (weak, nonatomic) IBOutlet UIButton *pictureButton;
+@property (assign) BOOL newMedia;
 
 - (CGSize)sizeOfText:(NSString *)text;
 - (IBAction)showInfoDetails:(UILongPressGestureRecognizer *)recognizer;
+- (IBAction)pictureButtonPressed:(id)sender;
 
 
 @end
@@ -37,8 +45,10 @@
 @implementation TimelineViewController
 
 @synthesize contentTableView = _contentTableView;
+@synthesize pictureButton = _pictureButton;
 @synthesize eventsArray = _eventsArray;
 @synthesize indexPathForSelectedRow = _indexPathForSelectedRow;
+@synthesize newMedia = _newMedia;
 
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -117,6 +127,7 @@
         nnvc.delegate = self;
         nnvc.baseEvent = nil;
     }
+    
     //If info details view has to be shown
     else if ([segue.identifier isEqualToString:@"eventDetailsSegue"]){
         
@@ -142,6 +153,15 @@
         }
         
     }
+}
+
+- (IBAction)pictureButtonPressed:(id)sender{
+    
+    //Set the actionshett to let the user choose between taking a picture or choosing from the library
+    UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:@"Choose" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take a picture",@"Choose from library...", nil];
+    
+    //Show the actionsheet
+    [as showFromTabBar:self.tabBarController.tabBar];
 }
 
 #pragma mark -
@@ -222,24 +242,25 @@
 
 - (void)addEventItem:(id)sender toBaseEvent:(BaseEvent *)baseEvent{
     //Dismiss the presented view controller
-    [self dismissViewControllerAnimated:YES completion:nil];
-    
-    //If baseEvent not exist make it
-    if (baseEvent==nil) {
-        Event *event = nil;
+    [self dismissViewControllerAnimated:YES completion:^{
         
-        //New BaseEvent
-        event = [[Event alloc] initEventWithLocation:((AppDelegate *)[[UIApplication sharedApplication] delegate]).userLocation date:[NSDate date] shared:NO creator:nil];
-        
-        //Add the object to the base event
-        [event.eventItems addObject:sender];
-        
-        //Insert the object at the beginning of the array
-        [self.eventsArray insertObject:event atIndex:0];
-        
-        //Update the TableView
-        [self.contentTableView reloadData];
-    }
+        //If baseEvent not exist make it
+        if (baseEvent==nil) {
+            Event *event = nil;
+            
+            //New BaseEvent
+            event = [[Event alloc] initEventWithLocation:((AppDelegate *)[[UIApplication sharedApplication] delegate]).userLocation date:[NSDate date] shared:NO creator:nil];
+            
+            //Add the object to the base event
+            [event.eventItems addObject:sender];
+            
+            //Insert the object at the beginning of the array
+            [self.eventsArray insertObject:event atIndex:0];
+            
+            //Update the TableView
+            [self.contentTableView reloadData];
+        }
+    }];
 }
 
 #pragma mark -
@@ -255,6 +276,55 @@
     CGSize size = [text sizeWithFont:[UIFont systemFontOfSize:FONT_SIZE] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
     
     return size;
+}
+
+#pragma mark -
+#pragma mark UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    if (buttonIndex==0) {
+        self.newMedia = YES;
+        [self presentModalViewController:[Utility imagePickerControllerForTakingPictureWithDelegate:self] animated:YES];
+        
+    }
+    if (buttonIndex==1) {
+        self.newMedia = NO;
+        [self presentModalViewController:[Utility imagePickerControllerForChoosingPictureWithDelegate:self] animated:YES];
+    }
+}
+
+#pragma mark -
+#pragma mark - UIImagePickerControllerDelegate
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
+    
+
+    //Get the mediaType
+    NSString *mediaType = [info objectForKey: UIImagePickerControllerMediaType];
+    
+    UIImage *imageToSave;
+    
+    //If it is a still image
+    if (CFStringCompare ((__bridge CFStringRef) mediaType, kUTTypeImage, 0)
+        == kCFCompareEqualTo) {
+       
+        //Get the original image (without editing)
+         imageToSave = (UIImage *) [info objectForKey:
+                                     UIImagePickerControllerOriginalImage];
+    }
+    
+    //If a new picture has taken
+    if (self.newMedia) {
+        //Save the photo in the Photoalbum
+        //UIImageWriteToSavedPhotosAlbum (imageToSave, nil, nil , nil);
+    }
+    
+    //Initialize a SimplePicture object
+    SimplePicture *sp = [[SimplePicture alloc] initSimplePictureWithImage:imageToSave eventItemCreator:nil];
+    
+    //Tells the delegate to perform a task with the object received
+    [self addEventItem:sp toBaseEvent:nil];
 }
 
 #pragma mark -
@@ -311,6 +381,19 @@
             cell.backgroundView.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, CELL_CONTENT_WIDTH, MAX(size.height, CELL_HEIGHT));
             cell.backgroundView = iv;
         }
+        //If it is a picture
+        else if ([objectInTimeline isMemberOfClass:[SimplePicture class]]){
+            
+            //Get a reusable cell
+            cell = [tableView dequeueReusableCellWithIdentifier:@"pictureCellIdentifier"];
+            
+            //Set the image for the cell
+            ((PictureViewCell *)cell).pictureImageView.image = ((SimplePicture *)objectInTimeline).image;
+            
+            //Set the background for the cell
+            cell.backgroundView = iv;
+        }
+            
         //No of the above specified objects
         else{
             cell = [tableView dequeueReusableCellWithIdentifier:@"timelineCellIndentifier"];
@@ -324,10 +407,7 @@
     //Set the cell not selectable
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
-   
-    
     return cell;
-    
 }
 
 #pragma mark - 
@@ -343,9 +423,6 @@
     
     CGFloat height;
     
-    //Get the object in timeline
-    //id objectInTimeline = [self.contentArray objectAtIndex:indexPath.row];
-    
     //If the object is a Note
     if ([objectInTimeline isMemberOfClass:[SampleNote class]]) {
         
@@ -354,15 +431,15 @@
         
         //Get the height for the row
         height = MAX(size.height, CELL_HEIGHT) + (CELL_CONTENT_MARGIN * 2) + CELL_CONTENT_MARGIN_Y;
-        
-        //return height + (CELL_CONTENT_MARGIN * 2) + CELL_CONTENT_MARGIN_Y;
     }
+    //If the cell contains a picture
+    else if ([objectInTimeline isMemberOfClass:[SimplePicture class]]){
+        height = PICTURECELL_SIZE;
+    }
+     
+    //Return the height for the cell
     return height;
-    /*
-    else if ([objectInTimeline isMemberOfClass:[SamplePicture class]]){
-        
-    }
-    */
+    
 }
 
 @end

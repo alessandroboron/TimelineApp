@@ -15,6 +15,6 @@
 @property (strong, nonatomic) NSString *noteText;
 
 //The designated initializer
-- (id)initSampleNoteWithTitle:(NSString *)title text:(NSString *)text eventItemCreator:(NSString *)creator;
+- (id)initSampleNoteWithTitle:(NSString *)title text:(NSString *)text eventItemCreator:(NSString *)eventCreator;
 
 @end

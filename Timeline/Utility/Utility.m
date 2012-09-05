@@ -6,12 +6,14 @@
 //  Copyright (c) 2012 Alessandro Boron. All rights reserved.
 //
 
+#import <MobileCoreServices/MobileCoreServices.h>
 #import "Utility.h"
 #import "NSString+MD5.h"
 #import "AppDelegate.h"
 #import "XMPPRequestController.h"
 #import "Reachability.h"
 #import "MBProgressHUD.h"
+#import "NSData+Base64.h"
 
 @interface Utility ()
 
@@ -348,7 +350,76 @@
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     
     [array sortUsingDescriptors:sortDescriptors];
+}
+
+//This method is used to get a base 64 string representation from a UIIMage
++ (NSString *)base64StringFromImage:(UIImage *)image{
     
+    //Get the png representation of the image
+    NSData *data = UIImagePNGRepresentation(image);
+    
+    //Return the image in a base 64 string representation
+    return [data base64EncodedString];
+}
+
+//This methos is used to get an Image from its base64 string representation
++ (UIImage *)imageFromBase64String:(NSString *)base64String{
+        
+    //Get the data from the base 64 string
+    NSData *data = [NSData dataFromBase64String:base64String];
+    
+    //Get the img from the nsdata
+    UIImage *img = [UIImage imageWithData:data];
+    
+    return img;
+
+}
+
+//This method is used to return an UIImagePickerController set up to take pictures
++ (UIImagePickerController *)imagePickerControllerForTakingPictureWithDelegate:(id)delegate{
+    
+    UIImagePickerController *imagePicker=nil;
+    
+    //Check if the device is able to take picture
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        //Initialize the UIImagePickerController
+        imagePicker = [[UIImagePickerController alloc] init];
+        //Set the delegate
+        imagePicker.delegate = delegate;
+        //Set the picker to use the camera
+        imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        //Set the picker to take only still pictures
+        imagePicker.mediaTypes = [NSArray arrayWithObjects:(NSString *)kUTTypeImage,nil];
+        //Disable editing of pictures
+        imagePicker.allowsEditing = NO;
+        //Enable camera controls
+        imagePicker.showsCameraControls = YES;
+    }
+    
+    return imagePicker;
+}
+
+//This method is used to return an UIImagePickerController set up to choose pictures from library
++ (UIImagePickerController *)imagePickerControllerForChoosingPictureWithDelegate:(id)delegate{
+    
+    UIImagePickerController *imagePicker = nil;
+    
+    //If the saved Photo album is available
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeSavedPhotosAlbum]){
+        //Initialize the UIImagePickerController 
+        imagePicker =
+        [[UIImagePickerController alloc] init];
+        //Set the delegate
+        imagePicker.delegate = delegate;
+        //Set the picker to use the photo album
+        imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        //Set the picker to choose only from still images
+        imagePicker.mediaTypes = [NSArray arrayWithObjects:(NSString *) kUTTypeImage, nil];
+        //Disable photo editing
+        imagePicker.allowsEditing = NO;
+    }
+    
+    return imagePicker;
 }
 
 @end

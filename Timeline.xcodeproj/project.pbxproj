@@ -28,6 +28,11 @@
 		D226D1FC15DBAB2E00227FAF /* TimelineViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D226D1FB15DBAB2D00227FAF /* TimelineViewCell.m */; };
 		D226D20015DBAD3000227FAF /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = D226D1FF15DBAD2F00227FAF /* Utility.m */; };
 		D226D20A15DBDC9C00227FAF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D226D20915DBDC9C00227FAF /* CoreLocation.framework */; };
+		D230E7D715F77D580059CC3D /* PictureDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D230E7D615F77D570059CC3D /* PictureDetailsViewController.m */; };
+		D24EC0D615F62D0E0031F5D3 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = D24EC0D515F62D0E0031F5D3 /* NSData+Base64.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D24EC0DC15F639DF0031F5D3 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D24EC0DB15F639DF0031F5D3 /* MobileCoreServices.framework */; };
+		D24EC0E215F6425B0031F5D3 /* SimplePicture.m in Sources */ = {isa = PBXBuildFile; fileRef = D24EC0E115F6425B0031F5D3 /* SimplePicture.m */; };
+		D24EC0E715F6520D0031F5D3 /* yelp.png in Resources */ = {isa = PBXBuildFile; fileRef = D24EC0E615F6520D0031F5D3 /* yelp.png */; };
 		D262252A15E7A36100F55FB1 /* EventDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D262252915E7A36100F55FB1 /* EventDetailViewController.m */; };
 		D262253615EA550500F55FB1 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D262253515EA550500F55FB1 /* AddressBook.framework */; };
 		D262253815EA676000F55FB1 /* eventDetailContainer.png in Resources */ = {isa = PBXBuildFile; fileRef = D262253715EA676000F55FB1 /* eventDetailContainer.png */; };
@@ -153,6 +158,14 @@
 		D226D1FE15DBAD2E00227FAF /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utility.h; path = Utility/Utility.h; sourceTree = "<group>"; };
 		D226D1FF15DBAD2F00227FAF /* Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Utility.m; path = Utility/Utility.m; sourceTree = "<group>"; };
 		D226D20915DBDC9C00227FAF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		D230E7D515F77D570059CC3D /* PictureDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PictureDetailsViewController.h; path = "View Controllers/TimelinesViewcontroller/TimelineViewController/EventDetailViewController/PictureDetailsViewController/PictureDetailsViewController.h"; sourceTree = "<group>"; };
+		D230E7D615F77D570059CC3D /* PictureDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PictureDetailsViewController.m; path = "View Controllers/TimelinesViewcontroller/TimelineViewController/EventDetailViewController/PictureDetailsViewController/PictureDetailsViewController.m"; sourceTree = "<group>"; };
+		D24EC0D415F62D0E0031F5D3 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
+		D24EC0D515F62D0E0031F5D3 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
+		D24EC0DB15F639DF0031F5D3 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		D24EC0E015F6425B0031F5D3 /* SimplePicture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimplePicture.h; path = Model/EventItem/SimplePicture/SimplePicture.h; sourceTree = "<group>"; };
+		D24EC0E115F6425B0031F5D3 /* SimplePicture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimplePicture.m; path = Model/EventItem/SimplePicture/SimplePicture.m; sourceTree = "<group>"; };
+		D24EC0E615F6520D0031F5D3 /* yelp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yelp.png; sourceTree = "<group>"; };
 		D262252815E7A36100F55FB1 /* EventDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventDetailViewController.h; path = TimelineViewController/EventDetailViewController/EventDetailViewController.h; sourceTree = "<group>"; };
 		D262252915E7A36100F55FB1 /* EventDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EventDetailViewController.m; path = TimelineViewController/EventDetailViewController/EventDetailViewController.m; sourceTree = "<group>"; };
 		D262253515EA550500F55FB1 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
@@ -322,6 +335,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D24EC0DC15F639DF0031F5D3 /* MobileCoreServices.framework in Frameworks */,
 				D262253615EA550500F55FB1 /* AddressBook.framework in Frameworks */,
 				D294744E15E248850016A093 /* SystemConfiguration.framework in Frameworks */,
 				D294743315E238290016A093 /* libresolv.dylib in Frameworks */,
@@ -430,11 +444,50 @@
 			name = Utility;
 			sourceTree = "<group>";
 		};
+		D230E7D915F77D5E0059CC3D /* PictureDetailsViewController */ = {
+			isa = PBXGroup;
+			children = (
+				D230E7D515F77D570059CC3D /* PictureDetailsViewController.h */,
+				D230E7D615F77D570059CC3D /* PictureDetailsViewController.m */,
+			);
+			name = PictureDetailsViewController;
+			path = ../..;
+			sourceTree = "<group>";
+		};
+		D24EC0D215F62BD10031F5D3 /* NSString+MD5 */ = {
+			isa = PBXGroup;
+			children = (
+				D285B56F15D5536800AFC1C7 /* NSString+MD5.h */,
+				D285B57015D5536800AFC1C7 /* NSString+MD5.m */,
+			);
+			name = "NSString+MD5";
+			sourceTree = "<group>";
+		};
+		D24EC0D315F62D0E0031F5D3 /* NSData+Base64 */ = {
+			isa = PBXGroup;
+			children = (
+				D24EC0D415F62D0E0031F5D3 /* NSData+Base64.h */,
+				D24EC0D515F62D0E0031F5D3 /* NSData+Base64.m */,
+			);
+			name = "NSData+Base64";
+			path = "Categories/NSData+Base64";
+			sourceTree = "<group>";
+		};
+		D24EC0E315F642600031F5D3 /* SimplePicture */ = {
+			isa = PBXGroup;
+			children = (
+				D24EC0E015F6425B0031F5D3 /* SimplePicture.h */,
+				D24EC0E115F6425B0031F5D3 /* SimplePicture.m */,
+			);
+			name = SimplePicture;
+			sourceTree = "<group>";
+		};
 		D262252C15E7A3B600F55FB1 /* EventDetailViewController */ = {
 			isa = PBXGroup;
 			children = (
 				D262252815E7A36100F55FB1 /* EventDetailViewController.h */,
 				D262252915E7A36100F55FB1 /* EventDetailViewController.m */,
+				D230E7D915F77D5E0059CC3D /* PictureDetailsViewController */,
 				D2EA0C2915EB72C20084B587 /* ShareEventViewController */,
 			);
 			name = EventDetailViewController;
@@ -443,6 +496,7 @@
 		D285B52F15D5301D00AFC1C7 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				D24EC0E615F6520D0031F5D3 /* yelp.png */,
 				D294744F15E261A60016A093 /* Settings */,
 				D294066215DD1ED700574FCD /* container.png */,
 				D2E622B215DCF5B0009FCEBB /* TimelineBackground */,
@@ -556,6 +610,7 @@
 				D285B56B15D550FD00AFC1C7 /* EventItem.h */,
 				D285B56C15D550FD00AFC1C7 /* EventItem.m */,
 				D226D1ED15DACAF600227FAF /* SampleNote */,
+				D24EC0E315F642600031F5D3 /* SimplePicture */,
 			);
 			name = EventItem;
 			sourceTree = "<group>";
@@ -563,8 +618,8 @@
 		D285B57215D5614700AFC1C7 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				D285B56F15D5536800AFC1C7 /* NSString+MD5.h */,
-				D285B57015D5536800AFC1C7 /* NSString+MD5.m */,
+				D24EC0D315F62D0E0031F5D3 /* NSData+Base64 */,
+				D24EC0D215F62BD10031F5D3 /* NSString+MD5 */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -900,6 +955,7 @@
 		D2CD815C15D2AEC000094D72 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D24EC0DB15F639DF0031F5D3 /* MobileCoreServices.framework */,
 				D262253515EA550500F55FB1 /* AddressBook.framework */,
 				D294744D15E248850016A093 /* SystemConfiguration.framework */,
 				D294743215E238290016A093 /* libresolv.dylib */,
@@ -1074,6 +1130,7 @@
 				D2EA0C2415EB6EF20084B587 /* tag@2x.png in Resources */,
 				D2AA185E15ECF82E0024BFF9 /* timeline_icon.png in Resources */,
 				D2AA186015ECF8330024BFF9 /* timeline_icon@2x.png in Resources */,
+				D24EC0E715F6520D0031F5D3 /* yelp.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1146,6 +1203,9 @@
 				D2B0A47015E4F98600150CC6 /* MBProgressHUD.m in Sources */,
 				D262252A15E7A36100F55FB1 /* EventDetailViewController.m in Sources */,
 				D2EA0C2815EB72BC0084B587 /* ShareEventViewController.m in Sources */,
+				D24EC0D615F62D0E0031F5D3 /* NSData+Base64.m in Sources */,
+				D24EC0E215F6425B0031F5D3 /* SimplePicture.m in Sources */,
+				D230E7D715F77D580059CC3D /* PictureDetailsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1236,6 +1296,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/Timeline/XMPPFramework/Vendor/libidin\"",
 				);
+				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "A08D6F31-2F63-4382-B541-EEF1009C134D";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A08D6F31-2F63-4382-B541-EEF1009C134D";
@@ -1255,6 +1316,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/Timeline/XMPPFramework/Vendor/libidin\"",
 				);
+				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "875C3AA6-1446-4883-91D5-D30A1EC86770";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "875C3AA6-1446-4883-91D5-D30A1EC86770";

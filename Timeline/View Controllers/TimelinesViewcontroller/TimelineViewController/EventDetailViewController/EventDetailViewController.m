@@ -11,9 +11,12 @@
 #import "EventDetailViewController.h"
 #import "TimelineViewCell.h"
 #import "NoteCell.h"
+#import "PictureViewCell.h"
 #import "Event.h"
 #import "NewNoteViewController.h"
 #import "SampleNote.h"
+#import "SimplePicture.h"
+#import "PictureDetailsViewController.h"
 #import "ShareEventViewController.h"
 #import "XMPPRequestController.h"
 
@@ -24,16 +27,19 @@
 #define CELL_CONTENT_MARGIN_Y 10.0f
 #define CELL_HEIGHT 55.0f
 
+#define PICTURECELL_SIZE 200.0f
+
 @interface EventDetailViewController ()
 
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (weak, nonatomic) IBOutlet UILabel *eventDateLabel;
 @property (weak, nonatomic) IBOutlet UILabel *eventLocationLabel;
 @property (weak, nonatomic) IBOutlet UITableView *itemsTableView;
-
+@property (strong, nonatomic) NSIndexPath *indexPath;
 
 - (IBAction)doneButtonPressed:(id)sender;
 - (IBAction)shareButtonPressed:(id)sender;
+- (IBAction)showEventItemDetails:(UILongPressGestureRecognizer *)recognizer;
 - (void)performReverseGeocoding;
 
 @end
@@ -46,6 +52,7 @@
 @synthesize eventDateLabel = _eventDateLabel;
 @synthesize eventLocationLabel = _eventLocationLabel;
 @synthesize itemsTableView = _itemsTableView;
+@synthesize indexPath = _indexPath;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -101,6 +108,19 @@
         nnvc.delegate = self;
         nnvc.baseEvent = self.event;
     }
+    
+    //If a picture detail
+    else if ([segue.identifier isEqualToString:@"pictureDetailsSegue"]){
+        
+        //Get the controller
+        PictureDetailsViewController *pdvc = (PictureDetailsViewController *)segue.destinationViewController;
+        //Set the delegate
+        pdvc.delegate = self;
+        //Set the image
+        pdvc.img = ((SimplePicture *)[self.event.eventItems objectAtIndex:self.indexPath.row]).image;
+        
+    }
+    
     else if ([segue.identifier isEqualToString:@"shareEventIdentifier"]){
         UINavigationController *navController = (UINavigationController *)segue.destinationViewController;
         
@@ -130,6 +150,27 @@
     }
     else{
         [Utility showAlertViewWithTitle:@"Mirror Space Service" message:@"Not connected to the Mirror Space Service" cancelButtonTitle:@"Dismiss"];
+    }
+}
+
+//This method is used to show the eventItem detail when the long pressure is recognized
+- (IBAction)showEventItemDetails:(UILongPressGestureRecognizer *)recognizer{
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        
+        //Get the point tapped if in table view
+        CGPoint p = [recognizer locationInView:self.itemsTableView];
+        
+        //Get the index
+        NSIndexPath *indexPath = [self.itemsTableView indexPathForRowAtPoint:p];
+        self.indexPath = indexPath;
+        
+        //Get the cell
+        UITableViewCell *cell = [self.itemsTableView cellForRowAtIndexPath:indexPath];
+        
+        //If the cell contains a picture
+        if ([cell isMemberOfClass:[PictureViewCell class]]){
+            [self performSegueWithIdentifier:@"pictureDetailsSegue" sender:self];
+        }
     }
 }
 
@@ -235,6 +276,15 @@
         
         cell.backgroundView = iv;
     }
+    //If the cell contains a picture
+    else if([objectInTimeline isMemberOfClass:[SimplePicture class]]){
+        
+        //Get a reusable cell
+        cell = [tableView dequeueReusableCellWithIdentifier:@"pictureCellIdentifier"];
+        //Se the image for the cell
+        ((PictureViewCell *)cell).pictureImageView.image = ((SimplePicture *)objectInTimeline).image;
+    }
+    
     //No of the above specified objects
     else{
         cell = [tableView dequeueReusableCellWithIdentifier:@"timelineCellIndentifier"];
@@ -265,12 +315,12 @@
         //Get the height for the row
         height = MAX(size.height, CELL_HEIGHT) + (CELL_CONTENT_MARGIN * 2) + CELL_CONTENT_MARGIN_Y;
     }
-    return height;
-    /*
-     else if ([objectInTimeline isMemberOfClass:[SamplePicture class]]){
+    else if ([objectInTimeline isMemberOfClass:[SimplePicture class]]){
+        height = PICTURECELL_SIZE;
+    }
      
-     }
-     */    
+    return height;
+     
 }
 
 @end

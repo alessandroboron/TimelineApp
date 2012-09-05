@@ -66,4 +66,17 @@
 //This method is used to sort the event based on an attribute and order ascending/descending
 + (void)sortArray:(NSArray *)array withKey:(NSString *)key ascending:(BOOL)ascending;
 
+//This method is used to get a base 64 string representation from a UIIMage
++ (NSString *)base64StringFromImage:(UIImage *)image;
+
+//This methos is used to get an Image from its base64 string representation
++ (UIImage *)imageFromBase64String:(NSString *)base64String;
+
+//This method is used to return an UIImagePickerController set up to take pictures
++ (UIImagePickerController *)imagePickerControllerForTakingPictureWithDelegate:(id)delegate;
+
+//This method is used to return an UIImagePickerController set up to choose pictures from library
++ (UIImagePickerController *)imagePickerControllerForChoosingPictureWithDelegate:(id)delegate;
+
+
 @end

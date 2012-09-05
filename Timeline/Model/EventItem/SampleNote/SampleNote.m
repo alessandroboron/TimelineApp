@@ -14,7 +14,7 @@
 @synthesize noteText = _noteText;
 
 //The designated initializer
-- (id)initSampleNoteWithTitle:(NSString *)title text:(NSString *)text eventItemCreator:(NSString *)eventCreator;{
+- (id)initSampleNoteWithTitle:(NSString *)title text:(NSString *)text eventItemCreator:(NSString *)eventCreator{
         
     self = [super initEventItemWithId:[NSString stringWithFormat:@"%@%@%@",title,text,eventCreator] creator:eventCreator];
     

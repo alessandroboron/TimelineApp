@@ -102,6 +102,9 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="pictureButtonPressed:" destination="PhQ-xk-epN" eventType="touchUpInside" id="8to-9n-4Ia"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="0Jk-lQ-LFe" userLabel="videoButton">
                                 <rect key="frame" x="275" y="129" width="44" height="44"/>
@@ -198,20 +201,31 @@
                                             <outlet property="timestampLabel" destination="NrS-KX-IZD" id="wIr-Fk-JHO"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="pictureCellIndentifier" rowHeight="200" id="0Zg-iV-Cvp" customClass="PictureViewCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="pictureCellIdentifier" rowHeight="200" id="0Zg-iV-Cvp" customClass="PictureViewCell">
                                         <rect key="frame" x="0.0" y="97" width="270" height="200"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="270" height="199"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" id="bAQ-6P-7Mm" userLabel="pictureImageView">
-                                                    <rect key="frame" x="20" y="5" width="250" height="190"/>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="uK5-C9-O6I">
+                                                    <rect key="frame" x="160" y="8" width="100" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
+                                                    <color key="textColor" red="1" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" id="bAQ-6P-7Mm" userLabel="pictureImageView">
+                                                    <rect key="frame" x="20" y="30" width="250" height="150"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <connections>
+                                            <outlet property="pictureImageView" destination="bAQ-6P-7Mm" id="rLB-Nk-byW"/>
+                                            <outlet property="timestampLabel" destination="uK5-C9-O6I" id="wk0-rS-Hu5"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="videoCellIndentifier" rowHeight="200" id="xpP-KR-SvY">
                                         <rect key="frame" x="0.0" y="297" width="270" height="200"/>
@@ -275,6 +289,7 @@
                     <navigationItem key="navigationItem" id="zdK-vk-eFL"/>
                     <connections>
                         <outlet property="contentTableView" destination="Zw1-fg-3Lj" id="bjd-re-Mgf"/>
+                        <outlet property="pictureButton" destination="j0o-yO-IoA" id="n2M-re-eHC"/>
                         <segue destination="ZFY-J7-MGz" kind="modal" identifier="eventDetailsSegue" id="rQK-Ia-UdL"/>
                     </connections>
                 </viewController>
@@ -434,6 +449,7 @@
                                 <rect key="frame" x="5" y="117" width="265" height="323"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="noteCellIdentifier" rowHeight="55" id="1sW-1C-SRE" customClass="NoteCell">
                                         <rect key="frame" x="0.0" y="22" width="265" height="55"/>
@@ -456,17 +472,26 @@
                                             <outlet property="contentLabel" destination="Oxw-eQ-fVF" id="e4e-n5-3Xl"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="pictureCellIdentifier" rowHeight="55" id="AzV-cK-jzT" customClass="PictureViewCell">
-                                        <rect key="frame" x="0.0" y="77" width="265" height="55"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="pictureCellIdentifier" rowHeight="170" id="AzV-cK-jzT" customClass="PictureViewCell">
+                                        <rect key="frame" x="0.0" y="77" width="265" height="170"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="265" height="54"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="265" height="169"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" id="mZE-67-HTp">
+                                                    <rect key="frame" x="10" y="10" width="245" height="150"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                            </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <connections>
+                                            <outlet property="pictureImageView" destination="mZE-67-HTp" id="fCf-RU-3B0"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="itemIdentifier" rowHeight="55" id="dIA-nF-hfS" customClass="NoteCell">
-                                        <rect key="frame" x="0.0" y="132" width="265" height="55"/>
+                                        <rect key="frame" x="0.0" y="247" width="265" height="55"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="265" height="54"/>
@@ -475,7 +500,7 @@
                                         </view>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="itemIdentifier" rowHeight="55" id="w10-tw-fUQ" customClass="NoteCell">
-                                        <rect key="frame" x="0.0" y="187" width="265" height="55"/>
+                                        <rect key="frame" x="0.0" y="302" width="265" height="55"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="265" height="54"/>
@@ -487,6 +512,7 @@
                                 <connections>
                                     <outlet property="dataSource" destination="ZFY-J7-MGz" id="zgE-Qk-FZP"/>
                                     <outlet property="delegate" destination="ZFY-J7-MGz" id="ruF-JA-ycj"/>
+                                    <outletCollection property="gestureRecognizers" destination="Yj1-Og-HEd" appends="YES" id="EgS-gW-lAm"/>
                                 </connections>
                             </tableView>
                         </subviews>
@@ -498,10 +524,16 @@
                         <outlet property="itemsTableView" destination="1fu-vl-aBy" id="3Yv-b7-3t9"/>
                         <outlet property="navigationBar" destination="bMv-0S-Iwn" id="a1Z-pC-3Qm"/>
                         <segue destination="tcr-Mm-HFP" kind="modal" identifier="shareEventIdentifier" id="TNr-lb-go6"/>
+                        <segue destination="tsE-gh-YNz" kind="modal" identifier="pictureDetailsSegue" id="aCP-V7-RkG"/>
                     </connections>
                 </viewController>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="Yj1-Og-HEd">
+                    <connections>
+                        <action selector="showEventItemDetails:" destination="ZFY-J7-MGz" id="Vs7-tr-WHQ"/>
+                    </connections>
+                </pongPressGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2862" y="-532"/>
+            <point key="canvasLocation" x="2806" y="88"/>
         </scene>
         <!--Share Event View Controller - Sharing-->
         <scene sceneID="Tn4-i4-Nn6">
@@ -547,7 +579,7 @@
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="3935" y="-356"/>
+            <point key="canvasLocation" x="3879" y="264"/>
         </scene>
         <!--New Note View Controller-->
         <scene sceneID="JNU-Nh-9Xu">
@@ -602,32 +634,6 @@
                 </viewController>
             </objects>
             <point key="canvasLocation" x="3035" y="-1361"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="MQg-fl-XAF">
-            <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="LzJ-Dp-onh" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController id="Yi4-LT-wOh" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="ACM-Ru-Qym">
-                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <navigationBar contentMode="scaleToFill" id="4PL-uP-yPj">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <items>
-                                    <navigationItem title="New Picture" id="6nF-H4-bIP">
-                                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="rak-dz-npy"/>
-                                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="TPG-bv-dHq"/>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-            </objects>
-            <point key="canvasLocation" x="3442" y="-1364"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="eWk-yh-hab">
@@ -1237,6 +1243,43 @@
             </objects>
             <point key="canvasLocation" x="594" y="1350"/>
         </scene>
+        <!--Picture Details View Controller-->
+        <scene sceneID="za5-Yk-Tp4">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ue7-dT-kAv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="tsE-gh-YNz" customClass="PictureDetailsViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="w9b-sY-vQg">
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <navigationBar contentMode="scaleToFill" id="9MX-Fe-ddw">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem title="Title" id="Ayg-ME-QmE">
+                                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="AlV-KH-T4E">
+                                            <connections>
+                                                <action selector="doneButtonPressed:" destination="tsE-gh-YNz" id="hNy-EC-rfC"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" id="coG-Wh-6TC">
+                                <rect key="frame" x="0.0" y="44" width="320" height="416"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="imgView" destination="coG-Wh-6TC" id="xMp-DT-7R8"/>
+                        <outlet property="navBar" destination="9MX-Fe-ddw" id="7JF-U1-qL7"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="3262" y="-324"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="Shn-fm-xhT">
             <objects>
@@ -1253,7 +1296,7 @@
                     </connections>
                 </navigationController>
             </objects>
-            <point key="canvasLocation" x="3409" y="-356"/>
+            <point key="canvasLocation" x="3353" y="264"/>
         </scene>
     </scenes>
     <resources>
@@ -1276,6 +1319,7 @@
             <relationships>
                 <relationship kind="action" name="doneButtonPressed:"/>
                 <relationship kind="action" name="shareButtonPressed:"/>
+                <relationship kind="action" name="showEventItemDetails:" candidateClass="UILongPressGestureRecognizer"/>
                 <relationship kind="outlet" name="eventDateLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="eventLocationLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="itemsTableView" candidateClass="UITableView"/>
@@ -1325,8 +1369,19 @@
                 <relationship kind="outlet" name="contentLabel" candidateClass="UILabel"/>
             </relationships>
         </class>
-        <class className="PictureViewCell" superclassName="UITableViewCell">
+        <class className="PictureDetailsViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PictureDetailsViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="doneButtonPressed:"/>
+                <relationship kind="outlet" name="imgView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="navBar" candidateClass="UINavigationBar"/>
+            </relationships>
+        </class>
+        <class className="PictureViewCell" superclassName="TimelineViewCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/PictureViewCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="pictureImageView" candidateClass="UIImageView"/>
+            </relationships>
         </class>
         <class className="SettingsViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/SettingsViewController.h"/>
@@ -1354,8 +1409,10 @@
         <class className="TimelineViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/TimelineViewController.h"/>
             <relationships>
+                <relationship kind="action" name="pictureButtonPressed:"/>
                 <relationship kind="action" name="showInfoDetails:" candidateClass="UILongPressGestureRecognizer"/>
                 <relationship kind="outlet" name="contentTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="pictureButton" candidateClass="UIButton"/>
             </relationships>
         </class>
         <class className="TimelinesViewController" superclassName="UITableViewController">

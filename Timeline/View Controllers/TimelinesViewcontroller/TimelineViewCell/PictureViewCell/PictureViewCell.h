@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TimelineViewCell.h"
 
-@interface PictureViewCell : UITableViewCell
+@interface PictureViewCell : TimelineViewCell
+
+@property (weak, nonatomic) IBOutlet UIImageView *pictureImageView;
 
 @end
