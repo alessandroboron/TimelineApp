@@ -9,6 +9,7 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "TimelineViewController.h"
 #import "NewNoteViewController.h"
+#import "NewAudioViewController.h"
 #import "Event.h"
 #import "SampleNote.h"
 #import "TimelineViewCell.h"
@@ -18,6 +19,7 @@
 #import "XMPPRequestController.h"
 #import "EventDetailViewController.h"
 #import "SimplePicture.h"
+#import "SimpleRecording.h"
 
 #define FONT_SIZE 16.0f
 #define CELL_CONTENT_WIDTH 235.0f
@@ -27,6 +29,7 @@
 #define CELL_HEIGHT 75.0f
 
 #define PICTURECELL_SIZE 200.0f
+#define AUDIOCELL_SIZE 130.0f;
 
 @interface TimelineViewController ()
 
@@ -38,6 +41,7 @@
 - (CGSize)sizeOfText:(NSString *)text;
 - (IBAction)showInfoDetails:(UILongPressGestureRecognizer *)recognizer;
 - (IBAction)pictureButtonPressed:(id)sender;
+- (IBAction)audioButtonPressed:(id)sender;
 
 
 @end
@@ -127,6 +131,12 @@
         nnvc.delegate = self;
         nnvc.baseEvent = nil;
     }
+    //If the user wants to record a new audio
+    else if ([segue.identifier isEqualToString:@"newAudioSegue"]){
+        
+        NewAudioViewController *navc = (NewAudioViewController *)segue.destinationViewController;
+        navc.delegate = self;
+    }
     
     //If info details view has to be shown
     else if ([segue.identifier isEqualToString:@"eventDetailsSegue"]){
@@ -162,6 +172,11 @@
     
     //Show the actionsheet
     [as showFromTabBar:self.tabBarController.tabBar];
+}
+
+- (IBAction)audioButtonPressed:(id)sender{
+    
+    [self performSegueWithIdentifier:@"newAudioSegue" sender:self];
 }
 
 #pragma mark -
@@ -303,25 +318,33 @@
     //Get the mediaType
     NSString *mediaType = [info objectForKey: UIImagePickerControllerMediaType];
     
-    UIImage *imageToSave;
+    UIImage *originalImage;
     
     //If it is a still image
     if (CFStringCompare ((__bridge CFStringRef) mediaType, kUTTypeImage, 0)
         == kCFCompareEqualTo) {
        
         //Get the original image (without editing)
-         imageToSave = (UIImage *) [info objectForKey:
+         originalImage = (UIImage *) [info objectForKey:
                                      UIImagePickerControllerOriginalImage];
     }
-    
-    //If a new picture has taken
+   //If a new picture has taken save in the photoalbum
     if (self.newMedia) {
         //Save the photo in the Photoalbum
         //UIImageWriteToSavedPhotosAlbum (imageToSave, nil, nil , nil);
     }
     
+    //Resize the picture to its 5%
+    UIImage *small = [UIImage imageWithCGImage:originalImage.CGImage scale:8 orientation:originalImage.imageOrientation];
+    //Get the new image compressed
+    small = [Utility imageWithImage:small scaledToSize:small.size];
+    NSLog(@"Frame: %f,%f",small.size.width,small.size.height);
+    NSData *d = UIImagePNGRepresentation(small);
+    NSLog(@"Data: %d",d.length);
+    
+    
     //Initialize a SimplePicture object
-    SimplePicture *sp = [[SimplePicture alloc] initSimplePictureWithImage:imageToSave eventItemCreator:nil];
+    SimplePicture *sp = [[SimplePicture alloc] initSimplePictureWithImage:small eventItemCreator:nil];
     
     //Tells the delegate to perform a task with the object received
     [self addEventItem:sp toBaseEvent:nil];
@@ -393,6 +416,15 @@
             //Set the background for the cell
             cell.backgroundView = iv;
         }
+        
+        else if ([objectInTimeline isMemberOfClass:[SimpleRecording class]]){
+            
+            //Get a reusable cell
+            cell = [tableView dequeueReusableCellWithIdentifier:@"audioCellIdentifier"];
+            
+            //Set the background for the cell
+            cell.backgroundView = iv;
+        }
             
         //No of the above specified objects
         else{
@@ -435,6 +467,10 @@
     //If the cell contains a picture
     else if ([objectInTimeline isMemberOfClass:[SimplePicture class]]){
         height = PICTURECELL_SIZE;
+    }
+    
+    else if ([objectInTimeline isMemberOfClass:[SimpleRecording class]]){
+        height = AUDIOCELL_SIZE;
     }
      
     //Return the height for the cell

@@ -16,6 +16,7 @@
 #import "NewNoteViewController.h"
 #import "SampleNote.h"
 #import "SimplePicture.h"
+#import "SimpleRecording.h"
 #import "PictureDetailsViewController.h"
 #import "ShareEventViewController.h"
 #import "XMPPRequestController.h"
@@ -28,6 +29,7 @@
 #define CELL_HEIGHT 55.0f
 
 #define PICTURECELL_SIZE 200.0f
+#define AUDIOCELL_SIZE 130.0f;
 
 @interface EventDetailViewController ()
 
@@ -39,7 +41,7 @@
 
 - (IBAction)doneButtonPressed:(id)sender;
 - (IBAction)shareButtonPressed:(id)sender;
-- (IBAction)showEventItemDetails:(UILongPressGestureRecognizer *)recognizer;
+- (IBAction)showEventItemDetails:(UITapGestureRecognizer *)recognizer;
 - (void)performReverseGeocoding;
 
 @end
@@ -122,10 +124,9 @@
     }
     
     else if ([segue.identifier isEqualToString:@"shareEventIdentifier"]){
-        UINavigationController *navController = (UINavigationController *)segue.destinationViewController;
         
-        //Set the background of the navigation bar
-        [navController.navigationBar setBackgroundImage:[UIImage imageNamed:@"navigationBarBackground.png"] forBarMetrics:UIBarMetricsDefault];
+        //Get the destination view controller
+        UINavigationController *navController = (UINavigationController *)segue.destinationViewController;
         //Get the controller to show
         ShareEventViewController *sevc = (ShareEventViewController *) [navController.viewControllers objectAtIndex:0];
         //Set the delegate
@@ -154,8 +155,8 @@
 }
 
 //This method is used to show the eventItem detail when the long pressure is recognized
-- (IBAction)showEventItemDetails:(UILongPressGestureRecognizer *)recognizer{
-    if (recognizer.state == UIGestureRecognizerStateBegan) {
+- (IBAction)showEventItemDetails:(UITapGestureRecognizer *)recognizer{
+    if (recognizer.state == UIGestureRecognizerStateEnded) {
         
         //Get the point tapped if in table view
         CGPoint p = [recognizer locationInView:self.itemsTableView];
@@ -285,6 +286,15 @@
         ((PictureViewCell *)cell).pictureImageView.image = ((SimplePicture *)objectInTimeline).image;
     }
     
+    //If the cell contains a picture
+    else if([objectInTimeline isMemberOfClass:[SimpleRecording class]]){
+        
+        //Get a reusable cell
+        cell = [tableView dequeueReusableCellWithIdentifier:@"audioCellIdentifier"];
+        
+    }
+
+    
     //No of the above specified objects
     else{
         cell = [tableView dequeueReusableCellWithIdentifier:@"timelineCellIndentifier"];
@@ -317,6 +327,9 @@
     }
     else if ([objectInTimeline isMemberOfClass:[SimplePicture class]]){
         height = PICTURECELL_SIZE;
+    }
+    else if ([objectInTimeline isMemberOfClass:[SimpleRecording class]]){
+        height = AUDIOCELL_SIZE;
     }
      
     return height;

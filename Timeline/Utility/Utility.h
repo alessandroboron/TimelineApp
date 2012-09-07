@@ -78,5 +78,8 @@
 //This method is used to return an UIImagePickerController set up to choose pictures from library
 + (UIImagePickerController *)imagePickerControllerForChoosingPictureWithDelegate:(id)delegate;
 
+//This method is used to get a image with scaled and compressed size
++ (UIImage*)imageWithImage:(UIImage*)image scaledToSize:(CGSize)newSize;
+
 
 @end

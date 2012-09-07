@@ -44,6 +44,9 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
+    //Set the background of the navigation bar
+    [[self.navigationController navigationBar] setBackgroundImage:[UIImage imageNamed:@"navigationBarBackground.png"] forBarMetrics:UIBarMetricsDefault];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSpaceList:) name:@"SpaceListDidUpdateNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSpaces:) name:@"SpacesDidUpdateNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissAI:) name:@"SpacesFetchingErrorNotification" object:nil];

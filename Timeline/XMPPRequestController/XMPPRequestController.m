@@ -11,6 +11,7 @@
 //#import "XMPPPubSub.h"
 #import "User.h"
 #import "SampleNote.h"
+#import "SimplePicture.h"
 #import "Event.h"
 
 #define kXMPPResourceIdentifier @"TimelineAPP"
@@ -309,19 +310,39 @@
     NSXMLElement *subject = nil;
     NSXMLElement *body = nil;
     NSXMLElement *location = nil;
-    
-    if ([[event.eventItems objectAtIndex:0] isMemberOfClass:[SampleNote class]]) {
+    NSXMLElement *attachment = nil;
+   
+    //If the event is a note
+    if ([[event.eventItems objectAtIndex:0] isMemberOfClass:[SampleNote class]]){
+        //Set subject and body
         subject = [NSXMLElement elementWithName:@"subject" stringValue:((SampleNote *)[event.eventItems objectAtIndex:0]).noteTitle];
         body = [NSXMLElement elementWithName:@"body" stringValue:((SampleNote *)[event.eventItems objectAtIndex:0]).noteText];
-        location = [NSXMLElement elementWithName:@"location"];
-        [location addAttributeWithName:@"latitude" stringValue:[NSString stringWithFormat:@"%f",event.location.coordinate.latitude]];
-        [location addAttributeWithName:@"longitude" stringValue:[NSString stringWithFormat:@"%f",event.location.coordinate.longitude]];
-#warning create attachment element for picture, video, sound
+    }
+    else{
+        subject = [NSXMLElement elementWithName:@"subject"];
+        body = [NSXMLElement elementWithName:@"body"];
     }
     
+    location = [NSXMLElement elementWithName:@"location"];
+    [location addAttributeWithName:@"latitude" stringValue:[NSString stringWithFormat:@"%f",event.location.coordinate.latitude]];
+    [location addAttributeWithName:@"longitude" stringValue:[NSString stringWithFormat:@"%f",event.location.coordinate.longitude]];
+    attachment = [NSXMLElement elementWithName:@"attachment"];
+    //If it is a picture
+    if ([[event.eventItems objectAtIndex:0] isMemberOfClass:[SimplePicture class]]){
+        [attachment addAttributeWithName:@"type" stringValue:@"photo"];
+    }
+    NSXMLElement *content = [NSXMLElement elementWithName:@"content"];
+    if ([[event.eventItems objectAtIndex:0] isMemberOfClass:[SimplePicture class]]){
+        [content addAttributeWithName:@"mimeType" stringValue:@"image/png"];
+    }
+    [content setStringValue:[Utility base64StringFromImage:((SimplePicture *)[event.eventItems objectAtIndex:0]).image]];
+        
+    [attachment addChild:content];
+
     [eventXML addChild:subject];
     [eventXML addChild:body];
     [eventXML addChild:location];
+    [eventXML addChild:attachment];
     
     XMPPIQ *iq = [XMPPIQ iqWithType:@"set" to:[XMPPJID jidWithString:kPubsubHost] elementID:kPubsubPublishIdentifier child:pubsub];
     
@@ -748,16 +769,47 @@
     NSString *subject = [[eventXML elementForName:@"subject"] stringValue];
     NSString *body = [[eventXML elementForName:@"body"] stringValue];
     
-    SampleNote *sn = [[SampleNote alloc] initSampleNoteWithTitle:subject text:body eventItemCreator:eventCreator];
+    NSXMLElement *attachment = [eventXML elementForName:@"attachment"];
+    NSString *type = [attachment attributeStringValueForName:@"type"];
+    
+    UIImage *img = nil;
+    NSString *contentBase64 = nil;
+    if ([type isEqualToString:@"photo"]) {
+        contentBase64 = [[attachment elementForName:@"content"] stringValue];
+    }
+    if (contentBase64) {
+        img = [Utility imageFromBase64String:contentBase64];
+        NSData *dataImg = UIImagePNGRepresentation(img);
+        NSLog(@"d: %d",dataImg.length);
+    }
+    
+    SampleNote *sn = nil;
+    SimplePicture *sp = nil;
+    
+    if (!img) {
+        sn = [[SampleNote alloc] initSampleNoteWithTitle:subject text:body eventItemCreator:eventCreator];
+    }
+    else{
+        sp = [[SimplePicture alloc] initSimplePictureWithImage:img eventItemCreator:eventCreator];
+    }
     
     CLLocation *loc = [[CLLocation alloc] initWithLatitude:[eventLatitude doubleValue] longitude:[eventLongitude doubleValue]];
     
     //New BaseEvent
     Event *event = [[Event alloc] initEventWithLocation:loc date:[Utility dateFromTimestamp:eventDate watchIT:NO] shared:NO creator:eventCreator];
     
-    //Add the object to the base event
-    [event.eventItems addObject:sn];
-    
+    if (img) {
+            
+        //Add the simple picture to the base event
+        [event.eventItems addObject:sp];
+    }
+    else{
+        //Add the simple note to the base event
+        [event.eventItems addObject:sn];
+
+    }
+#warning review this method when defined xML schemata for each eventItem are defined
+       
     //Send the data
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:event,@"userInfo",node,@"nodeId", nil];
     

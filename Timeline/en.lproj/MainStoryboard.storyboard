@@ -129,6 +129,9 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="audioButtonPressed:" destination="PhQ-xk-epN" eventType="touchUpInside" id="igv-jX-v28"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="l8b-9D-kF0" userLabel="moodButton">
                                 <rect key="frame" x="275" y="221" width="44" height="44"/>
@@ -242,17 +245,34 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="audioCellIndentifier" id="UQf-4T-fhe">
-                                        <rect key="frame" x="0.0" y="497" width="270" height="44"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="audioCellIdentifier" rowHeight="130" id="UQf-4T-fhe" customClass="AudioViewCell">
+                                        <rect key="frame" x="0.0" y="497" width="270" height="130"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="270" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="270" height="129"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="mic.png" id="XMW-f9-17u">
+                                                    <rect key="frame" x="20" y="35" width="250" height="86"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="7T7-TQ-izS">
+                                                    <rect key="frame" x="160" y="8" width="100" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
+                                                    <color key="textColor" red="1" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                            </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <connections>
+                                            <outlet property="imgView" destination="XMW-f9-17u" id="3Cf-lc-JL5"/>
+                                            <outlet property="timestampLabel" destination="7T7-TQ-izS" id="mtd-Z1-sgF"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="folderCellIndentifier" rowHeight="100" id="X0v-Yq-dqW" customClass="TimelineViewCell">
-                                        <rect key="frame" x="0.0" y="541" width="270" height="100"/>
+                                        <rect key="frame" x="0.0" y="627" width="270" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="270" height="99"/>
@@ -291,6 +311,7 @@
                         <outlet property="contentTableView" destination="Zw1-fg-3Lj" id="bjd-re-Mgf"/>
                         <outlet property="pictureButton" destination="j0o-yO-IoA" id="n2M-re-eHC"/>
                         <segue destination="ZFY-J7-MGz" kind="modal" identifier="eventDetailsSegue" id="rQK-Ia-UdL"/>
+                        <segue destination="ac0-P2-Ve7" kind="modal" identifier="newAudioSegue" id="Eh1-aB-qsU"/>
                     </connections>
                 </viewController>
                 <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.99999999999999967" id="L0b-Td-qoM">
@@ -490,7 +511,7 @@
                                             <outlet property="pictureImageView" destination="mZE-67-HTp" id="fCf-RU-3B0"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="itemIdentifier" rowHeight="55" id="dIA-nF-hfS" customClass="NoteCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="itemIdentifier" rowHeight="55" id="w10-tw-fUQ" customClass="NoteCell">
                                         <rect key="frame" x="0.0" y="247" width="265" height="55"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -499,20 +520,29 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="itemIdentifier" rowHeight="55" id="w10-tw-fUQ" customClass="NoteCell">
-                                        <rect key="frame" x="0.0" y="302" width="265" height="55"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="audioCellIdentifier" rowHeight="130" id="dIA-nF-hfS" customClass="AudioViewCell">
+                                        <rect key="frame" x="0.0" y="302" width="265" height="130"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="265" height="54"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="265" height="129"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="mic.png" id="G6h-lK-IkC">
+                                                    <rect key="frame" x="10" y="10" width="245" height="110"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                            </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <connections>
+                                            <outlet property="imgView" destination="G6h-lK-IkC" id="CBu-k2-N27"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="ZFY-J7-MGz" id="zgE-Qk-FZP"/>
                                     <outlet property="delegate" destination="ZFY-J7-MGz" id="ruF-JA-ycj"/>
-                                    <outletCollection property="gestureRecognizers" destination="Yj1-Og-HEd" appends="YES" id="EgS-gW-lAm"/>
+                                    <outletCollection property="gestureRecognizers" destination="JFa-0g-yfF" appends="YES" id="IWx-B2-RnZ"/>
                                 </connections>
                             </tableView>
                         </subviews>
@@ -527,11 +557,11 @@
                         <segue destination="tsE-gh-YNz" kind="modal" identifier="pictureDetailsSegue" id="aCP-V7-RkG"/>
                     </connections>
                 </viewController>
-                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="Yj1-Og-HEd">
+                <tapGestureRecognizer numberOfTapsRequired="2" id="JFa-0g-yfF">
                     <connections>
-                        <action selector="showEventItemDetails:" destination="ZFY-J7-MGz" id="Vs7-tr-WHQ"/>
+                        <action selector="showEventItemDetails:" destination="ZFY-J7-MGz" id="ZJq-To-5rF"/>
                     </connections>
-                </pongPressGestureRecognizer>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2806" y="88"/>
         </scene>
@@ -1243,6 +1273,115 @@
             </objects>
             <point key="canvasLocation" x="594" y="1350"/>
         </scene>
+        <!--New Audio View Controller-->
+        <scene sceneID="5GV-hJ-SIa">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fzE-Nh-6bt" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="ac0-P2-Ve7" customClass="NewAudioViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Ye2-pr-UIU">
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <navigationBar contentMode="scaleToFill" id="dLm-JR-BIO">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem title="Title" id="uXm-gk-RWr">
+                                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="CKu-mf-Mvi">
+                                            <connections>
+                                                <action selector="cancelButtonPressed:" destination="ac0-P2-Ve7" id="puu-Kt-Vrf"/>
+                                            </connections>
+                                        </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" title="Done" id="jeZ-75-HZF">
+                                            <connections>
+                                                <action selector="doneButtonPressed:" destination="ac0-P2-Ve7" id="5Ht-me-7B3"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="uuJ-DL-uAo">
+                                <rect key="frame" x="60" y="402" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" image="record.png">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="startButtonPressed:" destination="ac0-P2-Ve7" eventType="touchUpInside" id="rgj-xE-wIs"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="0Js-6P-fvs">
+                                <rect key="frame" x="216" y="402" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" image="stop.png">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="stopButtonPressed:" destination="ac0-P2-Ve7" eventType="touchUpInside" id="b56-TH-59U"/>
+                                </connections>
+                            </button>
+                            <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Recording..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="hhD-gg-KAn">
+                                <rect key="frame" x="90" y="379" width="140" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="TMH-fC-IMu">
+                                <rect key="frame" x="112" y="402" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" image="play.png">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="playButtonPressed:" destination="ac0-P2-Ve7" eventType="touchUpInside" id="lga-ad-qjq"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="KZW-bR-FaT">
+                                <rect key="frame" x="164" y="402" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" image="pause.png">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="pauseButtonPressed:" destination="ac0-P2-Ve7" eventType="touchUpInside" id="vsR-eo-12D"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="infoLabel" destination="hhD-gg-KAn" id="UeK-oE-7cC"/>
+                        <outlet property="navBar" destination="dLm-JR-BIO" id="Oqx-Bk-9Nx"/>
+                        <outlet property="pauseButton" destination="KZW-bR-FaT" id="qnM-J5-eL0"/>
+                        <outlet property="playButton" destination="TMH-fC-IMu" id="eqq-iF-wS7"/>
+                        <outlet property="recordButton" destination="uuJ-DL-uAo" id="UGH-6K-bkA"/>
+                        <outlet property="stopButton" destination="0Js-6P-fvs" id="vT8-5w-XBY"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="2719" y="-731"/>
+        </scene>
         <!--Picture Details View Controller-->
         <scene sceneID="za5-Yk-Tp4">
             <objects>
@@ -1304,22 +1443,33 @@
         <image name="eventDetailContainer.png" width="275" height="406"/>
         <image name="folderPS.png" width="512" height="512"/>
         <image name="groups.png" width="32" height="21"/>
+        <image name="mic.png" width="155" height="272"/>
         <image name="note.png" width="22" height="28"/>
+        <image name="pause.png" width="28" height="28"/>
         <image name="picture.png" width="26" height="22"/>
+        <image name="play.png" width="28" height="28"/>
+        <image name="record.png" width="28" height="28"/>
         <image name="redButton.png" width="20" height="20"/>
         <image name="settings.png" width="26" height="26"/>
         <image name="share.png" width="24" height="16"/>
+        <image name="stop.png" width="28" height="28"/>
         <image name="timelines.png" width="27" height="19"/>
         <image name="video.png" width="20" height="25"/>
         <image name="zoom.png" width="24" height="24"/>
     </resources>
     <classes>
+        <class className="AudioViewCell" superclassName="TimelineViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AudioViewCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="imgView" candidateClass="UIImageView"/>
+            </relationships>
+        </class>
         <class className="EventDetailViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EventDetailViewController.h"/>
             <relationships>
                 <relationship kind="action" name="doneButtonPressed:"/>
                 <relationship kind="action" name="shareButtonPressed:"/>
-                <relationship kind="action" name="showEventItemDetails:" candidateClass="UILongPressGestureRecognizer"/>
+                <relationship kind="action" name="showEventItemDetails:" candidateClass="UITapGestureRecognizer"/>
                 <relationship kind="outlet" name="eventDateLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="eventLocationLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="itemsTableView" candidateClass="UITableView"/>
@@ -1331,6 +1481,23 @@
         </class>
         <class className="GroupsViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/GroupsViewController.h"/>
+        </class>
+        <class className="NewAudioViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NewAudioViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="cancelButtonPressed:"/>
+                <relationship kind="action" name="doneButtonPressed:"/>
+                <relationship kind="action" name="pauseButtonPressed:"/>
+                <relationship kind="action" name="playButtonPressed:"/>
+                <relationship kind="action" name="startButtonPressed:"/>
+                <relationship kind="action" name="stopButtonPressed:"/>
+                <relationship kind="outlet" name="infoLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="navBar" candidateClass="UINavigationBar"/>
+                <relationship kind="outlet" name="pauseButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="playButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="recordButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="stopButton" candidateClass="UIButton"/>
+            </relationships>
         </class>
         <class className="NewGroupViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NewGroupViewController.h"/>
@@ -1409,6 +1576,7 @@
         <class className="TimelineViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/TimelineViewController.h"/>
             <relationships>
+                <relationship kind="action" name="audioButtonPressed:"/>
                 <relationship kind="action" name="pictureButtonPressed:"/>
                 <relationship kind="action" name="showInfoDetails:" candidateClass="UILongPressGestureRecognizer"/>
                 <relationship kind="outlet" name="contentTableView" candidateClass="UITableView"/>
@@ -1425,6 +1593,6 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="nBJ-E9-XSk"/>
+        <segue reference="o1b-ga-HKZ"/>
     </inferredMetricsTieBreakers>
 </document>
