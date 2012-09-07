@@ -9,7 +9,7 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "TimelineViewController.h"
 #import "NewNoteViewController.h"
-#import "NewAudioViewController.h"
+#import "AudioViewController.h"
 #import "Event.h"
 #import "SampleNote.h"
 #import "TimelineViewCell.h"
@@ -134,7 +134,7 @@
     //If the user wants to record a new audio
     else if ([segue.identifier isEqualToString:@"newAudioSegue"]){
         
-        NewAudioViewController *navc = (NewAudioViewController *)segue.destinationViewController;
+        AudioViewController *navc = (AudioViewController *)segue.destinationViewController;
         navc.delegate = self;
     }
     

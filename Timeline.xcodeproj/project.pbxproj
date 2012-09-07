@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D222ECD815F8A7EA00616F88 /* NewAudioViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D222ECD715F8A7EA00616F88 /* NewAudioViewController.m */; };
+		D222ECD815F8A7EA00616F88 /* AudioViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D222ECD715F8A7EA00616F88 /* AudioViewController.m */; };
 		D222ECDB15F8AB4A00616F88 /* microphone.png in Resources */ = {isa = PBXBuildFile; fileRef = D222ECDA15F8AB4A00616F88 /* microphone.png */; };
 		D222ECDD15F8B2B000616F88 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D222ECDC15F8B2B000616F88 /* AVFoundation.framework */; };
 		D222ECE515F8CC6400616F88 /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = D222ECDF15F8CC6400616F88 /* pause.png */; };
@@ -143,8 +143,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D222ECD615F8A7EA00616F88 /* NewAudioViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NewAudioViewController.h; path = "View Controllers/TimelinesViewcontroller/TimelineViewController/NewAudioViewController/NewAudioViewController.h"; sourceTree = "<group>"; };
-		D222ECD715F8A7EA00616F88 /* NewAudioViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NewAudioViewController.m; path = "View Controllers/TimelinesViewcontroller/TimelineViewController/NewAudioViewController/NewAudioViewController.m"; sourceTree = "<group>"; };
+		D222ECD615F8A7EA00616F88 /* AudioViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioViewController.h; path = "View Controllers/TimelinesViewcontroller/TimelineViewController/NewAudioViewController/AudioViewController.h"; sourceTree = "<group>"; };
+		D222ECD715F8A7EA00616F88 /* AudioViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioViewController.m; path = "View Controllers/TimelinesViewcontroller/TimelineViewController/NewAudioViewController/AudioViewController.m"; sourceTree = "<group>"; };
 		D222ECDA15F8AB4A00616F88 /* microphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = microphone.png; sourceTree = "<group>"; };
 		D222ECDC15F8B2B000616F88 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D222ECDF15F8CC6400616F88 /* pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause.png; sourceTree = "<group>"; };
@@ -385,8 +385,8 @@
 		D222ECD915F8A82300616F88 /* NewAudioViewController */ = {
 			isa = PBXGroup;
 			children = (
-				D222ECD615F8A7EA00616F88 /* NewAudioViewController.h */,
-				D222ECD715F8A7EA00616F88 /* NewAudioViewController.m */,
+				D222ECD615F8A7EA00616F88 /* AudioViewController.h */,
+				D222ECD715F8A7EA00616F88 /* AudioViewController.m */,
 			);
 			name = NewAudioViewController;
 			path = ../..;
@@ -1294,7 +1294,7 @@
 				D24EC0D615F62D0E0031F5D3 /* NSData+Base64.m in Sources */,
 				D24EC0E215F6425B0031F5D3 /* SimplePicture.m in Sources */,
 				D230E7D715F77D580059CC3D /* PictureDetailsViewController.m in Sources */,
-				D222ECD815F8A7EA00616F88 /* NewAudioViewController.m in Sources */,
+				D222ECD815F8A7EA00616F88 /* AudioViewController.m in Sources */,
 				D222ECF115F8D9B900616F88 /* SimpleRecording.m in Sources */,
 				D222ECF515F8DD8F00616F88 /* AudioViewCell.m in Sources */,
 			);

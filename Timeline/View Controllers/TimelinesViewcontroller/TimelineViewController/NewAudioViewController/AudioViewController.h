@@ -10,7 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "ModalViewControllerDelegate.h"
 
-@interface NewAudioViewController : UIViewController <AVAudioRecorderDelegate,AVAudioPlayerDelegate>
+@interface AudioViewController : UIViewController <AVAudioRecorderDelegate,AVAudioPlayerDelegate>
 
 @property (weak, nonatomic) id<ModalViewControllerDelegate> delegate;
 

@@ -6,10 +6,10 @@
 //  Copyright (c) 2012 Alessandro Boron. All rights reserved.
 //
 
-#import "NewAudioViewController.h"
+#import "AudioViewController.h"
 #import "SimpleRecording.h"
 
-@interface NewAudioViewController ()
+@interface AudioViewController ()
 
 @property (weak, nonatomic) IBOutlet UINavigationBar *navBar;
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
@@ -33,7 +33,7 @@
 
 @end
 
-@implementation NewAudioViewController
+@implementation AudioViewController
 
 @synthesize delegate = _delegate;
 
