@@ -12,6 +12,7 @@
 #import "User.h"
 #import "SampleNote.h"
 #import "SimplePicture.h"
+#import "SimpleRecording.h"
 #import "Event.h"
 
 #define kXMPPResourceIdentifier @"TimelineAPP"
@@ -327,16 +328,22 @@
     [location addAttributeWithName:@"latitude" stringValue:[NSString stringWithFormat:@"%f",event.location.coordinate.latitude]];
     [location addAttributeWithName:@"longitude" stringValue:[NSString stringWithFormat:@"%f",event.location.coordinate.longitude]];
     attachment = [NSXMLElement elementWithName:@"attachment"];
+     NSXMLElement *content = [NSXMLElement elementWithName:@"content"];
+    
     //If it is a picture
     if ([[event.eventItems objectAtIndex:0] isMemberOfClass:[SimplePicture class]]){
         [attachment addAttributeWithName:@"type" stringValue:@"photo"];
-    }
-    NSXMLElement *content = [NSXMLElement elementWithName:@"content"];
-    if ([[event.eventItems objectAtIndex:0] isMemberOfClass:[SimplePicture class]]){
         [content addAttributeWithName:@"mimeType" stringValue:@"image/png"];
+        [content setStringValue:[Utility base64StringFromImage:((SimplePicture *)[event.eventItems objectAtIndex:0]).image]];
     }
-    [content setStringValue:[Utility base64StringFromImage:((SimplePicture *)[event.eventItems objectAtIndex:0]).image]];
-        
+   
+    //If it is an audio
+    if ([[event.eventItems objectAtIndex:0] isMemberOfClass:[SimpleRecording class]]){
+        [attachment addAttributeWithName:@"type" stringValue:@"audio"];
+        [content addAttributeWithName:@"mimeType" stringValue:@"audio/x-caf"];
+        [content setStringValue:[Utility base64StringForAttachment:((SimpleRecording *)[event.eventItems objectAtIndex:0]).urlPath]];
+    }
+   
     [attachment addChild:content];
 
     [eventXML addChild:subject];
@@ -799,7 +806,6 @@
     Event *event = [[Event alloc] initEventWithLocation:loc date:[Utility dateFromTimestamp:eventDate watchIT:NO] shared:NO creator:eventCreator];
     
     if (img) {
-            
         //Add the simple picture to the base event
         [event.eventItems addObject:sp];
     }

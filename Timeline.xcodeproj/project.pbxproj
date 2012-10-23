@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D222ECD815F8A7EA00616F88 /* AudioViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D222ECD715F8A7EA00616F88 /* AudioViewController.m */; };
 		D222ECDB15F8AB4A00616F88 /* microphone.png in Resources */ = {isa = PBXBuildFile; fileRef = D222ECDA15F8AB4A00616F88 /* microphone.png */; };
 		D222ECDD15F8B2B000616F88 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D222ECDC15F8B2B000616F88 /* AVFoundation.framework */; };
 		D222ECE515F8CC6400616F88 /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = D222ECDF15F8CC6400616F88 /* pause.png */; };
@@ -43,6 +42,10 @@
 		D226D20015DBAD3000227FAF /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = D226D1FF15DBAD2F00227FAF /* Utility.m */; };
 		D226D20A15DBDC9C00227FAF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D226D20915DBDC9C00227FAF /* CoreLocation.framework */; };
 		D230E7D715F77D580059CC3D /* PictureDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D230E7D615F77D570059CC3D /* PictureDetailsViewController.m */; };
+		D24A21E31601E9E700F6E8B7 /* SimpleVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = D24A21E21601E9E700F6E8B7 /* SimpleVideo.m */; };
+		D24A21E81601EF3D00F6E8B7 /* VideoViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D24A21E71601EF3D00F6E8B7 /* VideoViewCell.m */; };
+		D24A21EB16020B3000F6E8B7 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D24A21EA16020B3000F6E8B7 /* CoreMedia.framework */; };
+		D24A21EE160216CB00F6E8B7 /* Emotion.m in Sources */ = {isa = PBXBuildFile; fileRef = D24A21ED160216CB00F6E8B7 /* Emotion.m */; };
 		D24EC0D615F62D0E0031F5D3 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = D24EC0D515F62D0E0031F5D3 /* NSData+Base64.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D24EC0DC15F639DF0031F5D3 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D24EC0DB15F639DF0031F5D3 /* MobileCoreServices.framework */; };
 		D24EC0E215F6425B0031F5D3 /* SimplePicture.m in Sources */ = {isa = PBXBuildFile; fileRef = D24EC0E115F6425B0031F5D3 /* SimplePicture.m */; };
@@ -140,11 +143,12 @@
 		D2EA0C2315EB6EF20084B587 /* tag.png in Resources */ = {isa = PBXBuildFile; fileRef = D2EA0C1F15EB6EF20084B587 /* tag.png */; };
 		D2EA0C2415EB6EF20084B587 /* tag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2EA0C2015EB6EF20084B587 /* tag@2x.png */; };
 		D2EA0C2815EB72BC0084B587 /* ShareEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2EA0C2715EB72BC0084B587 /* ShareEventViewController.m */; };
+		D2ED086F15FA12CB00BDF6E3 /* AudioViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2ED086E15FA12CB00BDF6E3 /* AudioViewController.m */; };
+		D2ED087215FA14BF00BDF6E3 /* AudioDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2ED087115FA14BF00BDF6E3 /* AudioDetailsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		D222ECD615F8A7EA00616F88 /* AudioViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioViewController.h; path = "View Controllers/TimelinesViewcontroller/TimelineViewController/NewAudioViewController/AudioViewController.h"; sourceTree = "<group>"; };
-		D222ECD715F8A7EA00616F88 /* AudioViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioViewController.m; path = "View Controllers/TimelinesViewcontroller/TimelineViewController/NewAudioViewController/AudioViewController.m"; sourceTree = "<group>"; };
 		D222ECDA15F8AB4A00616F88 /* microphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = microphone.png; sourceTree = "<group>"; };
 		D222ECDC15F8B2B000616F88 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D222ECDF15F8CC6400616F88 /* pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause.png; sourceTree = "<group>"; };
@@ -190,6 +194,13 @@
 		D226D20915DBDC9C00227FAF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		D230E7D515F77D570059CC3D /* PictureDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PictureDetailsViewController.h; path = "View Controllers/TimelinesViewcontroller/TimelineViewController/EventDetailViewController/PictureDetailsViewController/PictureDetailsViewController.h"; sourceTree = "<group>"; };
 		D230E7D615F77D570059CC3D /* PictureDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PictureDetailsViewController.m; path = "View Controllers/TimelinesViewcontroller/TimelineViewController/EventDetailViewController/PictureDetailsViewController/PictureDetailsViewController.m"; sourceTree = "<group>"; };
+		D24A21E11601E9E700F6E8B7 /* SimpleVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleVideo.h; path = Model/EventItem/SimpleVideo/SimpleVideo.h; sourceTree = "<group>"; };
+		D24A21E21601E9E700F6E8B7 /* SimpleVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimpleVideo.m; path = Model/EventItem/SimpleVideo/SimpleVideo.m; sourceTree = "<group>"; };
+		D24A21E61601EF3D00F6E8B7 /* VideoViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VideoViewCell.h; path = TimelineViewCell/VideoViewCell/VideoViewCell.h; sourceTree = "<group>"; };
+		D24A21E71601EF3D00F6E8B7 /* VideoViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VideoViewCell.m; path = TimelineViewCell/VideoViewCell/VideoViewCell.m; sourceTree = "<group>"; };
+		D24A21EA16020B3000F6E8B7 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		D24A21EC160216CB00F6E8B7 /* Emotion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Emotion.h; path = Model/Emotion/Emotion.h; sourceTree = "<group>"; };
+		D24A21ED160216CB00F6E8B7 /* Emotion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Emotion.m; path = Model/Emotion/Emotion.m; sourceTree = "<group>"; };
 		D24EC0D415F62D0E0031F5D3 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
 		D24EC0D515F62D0E0031F5D3 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		D24EC0DB15F639DF0031F5D3 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -357,6 +368,9 @@
 		D2EA0C2615EB72BC0084B587 /* ShareEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareEventViewController.h; path = TimelineViewController/EventDetailViewController/ShareEventViewController/ShareEventViewController.h; sourceTree = "<group>"; };
 		D2EA0C2715EB72BC0084B587 /* ShareEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareEventViewController.m; path = TimelineViewController/EventDetailViewController/ShareEventViewController/ShareEventViewController.m; sourceTree = "<group>"; };
 		D2EA0C2E15EB89A60084B587 /* SharingViewControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SharingViewControllerDelegate.h; path = Protocols/SharingViewControllerDelegate.h; sourceTree = "<group>"; };
+		D2ED086E15FA12CB00BDF6E3 /* AudioViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioViewController.m; path = "View Controllers/TimelinesViewcontroller/TimelineViewController/NewAudioViewController/AudioViewController.m"; sourceTree = "<group>"; };
+		D2ED087015FA14BF00BDF6E3 /* AudioDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioDetailsViewController.h; path = TimelineViewController/EventDetailViewController/AudioDetailsViewController/AudioDetailsViewController.h; sourceTree = "<group>"; };
+		D2ED087115FA14BF00BDF6E3 /* AudioDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioDetailsViewController.m; path = TimelineViewController/EventDetailViewController/AudioDetailsViewController/AudioDetailsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -364,6 +378,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D24A21EB16020B3000F6E8B7 /* CoreMedia.framework in Frameworks */,
 				D222ECDD15F8B2B000616F88 /* AVFoundation.framework in Frameworks */,
 				D24EC0DC15F639DF0031F5D3 /* MobileCoreServices.framework in Frameworks */,
 				D262253615EA550500F55FB1 /* AddressBook.framework in Frameworks */,
@@ -386,7 +401,7 @@
 			isa = PBXGroup;
 			children = (
 				D222ECD615F8A7EA00616F88 /* AudioViewController.h */,
-				D222ECD715F8A7EA00616F88 /* AudioViewController.m */,
+				D2ED086E15FA12CB00BDF6E3 /* AudioViewController.m */,
 			);
 			name = NewAudioViewController;
 			path = ../..;
@@ -504,6 +519,8 @@
 				D226D1FB15DBAB2D00227FAF /* TimelineViewCell.m */,
 				D226D1F115DAD34C00227FAF /* NoteViewCell */,
 				D226D1F515DAD38B00227FAF /* PictureViewCell */,
+				D24A21E91601EF4200F6E8B7 /* VideoViewCell */,
+				D222ECF615F8DD9600616F88 /* AudioViewCell */,
 			);
 			name = TimelineViewCell;
 			sourceTree = "<group>";
@@ -525,6 +542,33 @@
 			);
 			name = PictureDetailsViewController;
 			path = ../..;
+			sourceTree = "<group>";
+		};
+		D24A21E51601EA0E00F6E8B7 /* SimpleVideo */ = {
+			isa = PBXGroup;
+			children = (
+				D24A21E11601E9E700F6E8B7 /* SimpleVideo.h */,
+				D24A21E21601E9E700F6E8B7 /* SimpleVideo.m */,
+			);
+			name = SimpleVideo;
+			sourceTree = "<group>";
+		};
+		D24A21E91601EF4200F6E8B7 /* VideoViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				D24A21E61601EF3D00F6E8B7 /* VideoViewCell.h */,
+				D24A21E71601EF3D00F6E8B7 /* VideoViewCell.m */,
+			);
+			name = VideoViewCell;
+			sourceTree = "<group>";
+		};
+		D24A21EF160216D000F6E8B7 /* Emotion */ = {
+			isa = PBXGroup;
+			children = (
+				D24A21EC160216CB00F6E8B7 /* Emotion.h */,
+				D24A21ED160216CB00F6E8B7 /* Emotion.m */,
+			);
+			name = Emotion;
 			sourceTree = "<group>";
 		};
 		D24EC0D215F62BD10031F5D3 /* NSString+MD5 */ = {
@@ -561,6 +605,7 @@
 				D262252815E7A36100F55FB1 /* EventDetailViewController.h */,
 				D262252915E7A36100F55FB1 /* EventDetailViewController.m */,
 				D230E7D915F77D5E0059CC3D /* PictureDetailsViewController */,
+				D2ED087315FA14C600BDF6E3 /* AudioDetailsViewController */,
 				D2EA0C2915EB72C20084B587 /* ShareEventViewController */,
 			);
 			name = EventDetailViewController;
@@ -597,7 +642,6 @@
 				D226D1E215DAB6ED00227FAF /* NewNoteViewController */,
 				D222ECD915F8A82300616F88 /* NewAudioViewController */,
 				D226D1FD15DBAB3300227FAF /* TimelineViewCell */,
-				D222ECF615F8DD9600616F88 /* AudioViewCell */,
 			);
 			name = TimelinesViewcontroller;
 			path = "View Controllers/TimelinesViewcontroller";
@@ -649,6 +693,7 @@
 				D285B56615D550A300AFC1C7 /* BaseEvent */,
 				D285B56A15D550D200AFC1C7 /* Event */,
 				D285B56E15D5510100AFC1C7 /* EventItem */,
+				D24A21EF160216D000F6E8B7 /* Emotion */,
 				D294739415E232980016A093 /* User */,
 			);
 			name = Model;
@@ -688,6 +733,7 @@
 				D285B56C15D550FD00AFC1C7 /* EventItem.m */,
 				D226D1ED15DACAF600227FAF /* SampleNote */,
 				D24EC0E315F642600031F5D3 /* SimplePicture */,
+				D24A21E51601EA0E00F6E8B7 /* SimpleVideo */,
 				D222ECF215F8D9F300616F88 /* SimpleRecording */,
 			);
 			name = EventItem;
@@ -1014,6 +1060,7 @@
 		D2CD814E15D2AEC000094D72 = {
 			isa = PBXGroup;
 			children = (
+				D24A21EA16020B3000F6E8B7 /* CoreMedia.framework */,
 				D2AA185F15ECF8330024BFF9 /* timeline_icon@2x.png */,
 				D2AA185D15ECF82E0024BFF9 /* timeline_icon.png */,
 				D2CD816315D2AEC100094D72 /* Timeline */,
@@ -1113,6 +1160,15 @@
 				D2EA0C2715EB72BC0084B587 /* ShareEventViewController.m */,
 			);
 			name = ShareEventViewController;
+			sourceTree = "<group>";
+		};
+		D2ED087315FA14C600BDF6E3 /* AudioDetailsViewController */ = {
+			isa = PBXGroup;
+			children = (
+				D2ED087015FA14BF00BDF6E3 /* AudioDetailsViewController.h */,
+				D2ED087115FA14BF00BDF6E3 /* AudioDetailsViewController.m */,
+			);
+			name = AudioDetailsViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1294,9 +1350,13 @@
 				D24EC0D615F62D0E0031F5D3 /* NSData+Base64.m in Sources */,
 				D24EC0E215F6425B0031F5D3 /* SimplePicture.m in Sources */,
 				D230E7D715F77D580059CC3D /* PictureDetailsViewController.m in Sources */,
-				D222ECD815F8A7EA00616F88 /* AudioViewController.m in Sources */,
 				D222ECF115F8D9B900616F88 /* SimpleRecording.m in Sources */,
 				D222ECF515F8DD8F00616F88 /* AudioViewCell.m in Sources */,
+				D2ED086F15FA12CB00BDF6E3 /* AudioViewController.m in Sources */,
+				D2ED087215FA14BF00BDF6E3 /* AudioDetailsViewController.m in Sources */,
+				D24A21E31601E9E700F6E8B7 /* SimpleVideo.m in Sources */,
+				D24A21E81601EF3D00F6E8B7 /* VideoViewCell.m in Sources */,
+				D24A21EE160216CB00F6E8B7 /* Emotion.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1387,6 +1447,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/Timeline/XMPPFramework/Vendor/libidin\"",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "A08D6F31-2F63-4382-B541-EEF1009C134D";
@@ -1407,6 +1468,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/Timeline/XMPPFramework/Vendor/libidin\"",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "875C3AA6-1446-4883-91D5-D30A1EC86770";

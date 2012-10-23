@@ -12,12 +12,16 @@
 #import "TimelineViewCell.h"
 #import "NoteCell.h"
 #import "PictureViewCell.h"
+#import "VideoViewCell.h"
+#import "AudioViewCell.h"
 #import "Event.h"
 #import "NewNoteViewController.h"
 #import "SampleNote.h"
 #import "SimplePicture.h"
+#import "SimpleVideo.h"
 #import "SimpleRecording.h"
 #import "PictureDetailsViewController.h"
+#import "AudioDetailsViewController.h"
 #import "ShareEventViewController.h"
 #import "XMPPRequestController.h"
 
@@ -123,6 +127,20 @@
         
     }
     
+    //If a picture detail
+    else if ([segue.identifier isEqualToString:@"audioDetailsSegue"]){
+        
+        //Get the controller
+        AudioDetailsViewController *advc = (AudioDetailsViewController *)segue.destinationViewController;
+        //Set the delegate
+        advc.delegate = self;
+        
+        //Set the audio
+        advc.urlPath = ((SimpleRecording *)[self.event.eventItems objectAtIndex:self.indexPath.row]).urlPath;
+        
+    }
+    
+    //If sharing an eventItem
     else if ([segue.identifier isEqualToString:@"shareEventIdentifier"]){
         
         //Get the destination view controller
@@ -172,6 +190,12 @@
         if ([cell isMemberOfClass:[PictureViewCell class]]){
             [self performSegueWithIdentifier:@"pictureDetailsSegue" sender:self];
         }
+        
+        //If the cell contains a picture
+        if ([cell isMemberOfClass:[AudioViewCell class]]){
+            [self performSegueWithIdentifier:@"audioDetailsSegue" sender:self];
+        }
+
     }
 }
 
@@ -286,12 +310,21 @@
         ((PictureViewCell *)cell).pictureImageView.image = ((SimplePicture *)objectInTimeline).image;
     }
     
+    //If the cell contains a video
+    else if([objectInTimeline isMemberOfClass:[SimpleVideo class]]){
+        
+        //Get a reusable cell
+        cell = [tableView dequeueReusableCellWithIdentifier:@"videoCellIdentifier"];
+        //Se the image for the cell
+        ((VideoViewCell *)cell).videoImageView.image = ((SimpleVideo *)objectInTimeline).videoThumbnail;
+    }
+
+    
     //If the cell contains a picture
     else if([objectInTimeline isMemberOfClass:[SimpleRecording class]]){
         
         //Get a reusable cell
         cell = [tableView dequeueReusableCellWithIdentifier:@"audioCellIdentifier"];
-        
     }
 
     
@@ -328,6 +361,11 @@
     else if ([objectInTimeline isMemberOfClass:[SimplePicture class]]){
         height = PICTURECELL_SIZE;
     }
+    
+    else if ([objectInTimeline isMemberOfClass:[SimpleVideo class]]){
+        height = PICTURECELL_SIZE;
+    }
+    
     else if ([objectInTimeline isMemberOfClass:[SimpleRecording class]]){
         height = AUDIOCELL_SIZE;
     }

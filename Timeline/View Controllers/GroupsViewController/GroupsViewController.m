@@ -229,7 +229,7 @@
     
     cell.imageView.image = [UIImage imageNamed:@"groups.png"];
     cell.textLabel.text = sp.spaceName;
-    cell.detailTextLabel.text = [sp spaceTypeString];
+    cell.detailTextLabel.text = [Utility timelineTypeString:sp.spaceType];
     
     return cell;
 }

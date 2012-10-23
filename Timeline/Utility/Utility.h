@@ -7,8 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Space.h"
 
 @class XMPPRequestController;
+
 
 @interface Utility : NSObject
 
@@ -72,14 +74,21 @@
 //This methos is used to get an Image from its base64 string representation
 + (UIImage *)imageFromBase64String:(NSString *)base64String;
 
-//This method is used to return an UIImagePickerController set up to take pictures
-+ (UIImagePickerController *)imagePickerControllerForTakingPictureWithDelegate:(id)delegate;
+//This method is used to return an UIImagePickerController set up to choose a picture or video from library
++ (UIImagePickerController *)imagePickerControllerForLibraryWithDelegate:(id)delegate media:(NSString *)media;
 
-//This method is used to return an UIImagePickerController set up to choose pictures from library
-+ (UIImagePickerController *)imagePickerControllerForChoosingPictureWithDelegate:(id)delegate;
+//This method is used to return an UIImagePickerController set up to take pictures or video
++ (UIImagePickerController *)imagePickerControllerWithDelegate:(id)delegate media:(NSString *)media;
 
 //This method is used to get a image with scaled and compressed size
 + (UIImage*)imageWithImage:(UIImage*)image scaledToSize:(CGSize)newSize;
 
++ (NSString *)base64StringForAttachment:(id)attachment;
+
+
++ (UIImage *)imageFromVideoURL:(NSURL *)url;
+
+//This method is used to get a string representation of the space type
++ (NSString *)timelineTypeString:(SpaceType)spaceType;
 
 @end

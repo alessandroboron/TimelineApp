@@ -7,6 +7,7 @@
 //
 
 #import <MobileCoreServices/MobileCoreServices.h>
+#import <AVFoundation/AVFoundation.h>
 #import "Utility.h"
 #import "NSString+MD5.h"
 #import "AppDelegate.h"
@@ -14,6 +15,7 @@
 #import "Reachability.h"
 #import "MBProgressHUD.h"
 #import "NSData+Base64.h"
+#import "Space.h"
 
 @interface Utility ()
 
@@ -362,6 +364,30 @@
     return [data base64EncodedString];
 }
 
+//This method is used to get a base 64 string representation from a UIIMage
++ (NSString *)base64StringForAttachment:(id)attachment{
+    
+    NSData *data = nil;
+    
+    //If it is a picture
+    if ([attachment isMemberOfClass:[UIImage class]]) {
+        //Get the png representation of the image
+        data = UIImagePNGRepresentation(attachment);
+    }
+    //If it is a url path for a video or audio
+    else if ([attachment isMemberOfClass:[NSString class]]){
+       
+        NSRange range = [((NSString *)attachment) rangeOfString:@".caf"];
+        //If it is an audio
+        if ((range.location != NSNotFound )&&range.length!=0) {
+            data = [NSData dataWithContentsOfFile:attachment];
+        }
+    }
+    
+    //Return the image in a base 64 string representation
+    return [data base64EncodedString];
+}
+
 //This methos is used to get an Image from its base64 string representation
 + (UIImage *)imageFromBase64String:(NSString *)base64String{
         
@@ -399,22 +425,62 @@
     return imagePicker;
 }
 
-//This method is used to return an UIImagePickerController set up to choose pictures from library
-+ (UIImagePickerController *)imagePickerControllerForChoosingPictureWithDelegate:(id)delegate{
+//This method is used to return an UIImagePickerController set up to take pictures
++ (UIImagePickerController *)imagePickerControllerWithDelegate:(id)delegate media:(NSString *)media{
+    
+    UIImagePickerController *imagePicker=nil;
+    
+    //Check if the device is able to take picture
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+    
+        //Initialize the UIImagePickerController
+        imagePicker = [[UIImagePickerController alloc] init];
+        //Set the delegate
+        imagePicker.delegate = delegate;
+        //Set the picker to use the camera
+        imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        //If the user wants to take still pictures
+        if ([media isEqualToString:(NSString *)kUTTypeImage]){
+            //Set the picker to take only still pictures
+            imagePicker.mediaTypes = [NSArray arrayWithObjects:(NSString *)kUTTypeImage,nil];
+        }
+        //If the user wants to take a video
+        else if ([media isEqualToString:(NSString *)kUTTypeMovie]){
+            //Set the picker to take only still pictures
+            imagePicker.mediaTypes = [NSArray arrayWithObjects:(NSString *)kUTTypeMovie,nil];
+           }
+    }
+    //Disable editing of pictures
+    imagePicker.allowsEditing = NO;
+    //Enable camera controls
+    imagePicker.showsCameraControls = YES;
+    
+    return imagePicker;
+}
+
+//This method is used to return an UIImagePickerController set up to choose a picture or video from library
++ (UIImagePickerController *)imagePickerControllerForLibraryWithDelegate:(id)delegate media:(NSString *)media{
     
     UIImagePickerController *imagePicker = nil;
     
     //If the saved Photo album is available
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeSavedPhotosAlbum]){
-        //Initialize the UIImagePickerController 
-        imagePicker =
-        [[UIImagePickerController alloc] init];
+        //Initialize the UIImagePickerController
+        imagePicker = [[UIImagePickerController alloc] init];
         //Set the delegate
         imagePicker.delegate = delegate;
         //Set the picker to use the photo album
         imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-        //Set the picker to choose only from still images
-        imagePicker.mediaTypes = [NSArray arrayWithObjects:(NSString *) kUTTypeImage, nil];
+        //If the user wants to choose a picture
+        if ([media isEqualToString:(NSString *)kUTTypeImage]) {
+            //Set the picker to choose only from still images
+            imagePicker.mediaTypes = [NSArray arrayWithObjects:(NSString *) kUTTypeImage, nil];
+        }
+        //If the user wants to choose a video
+        else if ([media isEqualToString:(NSString *)kUTTypeMovie]){
+            //Set the picker to choose only from still images
+            imagePicker.mediaTypes = [NSArray arrayWithObjects:(NSString *) kUTTypeMovie, nil];
+        }
         //Disable photo editing
         imagePicker.allowsEditing = NO;
     }
@@ -442,4 +508,34 @@
     return newImage;
 }
 
++ (UIImage *)imageFromVideoURL:(NSURL *)url{
+    
+    AVAsset *asset = [AVAsset assetWithURL:url];
+    
+    AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
+    CMTime time = CMTimeMake(1, 1);
+    
+    UIImage *thumbnail = [UIImage imageWithCGImage:[imageGenerator copyCGImageAtTime:time actualTime:NULL error:NULL]];
+    
+    return thumbnail;
+}
+
+
+
+//This method is used to get a string representation of the space type
++ (NSString *)timelineTypeString:(SpaceType)spaceType{
+    //Check the type of the space
+    if (spaceType == SpaceTypeTeam) {
+        return @"Team Space";
+    }
+    else if (spaceType == SpaceTypeOrganizational){
+        return @"Organizational Space";
+    }
+    else if (spaceType == SpaceTypePrivate){
+        return @"Private Space";
+    }
+    else{
+        return @"Unknown";
+    }
+}
 @end

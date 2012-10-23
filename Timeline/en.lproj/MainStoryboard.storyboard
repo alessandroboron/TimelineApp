@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2549" systemVersion="12A269" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="cmr-hk-zSm">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2843" systemVersion="12C54" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="cmr-hk-zSm">
     <dependencies>
-        <deployment defaultVersion="1296" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1498"/>
+        <deployment defaultVersion="1536" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1929"/>
     </dependencies>
     <scenes>
         <!--Timelines View Controller - Timelines-->
         <scene sceneID="d4B-yD-hji">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="SJ8-UK-gTk" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="UxR-eu-lyS" customClass="TimelinesViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="48" sectionHeaderHeight="22" sectionFooterHeight="22" id="KAQ-ak-8a6">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
@@ -57,13 +56,13 @@
                         </barButtonItem>
                     </navigationItem>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SJ8-UK-gTk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1108" y="-731"/>
         </scene>
         <!--Timeline View Controller-->
         <scene sceneID="Zwr-Iy-VyM">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="eTk-Tb-2rk" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="PhQ-xk-epN" customClass="TimelineViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="GOp-G0-p8M">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
@@ -117,6 +116,9 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="videoButtonPressed:" destination="PhQ-xk-epN" eventType="touchUpInside" id="OuS-gz-kmA"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="n9u-sK-Vhu" userLabel="audioButton">
                                 <rect key="frame" x="275" y="175" width="44" height="44"/>
@@ -230,20 +232,31 @@
                                             <outlet property="timestampLabel" destination="uK5-C9-O6I" id="wk0-rS-Hu5"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="videoCellIndentifier" rowHeight="200" id="xpP-KR-SvY">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="videoCellIdentifier" rowHeight="200" id="xpP-KR-SvY" customClass="VideoViewCell">
                                         <rect key="frame" x="0.0" y="297" width="270" height="200"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="270" height="199"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" id="xXl-8l-tZz" userLabel="videoImageView">
-                                                    <rect key="frame" x="20" y="5" width="250" height="190"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" id="xXl-8l-tZz" userLabel="videoImageView">
+                                                    <rect key="frame" x="20" y="30" width="250" height="150"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="Iy3-aL-O2y">
+                                                    <rect key="frame" x="160" y="8" width="100" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
+                                                    <color key="textColor" red="1" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <connections>
+                                            <outlet property="timestampLabel" destination="Iy3-aL-O2y" id="MV1-CW-7sT"/>
+                                            <outlet property="videoImageView" destination="xXl-8l-tZz" id="RDR-ah-13f"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="audioCellIdentifier" rowHeight="130" id="UQf-4T-fhe" customClass="AudioViewCell">
                                         <rect key="frame" x="0.0" y="497" width="270" height="130"/>
@@ -314,6 +327,7 @@
                         <segue destination="ac0-P2-Ve7" kind="modal" identifier="newAudioSegue" id="Eh1-aB-qsU"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eTk-Tb-2rk" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.99999999999999967" id="L0b-Td-qoM">
                     <connections>
                         <action selector="showInfoDetails:" destination="PhQ-xk-epN" id="hDe-yz-fz6"/>
@@ -325,7 +339,6 @@
         <!--Event Detail View Controller-->
         <scene sceneID="2kU-cW-ldf">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="lTY-vd-vM5" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="ZFY-J7-MGz" customClass="EventDetailViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Zcj-26-3Lw">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -511,17 +524,26 @@
                                             <outlet property="pictureImageView" destination="mZE-67-HTp" id="fCf-RU-3B0"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="itemIdentifier" rowHeight="55" id="w10-tw-fUQ" customClass="NoteCell">
-                                        <rect key="frame" x="0.0" y="247" width="265" height="55"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="videoCellIdentifier" rowHeight="170" id="w10-tw-fUQ" customClass="VideoViewCell">
+                                        <rect key="frame" x="0.0" y="247" width="265" height="170"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="265" height="54"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="265" height="169"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" id="q7x-xg-OnV">
+                                                    <rect key="frame" x="10" y="10" width="245" height="150"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                            </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <connections>
+                                            <outlet property="videoImageView" destination="q7x-xg-OnV" id="G1Z-bW-92H"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="audioCellIdentifier" rowHeight="130" id="dIA-nF-hfS" customClass="AudioViewCell">
-                                        <rect key="frame" x="0.0" y="302" width="265" height="130"/>
+                                        <rect key="frame" x="0.0" y="417" width="265" height="130"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="265" height="129"/>
@@ -555,8 +577,10 @@
                         <outlet property="navigationBar" destination="bMv-0S-Iwn" id="a1Z-pC-3Qm"/>
                         <segue destination="tcr-Mm-HFP" kind="modal" identifier="shareEventIdentifier" id="TNr-lb-go6"/>
                         <segue destination="tsE-gh-YNz" kind="modal" identifier="pictureDetailsSegue" id="aCP-V7-RkG"/>
+                        <segue destination="fHq-b3-u0z" kind="modal" identifier="audioDetailsSegue" id="y3y-72-qbz"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lTY-vd-vM5" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer numberOfTapsRequired="2" id="JFa-0g-yfF">
                     <connections>
                         <action selector="showEventItemDetails:" destination="ZFY-J7-MGz" id="ZJq-To-5rF"/>
@@ -565,10 +589,97 @@
             </objects>
             <point key="canvasLocation" x="2806" y="88"/>
         </scene>
+        <!--Audio Details View Controller-->
+        <scene sceneID="bq2-Zd-awN">
+            <objects>
+                <viewController id="fHq-b3-u0z" customClass="AudioDetailsViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="SaW-kV-E39">
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <navigationBar contentMode="scaleToFill" id="Gyo-p1-fCw">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem title="Audio Details" id="IHd-qG-He9">
+                                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="FvQ-VK-HvO">
+                                            <connections>
+                                                <action selector="doneButtonPressed:" destination="fHq-b3-u0z" id="Tui-qc-o0j"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="dCG-89-hnd">
+                                <rect key="frame" x="80" y="402" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" image="play.png">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="playButton:" destination="fHq-b3-u0z" eventType="touchUpInside" id="rWz-d3-LMR"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Uiu-zC-VD1">
+                                <rect key="frame" x="132" y="402" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" image="pause.png">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="pauseButton:" destination="fHq-b3-u0z" eventType="touchUpInside" id="PaO-7b-PCM"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Hei-gd-en1">
+                                <rect key="frame" x="184" y="402" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" image="stop.png">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="stopButton:" destination="fHq-b3-u0z" eventType="touchUpInside" id="Qgp-07-0wb"/>
+                                </connections>
+                            </button>
+                            <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Playing..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="rG4-sa-Hkt">
+                                <rect key="frame" x="80" y="379" width="144" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="infoLabel" destination="rG4-sa-Hkt" id="Plc-of-knN"/>
+                        <outlet property="navBar" destination="Gyo-p1-fCw" id="Q8Z-Y3-u12"/>
+                        <outlet property="pauseButton" destination="Uiu-zC-VD1" id="MjI-7Z-2Nl"/>
+                        <outlet property="playButton" destination="dCG-89-hnd" id="h2A-TG-tMv"/>
+                        <outlet property="stopButton" destination="Hei-gd-en1" id="Myc-Pp-Wj4"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="83p-fc-pOm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3352" y="88"/>
+        </scene>
         <!--Share Event View Controller - Sharing-->
         <scene sceneID="Tn4-i4-Nn6">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="XkH-Ks-WSH" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="0BA-4r-yn3" customClass="ShareEventViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6mT-yw-qo4">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
@@ -608,13 +719,13 @@
                         <outlet property="timelinesTableView" destination="vLu-zr-DIs" id="rzr-pd-kPF"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XkH-Ks-WSH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3879" y="264"/>
+            <point key="canvasLocation" x="3311" y="912"/>
         </scene>
         <!--New Note View Controller-->
         <scene sceneID="JNU-Nh-9Xu">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="WBc-Qc-s9x" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="3i7-m4-jdc" customClass="NewNoteViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="fuC-KA-OFg">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -662,13 +773,13 @@
                         <outlet property="placeHolderLabel" destination="IUw-3I-mH5" id="9Ou-jJ-zJC"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WBc-Qc-s9x" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3035" y="-1361"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="eWk-yh-hab">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="tva-K1-LrU" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="N5y-Xm-QZh" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Tf7-gR-G5T">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -688,13 +799,13 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tva-K1-LrU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3838" y="-1364"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="EBj-px-oov">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="o5L-Og-h9T" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="Sht-To-Zce" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Wt3-hJ-HZ1">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -714,13 +825,13 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="o5L-Og-h9T" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4238" y="-1364"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="0Sc-3v-wbo">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="LkN-JI-EbZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="lxK-Sz-XJR" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="bvK-sO-HJN">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -740,13 +851,13 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LkN-JI-EbZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4642" y="-1364"/>
         </scene>
         <!--New Timeline View Controller - New Timeline-->
         <scene sceneID="Myq-ZI-g01">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="3FD-1b-P9h" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="CV8-g4-M7n" customClass="NewTimelineViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jZh-Ds-1IH">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
@@ -832,13 +943,13 @@
                         <outlet property="timelineTitleTextField" destination="19E-23-R8e" id="1m1-c8-bFi"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3FD-1b-P9h" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2145" y="-1364"/>
         </scene>
-        <!--Groups View Controller - Groups-->
+        <!--Groups View Controller - Members-->
         <scene sceneID="Shr-zT-hnB">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Zc3-7X-6d1" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="ORL-wY-cLf" customClass="GroupsViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="48" sectionHeaderHeight="22" sectionFooterHeight="22" id="Adu-4D-Xug">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
@@ -879,21 +990,15 @@
                             <outlet property="delegate" destination="ORL-wY-cLf" id="LbN-fX-Ybv"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Groups" id="w8l-Uw-cPD">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="8OG-Ar-QR6">
-                            <connections>
-                                <segue destination="dxn-Bo-jEs" kind="modal" identifier="newGroupSegue" modalTransitionStyle="coverVertical" id="1Zh-h3-eKC"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Members" id="w8l-Uw-cPD"/>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Zc3-7X-6d1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1118" y="709"/>
         </scene>
         <!--Group Members View Controller-->
         <scene sceneID="lGD-R2-pwQ">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="zK4-1g-c17" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="DKM-Vn-ofv" customClass="GroupMembersViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="kJt-ER-EFU">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
@@ -917,13 +1022,13 @@
                     </tableView>
                     <navigationItem key="navigationItem" id="J5D-Lo-PzU"/>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zK4-1g-c17" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1669" y="709"/>
         </scene>
         <!--Settings View Controller - Settings-->
         <scene sceneID="bXp-rU-d6b">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="AjN-nU-LLx" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="Enz-Ds-6j2" customClass="SettingsViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" bounces="NO" showsVerticalScrollIndicator="NO" dataMode="static" style="grouped" separatorStyle="singleLineEtched" rowHeight="42" sectionHeaderHeight="10" sectionFooterHeight="10" id="wn6-MK-bCq">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
@@ -1095,13 +1200,13 @@
                         <outlet property="userTextField" destination="vBy-ZU-baa" id="1KB-g9-WDY"/>
                     </connections>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AjN-nU-LLx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1189" y="1320"/>
         </scene>
         <!--New Group View Controller - New Group-->
         <scene sceneID="eIf-kK-sjp">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="jeC-Ey-1RL" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="JNa-NU-ZeH" customClass="NewGroupViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jd7-wV-ZbL">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
@@ -1146,6 +1251,7 @@
                         <outlet property="groupNameTextField" destination="7Ds-h2-BMR" id="igA-3b-6mk"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jeC-Ey-1RL" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer cancelsTouchesInView="NO" id="zDE-Cb-Z2X">
                     <connections>
                         <action selector="didTapInView:" destination="JNa-NU-ZeH" id="P0x-qT-ylb"/>
@@ -1157,7 +1263,6 @@
         <!--Tab Bar Controller-->
         <scene sceneID="eDO-B6-hfy">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="PKE-lY-6dg" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tabBarController id="cmr-hk-zSm" sceneMemberID="viewController">
                     <toolbarItems/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackTranslucent"/>
@@ -1172,13 +1277,13 @@
                         <segue destination="O6e-x0-RTI" kind="relationship" relationship="viewControllers" id="4yh-pG-maU"/>
                     </connections>
                 </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="PKE-lY-6dg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="7" y="709"/>
         </scene>
         <!--Navigation Controller - Groups-->
         <scene sceneID="e2E-HT-rfZ">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Su0-8o-zUp" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController id="4dm-vj-Aaw" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Groups" image="groups.png" id="fXD-uq-cwQ"/>
                     <toolbarItems/>
@@ -1192,13 +1297,13 @@
                         <segue destination="ORL-wY-cLf" kind="relationship" relationship="rootViewController" id="4MR-bI-vjm"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Su0-8o-zUp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="594" y="709"/>
         </scene>
         <!--Navigation Controller - Timelines-->
         <scene sceneID="GSD-cu-Wo0">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="LHa-ml-6bi" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController id="RBz-hb-nQP" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Timelines" image="timelines.png" id="7AZ-Hl-dI0"/>
                     <toolbarItems/>
@@ -1212,13 +1317,13 @@
                         <segue destination="UxR-eu-lyS" kind="relationship" relationship="rootViewController" id="6Kc-Nz-7rx"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LHa-ml-6bi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="594" y="-731"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="y2d-Ha-wo5">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="gfB-vd-lpd" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController id="Ec0-wq-ujL" sceneMemberID="viewController">
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
@@ -1231,13 +1336,13 @@
                         <segue destination="CV8-g4-M7n" kind="relationship" relationship="rootViewController" id="st9-f1-ph0"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gfB-vd-lpd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1645" y="-1364"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="S2G-7F-E0G">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="kf4-yw-hg1" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController id="dxn-Bo-jEs" sceneMemberID="viewController">
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
@@ -1250,13 +1355,13 @@
                         <segue destination="JNa-NU-ZeH" kind="relationship" relationship="rootViewController" id="iqz-eV-HkY"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kf4-yw-hg1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1657" y="-91"/>
         </scene>
         <!--Navigation Controller - Settings-->
         <scene sceneID="WWC-6N-Mdh">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="1vZ-C9-4T6" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController id="O6e-x0-RTI" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Settings" image="settings.png" id="dIJ-aa-XZL"/>
                     <toolbarItems/>
@@ -1270,13 +1375,13 @@
                         <segue destination="Enz-Ds-6j2" kind="relationship" relationship="rootViewController" id="JfW-Uf-tL9"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1vZ-C9-4T6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="594" y="1350"/>
         </scene>
         <!--Audio View Controller-->
         <scene sceneID="5GV-hJ-SIa">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="fzE-Nh-6bt" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="ac0-P2-Ve7" customClass="AudioViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ye2-pr-UIU">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -1286,7 +1391,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
-                                    <navigationItem title="Title" id="uXm-gk-RWr">
+                                    <navigationItem title="New Audio" id="uXm-gk-RWr">
                                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="CKu-mf-Mvi">
                                             <connections>
                                                 <action selector="cancelButtonPressed:" destination="ac0-P2-Ve7" id="puu-Kt-Vrf"/>
@@ -1379,13 +1484,13 @@
                         <outlet property="stopButton" destination="0Js-6P-fvs" id="vT8-5w-XBY"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fzE-Nh-6bt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2719" y="-731"/>
         </scene>
         <!--Picture Details View Controller-->
         <scene sceneID="za5-Yk-Tp4">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Ue7-dT-kAv" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="tsE-gh-YNz" customClass="PictureDetailsViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="w9b-sY-vQg">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -1395,7 +1500,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
-                                    <navigationItem title="Title" id="Ayg-ME-QmE">
+                                    <navigationItem title="Picture Details" id="Ayg-ME-QmE">
                                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="AlV-KH-T4E">
                                             <connections>
                                                 <action selector="doneButtonPressed:" destination="tsE-gh-YNz" id="hNy-EC-rfC"/>
@@ -1416,13 +1521,13 @@
                         <outlet property="navBar" destination="9MX-Fe-ddw" id="7JF-U1-qL7"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ue7-dT-kAv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3262" y="-324"/>
+            <point key="canvasLocation" x="3334" y="-540"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Shn-fm-xhT">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="VLc-LW-T8q" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController id="tcr-Mm-HFP" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="ZFp-CM-9MC">
@@ -1434,8 +1539,9 @@
                         <segue destination="0BA-4r-yn3" kind="relationship" relationship="rootViewController" id="c5a-9a-Hzn"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VLc-LW-T8q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3353" y="264"/>
+            <point key="canvasLocation" x="2785" y="912"/>
         </scene>
     </scenes>
     <resources>
@@ -1458,10 +1564,41 @@
         <image name="zoom.png" width="24" height="24"/>
     </resources>
     <classes>
+        <class className="AudioDetailsViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AudioDetailsViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="doneButtonPressed:"/>
+                <relationship kind="action" name="pauseButton:"/>
+                <relationship kind="action" name="playButton:"/>
+                <relationship kind="action" name="stopButton:"/>
+                <relationship kind="outlet" name="infoLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="navBar" candidateClass="UINavigationBar"/>
+                <relationship kind="outlet" name="pauseButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="playButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="stopButton" candidateClass="UIButton"/>
+            </relationships>
+        </class>
         <class className="AudioViewCell" superclassName="TimelineViewCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/AudioViewCell.h"/>
             <relationships>
                 <relationship kind="outlet" name="imgView" candidateClass="UIImageView"/>
+            </relationships>
+        </class>
+        <class className="AudioViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AudioViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="cancelButtonPressed:"/>
+                <relationship kind="action" name="doneButtonPressed:"/>
+                <relationship kind="action" name="pauseButtonPressed:"/>
+                <relationship kind="action" name="playButtonPressed:"/>
+                <relationship kind="action" name="startButtonPressed:"/>
+                <relationship kind="action" name="stopButtonPressed:"/>
+                <relationship kind="outlet" name="infoLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="navBar" candidateClass="UINavigationBar"/>
+                <relationship kind="outlet" name="pauseButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="playButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="recordButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="stopButton" candidateClass="UIButton"/>
             </relationships>
         </class>
         <class className="EventDetailViewController" superclassName="UIViewController">
@@ -1562,12 +1699,19 @@
                 <relationship kind="action" name="audioButtonPressed:"/>
                 <relationship kind="action" name="pictureButtonPressed:"/>
                 <relationship kind="action" name="showInfoDetails:" candidateClass="UILongPressGestureRecognizer"/>
+                <relationship kind="action" name="videoButtonPressed:"/>
                 <relationship kind="outlet" name="contentTableView" candidateClass="UITableView"/>
                 <relationship kind="outlet" name="pictureButton" candidateClass="UIButton"/>
             </relationships>
         </class>
         <class className="TimelinesViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/TimelinesViewController.h"/>
+        </class>
+        <class className="VideoViewCell" superclassName="TimelineViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/VideoViewCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="videoImageView" candidateClass="UIImageView"/>
+            </relationships>
         </class>
     </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
@@ -1576,6 +1720,6 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="o1b-ga-HKZ"/>
+        <segue reference="nBJ-E9-XSk"/>
     </inferredMetricsTieBreakers>
 </document>

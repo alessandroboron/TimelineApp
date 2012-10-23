@@ -14,11 +14,13 @@
 #import "SampleNote.h"
 #import "TimelineViewCell.h"
 #import "PictureViewCell.h"
+#import "VideoViewCell.h"
 #import "NoteCell.h"
 #import "AppDelegate.h"
 #import "XMPPRequestController.h"
 #import "EventDetailViewController.h"
 #import "SimplePicture.h"
+#import "SimpleVideo.h"
 #import "SimpleRecording.h"
 
 #define FONT_SIZE 16.0f
@@ -37,10 +39,12 @@
 @property (strong, nonatomic) NSIndexPath *indexPathForSelectedRow;
 @property (weak, nonatomic) IBOutlet UIButton *pictureButton;
 @property (assign) BOOL newMedia;
+@property (assign) BOOL mediaTypePicture;
 
 - (CGSize)sizeOfText:(NSString *)text;
 - (IBAction)showInfoDetails:(UILongPressGestureRecognizer *)recognizer;
 - (IBAction)pictureButtonPressed:(id)sender;
+- (IBAction)videoButtonPressed:(id)sender;
 - (IBAction)audioButtonPressed:(id)sender;
 
 
@@ -165,9 +169,21 @@
     }
 }
 
+- (IBAction)videoButtonPressed:(id)sender{
+    
+    self.mediaTypePicture = NO;
+    
+    UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:@"Choose" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Record a video",@"Choose from library...", nil];
+    
+    //Show the actionsheet
+    [as showFromTabBar:self.tabBarController.tabBar];
+}
+
 - (IBAction)pictureButtonPressed:(id)sender{
     
     //Set the actionshett to let the user choose between taking a picture or choosing from the library
+    self.mediaTypePicture = YES;
+    
     UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:@"Choose" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take a picture",@"Choose from library...", nil];
     
     //Show the actionsheet
@@ -298,14 +314,34 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
     
+    //If the user wants to take a picture or record a video
     if (buttonIndex==0) {
+        //Save it in the phone
         self.newMedia = YES;
-        [self presentModalViewController:[Utility imagePickerControllerForTakingPictureWithDelegate:self] animated:YES];
+        
+        //If the user wants to take a still picture
+        if (self.mediaTypePicture) {
+            [self presentModalViewController:[Utility imagePickerControllerWithDelegate:self media:(NSString *) kUTTypeImage] animated:YES];
+        }
+        //If the user wants to record a video
+        else{
+            [self presentModalViewController:[Utility imagePickerControllerWithDelegate:self media:(NSString *) kUTTypeMovie] animated:YES];
+        }
         
     }
+    
+    //If the user want to choose a picture or video from the device album
     if (buttonIndex==1) {
         self.newMedia = NO;
-        [self presentModalViewController:[Utility imagePickerControllerForChoosingPictureWithDelegate:self] animated:YES];
+        
+        //If the user wants to choose a still picture
+        if (self.mediaTypePicture) {
+            [self presentModalViewController:[Utility imagePickerControllerForLibraryWithDelegate:self media:(NSString *) kUTTypeImage] animated:YES];
+        }
+        //If the user wants to choose a video
+        else{
+            [self presentModalViewController:[Utility imagePickerControllerForLibraryWithDelegate:self media:(NSString *) kUTTypeMovie] animated:YES];
+        }
     }
 }
 
@@ -314,40 +350,55 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
     
-
-    //Get the mediaType
-    NSString *mediaType = [info objectForKey: UIImagePickerControllerMediaType];
-    
     UIImage *originalImage;
+    NSURL *videoURL;
+    SimplePicture *sp = nil;
+    SimpleVideo *sv = nil;
     
-    //If it is a still image
-    if (CFStringCompare ((__bridge CFStringRef) mediaType, kUTTypeImage, 0)
-        == kCFCompareEqualTo) {
-       
-        //Get the original image (without editing)
-         originalImage = (UIImage *) [info objectForKey:
-                                     UIImagePickerControllerOriginalImage];
-    }
-   //If a new picture has taken save in the photoalbum
+    //If a new picture has taken save in the photoalbum
     if (self.newMedia) {
         //Save the photo in the Photoalbum
         //UIImageWriteToSavedPhotosAlbum (imageToSave, nil, nil , nil);
     }
+
     
-    //Resize the picture to its 5%
-    UIImage *small = [UIImage imageWithCGImage:originalImage.CGImage scale:8 orientation:originalImage.imageOrientation];
-    //Get the new image compressed
-    small = [Utility imageWithImage:small scaledToSize:small.size];
-    NSLog(@"Frame: %f,%f",small.size.width,small.size.height);
-    NSData *d = UIImagePNGRepresentation(small);
-    NSLog(@"Data: %d",d.length);
+    //Get the mediaType
+    NSString *mediaType = [info objectForKey: UIImagePickerControllerMediaType];
     
+    //If Media is an image
+    if ([mediaType isEqualToString:(NSString *)kUTTypeImage])
+    {
+        //Get the original image (without editing)
+        originalImage = (UIImage *) [info objectForKey:
+                                     UIImagePickerControllerOriginalImage];
+        
+        //Resize the picture to its 5%
+        UIImage *small = [UIImage imageWithCGImage:originalImage.CGImage scale:8 orientation:originalImage.imageOrientation];
+        
+        //Get the new image compressed
+        small = [Utility imageWithImage:small scaledToSize:small.size];
+                
+        //Initialize a SimplePicture object
+        sp = [[SimplePicture alloc] initSimplePictureWithImage:small eventItemCreator:nil];
+        
+        //Tells the delegate to perform a task with the object received
+        [self addEventItem:sp toBaseEvent:nil];
+
+    }
     
-    //Initialize a SimplePicture object
-    SimplePicture *sp = [[SimplePicture alloc] initSimplePictureWithImage:small eventItemCreator:nil];
-    
-    //Tells the delegate to perform a task with the object received
-    [self addEventItem:sp toBaseEvent:nil];
+    //If Media is a video
+    else if ([mediaType isEqualToString:(NSString *)kUTTypeMovie])
+    {
+        //Get the url of the video
+        videoURL = [info objectForKey:UIImagePickerControllerMediaURL];
+        
+        //Initialize a SimpleVideo object
+        sv = [[SimpleVideo alloc] initSimpleVideoWithURL:videoURL eventItemCreator:nil];
+        
+        //Tells the delegate to perform a task with the object received
+        [self addEventItem:sv toBaseEvent:nil];
+        
+    }
 }
 
 #pragma mark -
@@ -417,6 +468,17 @@
             cell.backgroundView = iv;
         }
         
+        else if ([objectInTimeline isMemberOfClass:[SimpleVideo class]]){
+            
+            //Get a reusable cell
+            cell = [tableView dequeueReusableCellWithIdentifier:@"videoCellIdentifier"];
+            
+            ((VideoViewCell *)cell).videoImageView.image = ((SimpleVideo *)objectInTimeline).videoThumbnail;
+            
+            //Set the background for the cell
+            cell.backgroundView = iv;
+        }
+        
         else if ([objectInTimeline isMemberOfClass:[SimpleRecording class]]){
             
             //Get a reusable cell
@@ -466,6 +528,10 @@
     }
     //If the cell contains a picture
     else if ([objectInTimeline isMemberOfClass:[SimplePicture class]]){
+        height = PICTURECELL_SIZE;
+    }
+    
+    else if ([objectInTimeline isMemberOfClass:[SimpleVideo class]]){
         height = PICTURECELL_SIZE;
     }
     

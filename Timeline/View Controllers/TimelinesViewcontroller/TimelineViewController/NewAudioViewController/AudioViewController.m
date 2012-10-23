@@ -132,6 +132,20 @@
 
 - (IBAction)doneButtonPressed:(id)sender{
     
+    //If it is recording while 'done' is pressed
+    if ([self.audioRecorder isRecording]) {
+        //stop the recording
+        [self.audioRecorder stop];
+        //hide the info label
+        self.infoLabel.hidden = YES;
+    }
+    //If it is playing whilt 'done' is pressed
+    else if ([self.audioPlayer isPlaying]){
+        //Stop the playing
+        [self.audioPlayer stop];
+        //Hide the info label
+    }
+    
     if (self.isRecorded) {
         
         //Initialize the SimpleRecording data
@@ -139,6 +153,9 @@
         
         //Tells the delegate to perform a task with the object received
         [self.delegate addEventItem:sr toBaseEvent:nil];
+    }
+    else{
+        [Utility showAlertViewWithTitle:@"Recording Audio Error" message:@"You did not record your audio. Please try again or cancel the operation" cancelButtonTitle:@"Dismiss"];
     }
     
     
@@ -230,6 +247,9 @@
 -(void)audioRecorderEncodeErrorDidOccur:(AVAudioRecorder *)recorder error:(NSError *)error{
     NSLog(@"Encode Error occurred");
 }
+
+#pragma mark -
+#pragma mark AVAudioPlayerDelegate
 
 -(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag{
     
