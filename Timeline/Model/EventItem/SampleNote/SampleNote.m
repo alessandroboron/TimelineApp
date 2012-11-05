@@ -10,15 +10,32 @@
 
 @implementation SampleNote
 
+@synthesize eventId = _eventId;
 @synthesize noteTitle = _noteTitle;
 @synthesize noteText = _noteText;
 
 //The designated initializer
-- (id)initSampleNoteWithTitle:(NSString *)title text:(NSString *)text eventItemCreator:(NSString *)eventCreator{
+- (id)initSampleNoteWithEventId:(NSString *)eventId title:(NSString *)title text:(NSString *)text eventItemCreator:(NSString *)eventCreator{
         
-    self = [super initEventItemWithId:[NSString stringWithFormat:@"%@%@%@",title,text,eventCreator] creator:eventCreator];
+    self = [super initEventItemWithHashedId:[NSString stringWithFormat:@"%@%@%@",title,text,eventCreator] creator:eventCreator];
     
     if (self) {
+        if (eventId) {
+            _eventId = eventId;
+        }
+        _noteTitle = title;
+        _noteText = text;
+    }
+    
+    return self;
+}
+
+- (id)initSampleNoteWithEventItem:(EventItem *)eventItem title:(NSString *)title text:(NSString *)text{
+    
+    self = [super initEventItemWithId:eventItem.eventItemId eventId:eventItem.eventId creator:eventItem.creator];
+    
+    if (self) {
+       
         _noteTitle = title;
         _noteText = text;
     }

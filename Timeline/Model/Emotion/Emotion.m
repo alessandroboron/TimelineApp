@@ -10,6 +10,7 @@
 
 @implementation Emotion
 
+@synthesize eventId = _eventId;
 @synthesize emotionItem = _emotionItem;
 
 

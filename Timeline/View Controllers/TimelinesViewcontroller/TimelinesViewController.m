@@ -14,15 +14,21 @@
 #import "Reachability.h"
 #import "Space.h"
 #import "XMPPRequestController.h"
+#import "DBController.h"
+#import "Timeline.h"
+#import "Event.h"
 
 @interface TimelinesViewController ()
 
+@property (strong, nonatomic) NSMutableDictionary *dataDictionary;
 @property (strong, nonatomic) NSMutableArray *timelinesAppArray;
+@property (strong, nonatomic) Reachability *hostReachable;
 
 @end
 
 @implementation TimelinesViewController
 
+@synthesize dataDictionary = _dataDictionary;
 @synthesize timelinesArray = _timelinesArray;
 @synthesize timelinesAppArray = _timelinesAppArray;
 
@@ -51,6 +57,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSpaces:) name:@"SpacesDidUpdateNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissAI:) name:@"SpacesFetchingErrorNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchTimelines:) name:@"SpacesServiceDidConnectNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(storeData:) name:@"XMPPServerDidAuthenticate" object:nil];
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
@@ -75,15 +82,62 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    /*
+    //Get the xmpp controller
+    XMPPRequestController *rc = [Utility xmppRequestController];
+    
+    //Check if there is internet connection
+    self.hostReachable = [Reachability reachabilityWithHostname:@"www.google.com"];
     
     //If Online and Authenticathed retrieve groups
-    if ([Utility isHostReachable] && [Utility isUserAuthenticatedOnXMPPServer]) {
-        
-        XMPPRequestController *rc = [Utility xmppRequestController];
-        
+    if ([self.hostReachable isReachable] && rc.isUserAuthenticatedOnXMPPServer) {
+        //Get the list of the Timelines/Space
         [rc spacesListRequest];
+        //Show activity indicator
         [Utility showActivityIndicatorWithView:self.tableView label:@"Loading Timelines..."];
+        
+        //Update the DB
     }
+    //Otherwise retrieve the timelines from DB
+    else{
+    
+       // [[Utility databaseController] fetchDataFromDB];
+
+    }
+     */
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    //Get the xmpp controller
+    XMPPRequestController *rc = [Utility xmppRequestController];
+    
+    //Check if there is internet connection
+    self.hostReachable = [Reachability reachabilityWithHostname:@"www.google.com"];
+ 
+    
+    //If Online and Authenticathed retrieve groups
+    if ([self.hostReachable isReachable] && rc.isUserAuthenticatedOnXMPPServer) {
+        //Get the list of the Timelines/Space
+        [rc spacesListRequest];
+        //Show activity indicator
+        [Utility showActivityIndicatorWithView:self.tableView label:@"Loading Timelines..."];
+        
+        //Update the DB
+    }
+    
+    //Otherwise retrieve the timelines from DB
+    else{
+        self.timelinesArray = [[Utility databaseController] fetchTimelinesFromDB];
+        [self.tableView reloadData];
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    
+    [Utility dismissActivityIndicator:self.tableView];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -116,8 +170,8 @@
         TimelineViewController *tvc =  (TimelineViewController *)segue.destinationViewController;
         //Set the title of the navigation bar
         tvc.navigationItem.title = ((Timeline *)[self.timelinesArray objectAtIndex:indexPath.row]).title;
-        //Set the timeline(space) id for the corrisponding timeline(space)
-        tvc.spaceId = ((Timeline *)[self.timelinesArray objectAtIndex:indexPath.row]).tId;
+        //Set the timeline
+        tvc.timeline = [self.timelinesArray objectAtIndex:indexPath.row];
     }
 }
 
@@ -131,6 +185,13 @@
     return _timelinesArray;
 }
 
+- (NSMutableDictionary *)dataDictionary{
+    if (!_dataDictionary) {
+        _dataDictionary = [[NSMutableDictionary alloc] init];
+    }
+    return _dataDictionary;
+}
+
 #pragma mark -
 #pragma mark Notification Methods (XMPPRequestController)
 
@@ -140,6 +201,7 @@
     if (self.isViewLoaded && self.view.window) {
         //Set the timelines array to nil. It prevents to duplicate timelines
         self.timelinesArray = nil;
+        //self.dataDictionary = nil;
         
         //Get the spaces list
         self.timelinesAppArray = [notification.userInfo objectForKey:@"userInfo"];
@@ -175,8 +237,14 @@
         if ([sp.spaceUsers count]>1) {
             shared = YES;
         }
+        
+        //Initialize the timeline object
+        Timeline *t = [[Timeline alloc] initTimelineWithId:sp.spaceId title:sp.spaceName creator:nil shared:shared];
+        
+        [self.dataDictionary setObject:t forKey:sp.spaceId];
+        
         //Map the space object in a timeline object
-        [self.timelinesArray addObject:[[Timeline alloc] initTimelineWithId:sp.spaceId title:sp.spaceName creator:nil shared:shared]];
+        [self.timelinesArray addObject:t];
         
         //Update the tableview
         [self.tableView reloadData];
@@ -213,6 +281,45 @@
     }
 }
 
+#pragma XMPPServerDidAuthenticate
+
+//This method is used to send to the XMPP server the data stored when the timeline was offline
+- (void)storeData:(NSNotification *)notification{
+    
+    //Get the user defaults
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    
+    //Check if there's something to share avoiding DB calls
+    if ([userDefaults boolForKey:@"Share"]) {
+
+        //Get the XMPP Controller
+        XMPPRequestController *rc = [Utility xmppRequestController];
+        
+        DBController *db = [Utility databaseController];
+        
+        //Get the timelines
+        NSMutableArray *timelines = [db fetchTimelinesFromDB];
+        
+        for (Timeline *tl in timelines) {
+            //Get the events for each timeline
+            NSMutableArray *events = [db fetchEventsFromDBForTimelineId:tl];
+            //Get the events
+            for (Event *ev in events) {
+                //If the event is not stored
+                if (ev.stored == NO) {
+                    //Update the Event
+                    [db updateEvent:ev.baseEventId withStorage:YES];
+                    //Send the event to the xmpp Server
+                    [rc sendEventItem:ev toSpaceWithId:tl.tId];
+                }
+            }
+        }
+        //Set the user defaults to store to NO
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"Share"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+}
+
 #pragma mark -
 #pragma mark DismissModalViewControllerProtocol
 
@@ -237,6 +344,7 @@
 
     // Return the number of rows in the section.
     return [self.timelinesArray count];
+
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

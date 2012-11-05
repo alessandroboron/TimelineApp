@@ -11,15 +11,32 @@
 
 @implementation SimpleVideo
 
+@synthesize eventId = _eventId;
 @synthesize videoURL = _videoURL;
 @synthesize videoThumbnail = _videoThumbnail;
 
 //The designated initializer
-- (id)initSimpleVideoWithURL:(NSURL *)url eventItemCreator:(NSString *)eventCreator{
+- (id)initSimpleVideoWithEventId:(NSString *)eventId URL:(NSURL *)url eventItemCreator:(NSString *)eventCreator{
     
-    self = [super initEventItemWithId:[[NSString stringWithFormat:@"%@%@",url,eventCreator] MD5] creator:eventCreator];
+    self = [super initEventItemWithHashedId:[[NSString stringWithFormat:@"%@%@",url,eventCreator] MD5] creator:eventCreator];
     
     if (self) {
+        if (eventId) {
+            _eventId = eventId;
+        }
+        _videoURL = url;
+        _videoThumbnail = [Utility imageFromVideoURL:_videoURL];
+    }
+    
+    return self;
+}
+
+- (id)initSimpleVideoWithEventItem:(EventItem *)eventItem url:(NSURL *)url{
+    
+    self = [super initEventItemWithId:eventItem.eventItemId eventId:eventItem.eventId creator:eventItem.creator];
+    
+    if (self) {
+        
         _videoURL = url;
         _videoThumbnail = [Utility imageFromVideoURL:_videoURL];
     }

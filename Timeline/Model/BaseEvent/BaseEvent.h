@@ -16,8 +16,12 @@
 @property (strong, nonatomic) NSDate *date;
 @property (assign, nonatomic) BOOL shared;
 @property (strong, nonatomic) NSString *creator;
+@property (assign) BOOL stored;
+@property (assign) BOOL post;
 
 //The designated initializer
 - (id)initBaseEventWithLocation:(CLLocation *)location date:(NSDate *)date shared:(BOOL)shared creator:(NSString *)creator;
+
+- (id)initBaseEventWithId:(NSString *)theId location:(CLLocation *)location date:(NSDate *)date creator:(NSString *)creator shared:(BOOL)shared stored:(BOOL)stored post:(BOOL)post;
 
 @end

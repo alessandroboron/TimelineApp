@@ -10,7 +10,8 @@
 #import "Space.h"
 
 @class XMPPRequestController;
-
+@class Reachability;
+@class DBController;
 
 @interface Utility : NSObject
 
@@ -19,6 +20,8 @@
 
 //This method is used to get the string representation of a date formatted in a certain way
 + (NSString *)dateTimeDescriptionWithLocaleIdentifier:(NSDate *)date;
+
++ (NSDate *)dateFromEventTimestampString:(NSString *)eventTimestampString;
 
 //This method is used to get the string representation of a date formatted in a certain way
 + (NSString *)dateDescriptionForEventDetailsWithDate:(NSDate *)date;
@@ -55,6 +58,12 @@
 
 //This method is used to get the XMPPRequestController;
 + (XMPPRequestController *)xmppRequestController;
+
+//This method is used to get the Reachability object;
++ (Reachability *)reachability;
+
+//This method is used to get the DBController object;
++ (DBController *)databaseController;
 
 //Used to show the activity indicator on the screen
 + (void)showActivityIndicatorWithView:(UIView *)theView label:(NSString *)label;

@@ -7,7 +7,9 @@
 //
 
 #import "AppDelegate.h"
-#import "XMPPRequestController/XMPPRequestController.h"
+#import "XMPPRequestController.h"
+#import "DBController.h"
+#import "Reachability.h"
 
 @implementation AppDelegate
 
@@ -22,6 +24,9 @@
     self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
     self.locationManager.delegate = self;
     [self.locationManager startUpdatingLocation];
+    
+    //Initialize the DBController
+    self.dbController = [[DBController alloc] initDB];
     
     //Init the XMPP Controller
     self.xmppRequestController = [[XMPPRequestController alloc] init];

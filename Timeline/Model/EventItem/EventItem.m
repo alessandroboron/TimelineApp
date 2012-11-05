@@ -11,10 +11,12 @@
 @implementation EventItem
 
 @synthesize eventItemId = _eventItemId;
+@synthesize eventId = _eventId;
 @synthesize creator = _creator;
 
 //The designated initializer
-- (id)initEventItemWithId:(NSString *)eventId creator:(NSString *)creator{
+
+- (id)initEventItemWithHashedId:(NSString *)eventId creator:(NSString *)creator{
     
     self = [super init];
     
@@ -22,6 +24,18 @@
         
         _eventItemId = [Utility MD5ForString:eventId];
         _creator = creator;
+    }
+    
+    return self;
+}
+
+- (id)initEventItemWithId:(NSString *)eventItemId eventId:(NSString *)eventId creator:(NSString *)creator{
+    
+    self = [self initEventItemWithHashedId:eventId creator:creator];
+    
+    if (self) {
+        _eventItemId = eventItemId;
+        _eventId = eventId;
     }
     
     return self;

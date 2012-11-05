@@ -7,9 +7,13 @@
 //
 
 #import <MobileCoreServices/MobileCoreServices.h>
+#import <AssetsLibrary/AssetsLibrary.h>
 #import "TimelineViewController.h"
+#import "Reachability.h"
+#import "DBController.h"
 #import "NewNoteViewController.h"
 #import "AudioViewController.h"
+#import "Timeline.h"
 #import "Event.h"
 #import "SampleNote.h"
 #import "TimelineViewCell.h"
@@ -46,7 +50,7 @@
 - (IBAction)pictureButtonPressed:(id)sender;
 - (IBAction)videoButtonPressed:(id)sender;
 - (IBAction)audioButtonPressed:(id)sender;
-
+- (void)fetchEventsFromDB;
 
 @end
 
@@ -92,11 +96,17 @@
     v.backgroundColor = [UIColor clearColor];
     [self.contentTableView setTableFooterView:v];
     
-    //Get the xmpp controller
-    XMPPRequestController *rc = [Utility xmppRequestController];
-    //Retrieve all the items for the timeline (space)
-    [rc retrieveAllItemsForSpace:self.spaceId];
-    [Utility showActivityIndicatorWithView:self.view label:@"Loading Info..."];
+    if ([Utility isHostReachable] && [Utility isUserAuthenticatedOnXMPPServer]) {
+        //Get the xmpp controller
+        XMPPRequestController *rc = [Utility xmppRequestController];
+        //Retrieve all the items for the timeline (space)
+        [rc retrieveAllItemsForSpace:self.timeline.tId];
+        [Utility showActivityIndicatorWithView:self.view label:@"Loading Info..."];
+    }
+    else{
+        [self fetchEventsFromDB];
+    }
+    
     
 }
 
@@ -234,7 +244,7 @@
     NSString *nId = [NSString stringWithFormat:@"%@#%@",[[nodeId componentsSeparatedByString:@"#"] objectAtIndex:1],[[nodeId componentsSeparatedByString:@"#"] objectAtIndex:2]];
     
     //If team#xx == team#xx (spaces#team#xx)
-    if ([self.spaceId isEqualToString:nId]) {
+    if ([self.timeline.tId isEqualToString:nId]) {
         //Get the event from the notification
         Event *event = [notification.userInfo objectForKey:@"userInfo"];
         
@@ -280,16 +290,54 @@
             Event *event = nil;
             
             //New BaseEvent
-            event = [[Event alloc] initEventWithLocation:((AppDelegate *)[[UIApplication sharedApplication] delegate]).userLocation date:[NSDate date] shared:NO creator:nil];
+            event = [[Event alloc] initEventWithLocation:((AppDelegate *)[[UIApplication sharedApplication] delegate]).userLocation date:[NSDate date] shared:NO creator:[Utility settingField:kXMPPUserIdentifier]];
             
             //Add the object to the base event
             [event.eventItems addObject:sender];
             
-            //Insert the object at the beginning of the array
-            [self.eventsArray insertObject:event atIndex:0];
+            //If there's connectivity
+            if ([Utility isHostReachable]){
+                
+                //If the user is authenticated on the XMPP Server
+                if ([Utility isUserAuthenticatedOnXMPPServer]){
+                    
+                    //Set the event stored
+                    event.stored = YES;
+                    event.post = YES;
+                    
+                    //Get the XMPPRequestController
+                    XMPPRequestController *rc = [Utility xmppRequestController];
+                    [rc sendEventItem:event toSpaceWithId:self.timeline.tId];
+                    
+                }
+                //Otherwise
+                else{
+                   // [Utility showAlertViewWithTitle:@"Mirror Space Service" message:@"Not connected to the Mirror Space Service" cancelButtonTitle:@"Dismiss"];
+                }
+            }
+            //If there's no connection
+            else{
+                
+                //Set the key Share to YES in the standard user defaults 
+                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"Share"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                
+                event.stored = NO;
+                event.post = NO;
+                
+                //Insert the object at the beginning of the array
+                [self.eventsArray insertObject:event atIndex:0];
+                
+                //Update the TableView (If when connection duplicate on tableview)
+                [self.contentTableView reloadData];
+  
+                
+              //  [Utility showAlertViewWithTitle:@"Connection Error" message:@"Not Connected to a Network" cancelButtonTitle:@"Dismiss"];
+            }
+                       
+            //Update the DB
+            [[Utility databaseController] insertEvent:event inTimeline:self.timeline];
             
-            //Update the TableView
-            [self.contentTableView reloadData];
         }
     }];
 }
@@ -307,6 +355,18 @@
     CGSize size = [text sizeWithFont:[UIFont systemFontOfSize:FONT_SIZE] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
     
     return size;
+}
+
+- (void)fetchEventsFromDB{
+   
+    self.eventsArray = [[Utility databaseController] fetchEventsFromDBForTimelineId:self.timeline];
+    
+    //Order the array based on the date
+    [Utility sortArray:self.eventsArray withKey:@"date" ascending:NO];
+    
+    //Update the TableView
+    [self.contentTableView reloadData];
+    
 }
 
 #pragma mark -
@@ -350,7 +410,8 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
     
-    UIImage *originalImage;
+    UIImage *originalImage = (UIImage *) [info objectForKey:
+                                          UIImagePickerControllerOriginalImage];
     NSURL *videoURL;
     SimplePicture *sp = nil;
     SimpleVideo *sv = nil;
@@ -358,7 +419,20 @@
     //If a new picture has taken save in the photoalbum
     if (self.newMedia) {
         //Save the photo in the Photoalbum
-        //UIImageWriteToSavedPhotosAlbum (imageToSave, nil, nil , nil);
+        
+        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+        
+        // Request to save the image to camera roll
+        [library writeImageToSavedPhotosAlbum:[originalImage CGImage] orientation:(ALAssetOrientation)[originalImage imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error){
+            if (error) {
+                NSLog(@"error");
+            } else {
+                NSLog(@"url %@", assetURL);
+            }  
+        }];  
+       
+        
+        //UIImageWriteToSavedPhotosAlbum (originalImage, nil, nil , nil);
     }
 
     
@@ -379,7 +453,9 @@
         small = [Utility imageWithImage:small scaledToSize:small.size];
                 
         //Initialize a SimplePicture object
-        sp = [[SimplePicture alloc] initSimplePictureWithImage:small eventItemCreator:nil];
+        //sp = [[SimplePicture alloc] initSimplePictureWithImage:small eventItemCreator:nil];
+#warning no eventID
+        sp = [[SimplePicture alloc] initSimplePictureWithEventId:nil image:small eventItemCreator:nil];
         
         //Tells the delegate to perform a task with the object received
         [self addEventItem:sp toBaseEvent:nil];
@@ -393,8 +469,8 @@
         videoURL = [info objectForKey:UIImagePickerControllerMediaURL];
         
         //Initialize a SimpleVideo object
-        sv = [[SimpleVideo alloc] initSimpleVideoWithURL:videoURL eventItemCreator:nil];
-        
+      //  sv = [[SimpleVideo alloc] initSimpleVideoWithURL:videoURL eventItemCreator:nil];
+        sv = [[SimpleVideo alloc] initSimpleVideoWithEventId:nil URL:videoURL eventItemCreator:nil];
         //Tells the delegate to perform a task with the object received
         [self addEventItem:sv toBaseEvent:nil];
         

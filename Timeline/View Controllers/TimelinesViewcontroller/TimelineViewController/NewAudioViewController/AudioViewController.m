@@ -149,7 +149,8 @@
     if (self.isRecorded) {
         
         //Initialize the SimpleRecording data
-        SimpleRecording *sr = [[SimpleRecording alloc] initSimpleRecordingWithURLPath:[self.audioRecorder.url absoluteString] eventCreator:nil];
+       // SimpleRecording *sr = [[SimpleRecording alloc] initSimpleRecordingWithURLPath:[self.audioRecorder.url absoluteString] eventCreator:nil];
+        SimpleRecording *sr = [[SimpleRecording alloc] initSimpleRecordingWithEventId:nil URLPath:[self.audioRecorder.url absoluteString] eventCreator:nil];
         
         //Tells the delegate to perform a task with the object received
         [self.delegate addEventItem:sr toBaseEvent:nil];

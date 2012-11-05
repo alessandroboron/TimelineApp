@@ -11,9 +11,12 @@
 @interface EventItem : NSObject
 
 @property (strong, nonatomic) NSString *eventItemId;
+@property (strong, nonatomic) NSString *eventId;
 @property (strong, nonatomic) NSString *creator;
 
+- (id)initEventItemWithId:(NSString *)eventItemId eventId:(NSString *)eventId creator:(NSString *)creator;
+
 //The designated initializer
-- (id)initEventItemWithId:(NSString *)eventId creator:(NSString *)creator;
+- (id)initEventItemWithHashedId:(NSString *)eventId creator:(NSString *)creator;
 
 @end

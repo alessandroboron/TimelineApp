@@ -10,6 +10,7 @@
 #import <CoreLocation/CoreLocation.h>
 
 @class XMPPRequestController;
+@class DBController;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate,CLLocationManagerDelegate>
 
@@ -17,4 +18,7 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) CLLocation *userLocation;
 @property (strong, nonatomic) XMPPRequestController *xmppRequestController;
+@property (strong, nonatomic) DBController *dbController;
+@property (strong, nonatomic) Reachability *reachability;
+
 @end

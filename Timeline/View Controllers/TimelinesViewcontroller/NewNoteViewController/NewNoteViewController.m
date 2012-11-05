@@ -92,7 +92,9 @@
 - (IBAction)saveButtonPressed:(id)sender{
     
     //Creates the SampleNote object
-    SampleNote *sn = [[SampleNote alloc] initSampleNoteWithTitle:self.contentTextView.text text:self.contentTextView.text eventItemCreator:nil];
+   // SampleNote *sn = [[SampleNote alloc] initSampleNoteWithTitle:self.contentTextView.text text:self.contentTextView.text eventItemCreator:nil];
+    
+    SampleNote *sn = [[SampleNote alloc] initSampleNoteWithEventId:self.baseEvent.baseEventId title:self.contentTextView.text text:self.contentTextView.text eventItemCreator:[Utility settingField:kXMPPUserIdentifier]];
     
     //Tells the delegate to perform a task with the object received
     [self.delegate addEventItem:sn toBaseEvent:self.baseEvent];

@@ -11,10 +11,13 @@
 
 @interface SimpleVideo : EventItem
 
+@property (strong, nonatomic) NSString *eventId;
 @property (strong, nonatomic) NSURL *videoURL;
 @property (strong, nonatomic) UIImage *videoThumbnail;
 
 //The designated initializer
-- (id)initSimpleVideoWithURL:(NSURL *)url eventItemCreator:(NSString *)eventCreator;
+- (id)initSimpleVideoWithEventId:(NSString *)eventId URL:(NSURL *)url eventItemCreator:(NSString *)eventCreator;
+
+- (id)initSimpleVideoWithEventItem:(EventItem *)eventItem url:(NSURL *)url;
 
 @end

@@ -11,10 +11,13 @@
 
 @interface SampleNote : EventItem
 
+@property (strong, nonatomic) NSString *eventId;
 @property (strong, nonatomic) NSString *noteTitle;
 @property (strong, nonatomic) NSString *noteText;
 
 //The designated initializer
-- (id)initSampleNoteWithTitle:(NSString *)title text:(NSString *)text eventItemCreator:(NSString *)eventCreator;
+- (id)initSampleNoteWithEventId:(NSString *)eventId title:(NSString *)title text:(NSString *)text eventItemCreator:(NSString *)eventCreator;
+
+- (id)initSampleNoteWithEventItem:(EventItem *)eventItem title:(NSString *)title text:(NSString *)text;
 
 @end

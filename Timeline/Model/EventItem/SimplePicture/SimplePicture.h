@@ -11,9 +11,12 @@
 
 @interface SimplePicture : EventItem
 
+@property (strong, nonatomic) NSString *eventId;
 @property (strong, nonatomic) UIImage *image;
 
 //The designated initializer
-- (id)initSimplePictureWithImage:(UIImage *)image eventItemCreator:(NSString *)eventCreator;
+- (id)initSimplePictureWithEventId:(NSString *)eventId image:(UIImage *)image eventItemCreator:(NSString *)eventCreator;
+
+- (id)initSimplePictureWithEventItem:(EventItem *)eventItem url:(NSString *)urlImgPath;
 
 @end

@@ -26,4 +26,23 @@
     return self;
 }
 
+- (id)initEventWithId:(NSString *)theId location:(CLLocation *)location date:(NSDate *)date creator:(NSString *)creator shared:(BOOL)shared stored:(BOOL)stored post:(BOOL)post{
+    
+    self = [super initBaseEventWithId:theId location:location date:date creator:creator shared:shared stored:stored post:post];
+    
+    if (self) {
+        _eventItems = [[NSMutableArray alloc] init];
+        _emotions = [[NSMutableArray alloc] init];
+    }
+    
+    return self;
+}
+
+- (NSMutableArray *)eventItems{
+    if (!_eventItems) {
+        _eventItems = [[NSMutableArray alloc] init];
+    }
+    return _eventItems;
+}
+
 @end

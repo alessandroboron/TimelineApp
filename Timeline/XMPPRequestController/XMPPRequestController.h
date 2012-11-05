@@ -37,6 +37,9 @@ static int nodeIdRequestNumber=0;
 - (void)sendEventItem:(id)eventItem toSpaceWithId:(NSString *)spaceId;
 
 
-//Server status
+//This method is used to check the connectivity status
 - (BOOL)isXMPPServerConnected;
+//This method is used to check the authentication on the xmpp server
+- (BOOL)isUserAuthenticatedOnXMPPServer;
+
 @end

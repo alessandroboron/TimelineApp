@@ -54,6 +54,25 @@
     return timeStamp;
 }
 
++ (NSDate *)dateFromEventTimestampString:(NSString *)eventTimestampString{
+    
+    //Initialize the date formatter
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    
+    //Set the date format
+    
+    //Date Format "2010/06/25 11:54"
+    [dateFormatter setDateFormat:@"dd/MM/yyyy HH:mm"];
+    
+    //Set the locale 'EN' for the date formatter
+    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"EN"]];
+    
+    //Get the date object from a string date
+    NSDate *date = [dateFormatter dateFromString:eventTimestampString];
+    
+    return date;    
+}
+
 //This method is used to get the string rapresentation of a date formatted in a certain way
 + (NSString *)dateDescriptionForEventDetailsWithDate:(NSDate *)date{
     
@@ -293,6 +312,22 @@
     AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     return delegate.xmppRequestController;
+}
+
+//This method is used to get the Reachability object;
++ (Reachability *)reachability{
+    
+    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    return delegate.reachability;
+}
+
+//This method is used to get the DBController object;
++ (DBController *)databaseController{
+    
+    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    return delegate.dbController;
 }
 
 #pragma mark -
@@ -538,4 +573,5 @@
         return @"Unknown";
     }
 }
+ 
 @end

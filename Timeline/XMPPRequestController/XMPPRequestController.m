@@ -14,6 +14,7 @@
 #import "SimplePicture.h"
 #import "SimpleRecording.h"
 #import "Event.h"
+#import "DBController.h"
 
 #define kXMPPResourceIdentifier @"TimelineAPP"
 #define kXMPPPortIdentifier     5222
@@ -73,6 +74,9 @@
 @property (nonatomic,retain) NSString *xmppSpacesHost;
 @property (nonatomic,retain) NSString *xmppPubsubHost;
 @property (nonatomic,retain) NSMutableArray *spacesArray;
+
+- (void)goOnline;
+- (void)goOffline;
 
 - (void)requiredParametersForInbandRegistration;
 - (void)makeSpacesList:(XMPPIQ *)iq;
@@ -168,7 +172,17 @@
 
 //This method is used to disconnect from the XMPP server
 - (void)disconnect{
+    [self goOffline];
     [self.xmppStream disconnect];
+}
+
+- (void)goOnline {
+    XMPPPresence *presence = [XMPPPresence presence];
+    [[self xmppStream] sendElement:presence];
+}
+- (void)goOffline {
+    XMPPPresence *presence = [XMPPPresence presenceWithType:@"unavailable"];
+    [[self xmppStream] sendElement:presence];
 }
 
 /*
@@ -269,7 +283,7 @@
 
 
 //This method is used to send an event(eventItem) to the XMPP stream
-- (void)sendEventItem:(id)eventItem toSpaceWithId:(NSString *)spaceId;{
+- (void)sendEventItem:(id)eventItem toSpaceWithId:(NSString *)spaceId{
     
     Event *event = (Event *)eventItem;
     
@@ -282,8 +296,6 @@
     [pubsub addChild:publish];
     
     NSXMLElement *item = [NSXMLElement elementWithName:@"item"];
-    
-
     
     NSXMLElement *eventXML = [NSXMLElement elementWithName:@"eventItem"];
     [eventXML addAttributeWithName:@"xmlns" stringValue:@"mirror:application:timeline:item"];
@@ -299,10 +311,13 @@
     [publish addChild:item];
     
     NSXMLElement *creationInfo = [NSXMLElement elementWithName:@"creationInfo"];
+    NSXMLElement *cdtId = [NSXMLElement elementWithName:@"cdt:id" stringValue:event.baseEventId];
     
     NSXMLElement *cdtDate = [NSXMLElement elementWithName:@"cdt:date" stringValue:[Utility dateDescriptionForXMPPServerWithDate:event.date]];
-    NSXMLElement *cdtPerson = [NSXMLElement elementWithName:@"cdt:person" stringValue:[NSString stringWithFormat:@"%@@%@",self.xmppUser,self.xmppDomain]];
+   // NSXMLElement *cdtPerson = [NSXMLElement elementWithName:@"cdt:person" stringValue:[NSString stringWithFormat:@"%@@%@",self.xmppUser,self.xmppDomain]];
+    NSXMLElement *cdtPerson = [NSXMLElement elementWithName:@"cdt:person" stringValue:[NSString stringWithFormat:@"%@",self.xmppUser]];
     
+    [creationInfo addChild:cdtId];
     [creationInfo addChild:cdtDate];
     [creationInfo addChild:cdtPerson];
     
@@ -683,14 +698,16 @@
         }
     }
     
-    //Init the note
-    SampleNote *sn = [[SampleNote alloc] initSampleNoteWithTitle:@"WatchIt" text:valuesString eventItemCreator:eventCreator];
-    
     //Init the location
     CLLocation *loc = [[CLLocation alloc] initWithLatitude:[eventLatitude doubleValue] longitude:[eventLongitude doubleValue]];
     
     //New BaseEvent
     Event *event = [[Event alloc] initEventWithLocation:loc date:[Utility dateFromTimestamp:eventDate watchIT:YES] shared:NO creator:eventCreator];
+    
+    //Init the note
+   // SampleNote *sn = [[SampleNote alloc] initSampleNoteWithTitle:@"WatchIt" text:valuesString eventItemCreator:eventCreator];
+    
+    SampleNote *sn = [[SampleNote alloc] initSampleNoteWithEventId:event.baseEventId title:@"WATCHiT" text:valuesString eventItemCreator:eventCreator];
     
     //Add the object to the base event
     [event.eventItems addObject:sn];
@@ -730,12 +747,14 @@
     
     NSString *notebody = [[recommendation elementForName:@"noteBody"] stringValue];
     
-    SampleNote *sn = [[SampleNote alloc] initSampleNoteWithTitle:@"CroMAR" text:notebody eventItemCreator:eventCreator];
-    
     CLLocation *loc = [[CLLocation alloc] initWithLatitude:[eventLatitude doubleValue] longitude:[eventLongitude doubleValue]];
     
     //New BaseEvent
     Event *event = [[Event alloc] initEventWithLocation:loc date:[Utility dateFromCroMARTimestampString:eventDate] shared:NO creator:eventCreator];
+    
+   // SampleNote *sn = [[SampleNote alloc] initSampleNoteWithTitle:@"CroMAR" text:notebody eventItemCreator:eventCreator];
+    
+    SampleNote *sn = [[SampleNote alloc] initSampleNoteWithEventId:event.baseEventId title:@"CroMAR" text:notebody eventItemCreator:eventCreator];
     
     //Add the object to the base event
     [event.eventItems addObject:sn];
@@ -764,70 +783,82 @@
     
     //Get the creation info element
     NSXMLElement *creationInfo = [eventXML elementForName:@"creationInfo"];
-    
-    NSString *eventDate = [[creationInfo elementForName:@"cdt:date"] stringValue];
-    
-    NSString *eventCreator = [[creationInfo elementForName:@"cdt:person"] stringValue];
-    
-    NSXMLElement *location = [eventXML elementForName:@"location"];
-    NSString *eventLatitude = [location attributeStringValueForName:@"latitude"];
-    NSString *eventLongitude = [location attributeStringValueForName:@"longitude"];
-    
-    NSString *subject = [[eventXML elementForName:@"subject"] stringValue];
-    NSString *body = [[eventXML elementForName:@"body"] stringValue];
-    
-    NSXMLElement *attachment = [eventXML elementForName:@"attachment"];
-    NSString *type = [attachment attributeStringValueForName:@"type"];
-    
-    UIImage *img = nil;
-    NSString *contentBase64 = nil;
-    if ([type isEqualToString:@"photo"]) {
-        contentBase64 = [[attachment elementForName:@"content"] stringValue];
-    }
-    if (contentBase64) {
-        img = [Utility imageFromBase64String:contentBase64];
-        NSData *dataImg = UIImagePNGRepresentation(img);
-        NSLog(@"d: %d",dataImg.length);
-    }
-    
-    SampleNote *sn = nil;
-    SimplePicture *sp = nil;
-    
-    if (!img) {
-        sn = [[SampleNote alloc] initSampleNoteWithTitle:subject text:body eventItemCreator:eventCreator];
-    }
-    else{
-        sp = [[SimplePicture alloc] initSimplePictureWithImage:img eventItemCreator:eventCreator];
-    }
-    
-    CLLocation *loc = [[CLLocation alloc] initWithLatitude:[eventLatitude doubleValue] longitude:[eventLongitude doubleValue]];
-    
-    //New BaseEvent
-    Event *event = [[Event alloc] initEventWithLocation:loc date:[Utility dateFromTimestamp:eventDate watchIT:NO] shared:NO creator:eventCreator];
-    
-    if (img) {
-        //Add the simple picture to the base event
-        [event.eventItems addObject:sp];
-    }
-    else{
-        //Add the simple note to the base event
-        [event.eventItems addObject:sn];
+    NSString *eventId = [[creationInfo elementForName:@"cdt:id"] stringValue];
 
-    }
+    if ([[Utility databaseController] isEventToPost:eventId]) {
+        
+        NSString *eventDate = [[creationInfo elementForName:@"cdt:date"] stringValue];
+        
+        NSString *eventCreator = [[creationInfo elementForName:@"cdt:person"] stringValue];
+        
+        NSXMLElement *location = [eventXML elementForName:@"location"];
+        NSString *eventLatitude = [location attributeStringValueForName:@"latitude"];
+        NSString *eventLongitude = [location attributeStringValueForName:@"longitude"];
+        
+        NSString *subject = [[eventXML elementForName:@"subject"] stringValue];
+        NSString *body = [[eventXML elementForName:@"body"] stringValue];
+        
+        NSXMLElement *attachment = [eventXML elementForName:@"attachment"];
+        NSString *type = [attachment attributeStringValueForName:@"type"];
+        
+        UIImage *img = nil;
+        NSString *contentBase64 = nil;
+        if ([type isEqualToString:@"photo"]) {
+            contentBase64 = [[attachment elementForName:@"content"] stringValue];
+        }
+        if (contentBase64) {
+            img = [Utility imageFromBase64String:contentBase64];
+            NSData *dataImg = UIImagePNGRepresentation(img);
+            NSLog(@"d: %d",dataImg.length);
+        }
+        
+        SampleNote *sn = nil;
+        SimplePicture *sp = nil;
+        
+        CLLocation *loc = [[CLLocation alloc] initWithLatitude:[eventLatitude doubleValue] longitude:[eventLongitude doubleValue]];
+        
+        //New BaseEvent
+        Event *event = [[Event alloc] initEventWithLocation:loc date:[Utility dateFromTimestamp:eventDate watchIT:NO] shared:NO creator:eventCreator];
+        
+        if (!img) {
+            //sn = [[SampleNote alloc] initSampleNoteWithTitle:subject text:body eventItemCreator:eventCreator];
+            sn = [[SampleNote alloc] initSampleNoteWithEventId:event.baseEventId title:subject text:body eventItemCreator:eventCreator];
+        }
+        else{
+            //sp = [[SimplePicture alloc] initSimplePictureWithImage:img eventItemCreator:eventCreator];
+            sp = [[SimplePicture alloc] initSimplePictureWithEventId:event.baseEventId image:img eventItemCreator:eventCreator];
+            
+        }
+        
+        if (img) {
+            //Add the simple picture to the base event
+            [event.eventItems addObject:sp];
+        }
+        else{
+            //Add the simple note to the base event
+            [event.eventItems addObject:sn];
+            
+        }
 #warning review this method when defined xML schemata for each eventItem are defined
-       
-    //Send the data
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:event,@"userInfo",node,@"nodeId", nil];
-    
-    //If retrieving all the data from a space
-    if (!update) {
+        
         //Send the data
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"EventDidLoadNotification" object:nil userInfo:userInfo];
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:event,@"userInfo",node,@"nodeId", nil];
+        
+        //If retrieving all the data from a space
+        if (!update) {
+            //Send the data
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"EventDidLoadNotification" object:nil userInfo:userInfo];
+        }
+        //If the app received a real-time notification from another app
+        else{
+            //Send the data and update the timeline
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateTimelineNotification" object:nil userInfo:userInfo];
+        }
     }
-    //If the app received a real-time notification from another app
     else{
-        //Send the data and update the timeline
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateTimelineNotification" object:nil userInfo:userInfo];
+        
+        //Set the Post to 1 after received the message
+        [[Utility databaseController] updateEvent:eventId withPost:YES];
     }
 }
 
@@ -865,6 +896,9 @@
 //If the user is authenticated on the server
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender{
     
+    //Notify the presence to the server
+    [self goOnline];
+    
     //Did Authenticate thereby set the status 'YES'
     NSNumber *boolForConnectivityInfo = [NSNumber numberWithBool:YES];
     
@@ -873,7 +907,7 @@
     //Send the notification with the status
     [[NSNotificationCenter defaultCenter] postNotificationName:@"XMPPConnectivityDidUpdateNotification" object:nil userInfo:connectivityStatus];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"SpacesServiceDidConnectNotification" object:nil];
-    //[self subscribeToNode:@"team#12"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"XMPPServerDidAuthenticate" object:nil];
 }
 
 //If the user is not authenticated on the server
@@ -1086,7 +1120,7 @@
 #pragma mark -
 #pragma mark Server Status
 
-//This method is used to check if the app is connected to the XMPP Server
+//This method is used to check the connectivity status
 - (BOOL)isXMPPServerConnected{
     
     if ([self.xmppStream isConnected]) {
@@ -1095,6 +1129,18 @@
     else
         return NO;
 }
+
+//This method is used to check the authentication on the xmpp server
+- (BOOL)isUserAuthenticatedOnXMPPServer{
+    
+    if ([self isXMPPServerConnected] && [self.xmppStream isAuthenticated]) {
+        return YES;
+    }
+    else
+        return NO;
+    
+}
+
 
 #pragma mark -
 #pragma mark Notification Methods

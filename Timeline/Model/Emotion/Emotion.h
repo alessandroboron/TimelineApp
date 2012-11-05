@@ -19,6 +19,7 @@ typedef enum{
 
 @interface Emotion : NSObject
 
+@property (strong, nonatomic) NSString *eventId;
 @property (assign) EmotionItem *emotionItem;
 
 
