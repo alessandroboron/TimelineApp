@@ -20,12 +20,15 @@
 #import "PictureViewCell.h"
 #import "VideoViewCell.h"
 #import "NoteCell.h"
+#import "EmotionViewCell.h"
 #import "AppDelegate.h"
 #import "XMPPRequestController.h"
 #import "EventDetailViewController.h"
 #import "SimplePicture.h"
 #import "SimpleVideo.h"
 #import "SimpleRecording.h"
+#import "NewEmotionViewController.h"
+#import "Emotion.h"
 
 #define FONT_SIZE 16.0f
 #define CELL_CONTENT_WIDTH 235.0f
@@ -36,20 +39,27 @@
 
 #define PICTURECELL_SIZE 200.0f
 #define AUDIOCELL_SIZE 130.0f;
+#define EMOTION_SIZE 100.0f;
 
 @interface TimelineViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *contentTableView;
 @property (strong, nonatomic) NSIndexPath *indexPathForSelectedRow;
+@property (weak, nonatomic) IBOutlet UILabel *noItemLabel;
 @property (weak, nonatomic) IBOutlet UIButton *pictureButton;
+@property (weak, nonatomic) IBOutlet UIButton *videoButton;
+@property (weak, nonatomic) IBOutlet UIButton *audioButton;
+@property (weak, nonatomic) IBOutlet UIButton *emotionButton;
 @property (assign) BOOL newMedia;
 @property (assign) BOOL mediaTypePicture;
+@property (strong, nonatomic) NewEmotionViewController *emotionViewController;
 
 - (CGSize)sizeOfText:(NSString *)text;
-- (IBAction)showInfoDetails:(UILongPressGestureRecognizer *)recognizer;
+- (IBAction)showInfoDetails:(UITapGestureRecognizer *)recognizer;
 - (IBAction)pictureButtonPressed:(id)sender;
 - (IBAction)videoButtonPressed:(id)sender;
 - (IBAction)audioButtonPressed:(id)sender;
+- (IBAction)emotionButtonPressed:(id)sender;
 - (void)fetchEventsFromDB;
 
 @end
@@ -96,12 +106,28 @@
     v.backgroundColor = [UIColor clearColor];
     [self.contentTableView setTableFooterView:v];
     
-    if ([Utility isHostReachable] && [Utility isUserAuthenticatedOnXMPPServer]) {
+    //If the timeline is shared set only the notes and emotion
+    if (self.timeline.shared) {
+        
+        self.pictureButton.hidden = YES;
+        self.videoButton.hidden = YES;
+        self.audioButton.hidden = YES;
+        self.emotionButton.frame = CGRectMake(self.pictureButton.frame.origin.x, self.pictureButton.frame.origin.y, self.emotionButton.frame.size.width, self.emotionButton.frame.size.height);
+    }
+    
+    //If no element in the table view set its background
+    if ([self.eventsArray count]==0) {
+        self.noItemLabel.hidden = NO;
+    }
+    
+    if ([Utility isHostReachable] && [Utility isUserAuthenticatedOnXMPPServer] && self.timeline.shared) {
+        
         //Get the xmpp controller
         XMPPRequestController *rc = [Utility xmppRequestController];
         //Retrieve all the items for the timeline (space)
         [rc retrieveAllItemsForSpace:self.timeline.tId];
         [Utility showActivityIndicatorWithView:self.view label:@"Loading Info..."];
+        
     }
     else{
         [self fetchEventsFromDB];
@@ -116,11 +142,16 @@
     // Release any retained subviews of the main view.
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    
+    [Utility dismissActivityIndicator:self.view];
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
-
 
 #pragma mark -
 #pragma mark Lazy Instantiation
@@ -160,13 +191,15 @@
         edvc.delegate = self;
         edvc.event = [self.eventsArray objectAtIndex:indexPath.row];
     }
+    
+     
 }
 
 #pragma mark -
 #pragma mark UI Methods
 
-- (IBAction)showInfoDetails:(UILongPressGestureRecognizer *)recognizer{
-    if (recognizer.state == UIGestureRecognizerStateBegan) {
+- (IBAction)showInfoDetails:(UITapGestureRecognizer *)recognizer{
+    if (recognizer.state == UIGestureRecognizerStateEnded) {
         
         CGPoint p = [recognizer locationInView:self.contentTableView];
         
@@ -205,6 +238,25 @@
     [self performSegueWithIdentifier:@"newAudioSegue" sender:self];
 }
 
+- (IBAction)emotionButtonPressed:(id)sender{
+   
+    //If it is not shown
+    if (self.emotionViewController.view.superview == nil) {
+        
+        if (self.emotionViewController == nil) {
+            NewEmotionViewController *nevc = [[UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"NewEmotion"];
+            nevc.baseEvent = nil;
+            nevc.delegate = self;
+            self.emotionViewController = nevc;
+        }
+        [self.view addSubview:self.emotionViewController.view];
+    }
+    else{
+        //Remove
+        [self.emotionViewController.view removeFromSuperview];
+    }
+}
+
 #pragma mark -
 #pragma mark DismissActivityIndicatorNotification
 
@@ -228,9 +280,11 @@
     //Order the array based on the date
     [Utility sortArray:self.eventsArray withKey:@"date" ascending:NO];
     
-    
     //Update the TableView
     [self.contentTableView reloadData];
+    
+    //Update the DB
+   // [[Utility databaseController] insertEvent:event inTimeline:<#(Timeline *)#>]
 }
 
 #pragma mark -
@@ -283,63 +337,76 @@
 
 - (void)addEventItem:(id)sender toBaseEvent:(BaseEvent *)baseEvent{
     //Dismiss the presented view controller
-    [self dismissViewControllerAnimated:YES completion:^{
+    
+    //If the emotion popup is presented 
+    if (self.emotionViewController.view.superview) {
+        //Remove it
+        [self.emotionViewController.view removeFromSuperview];
+    }
+    //Otherwise dismiss the presented view controller
+    else{
+        [self dismissModalViewControllerAnimated:YES];
+    }
+    
+    //If baseEvent not exist make it
+    if (baseEvent==nil) {
+        Event *event = nil;
         
-        //If baseEvent not exist make it
-        if (baseEvent==nil) {
-            Event *event = nil;
+        //New BaseEvent
+        event = [[Event alloc] initEventWithLocation:((AppDelegate *)[[UIApplication sharedApplication] delegate]).userLocation date:[NSDate date] shared:NO creator:[Utility settingField:kXMPPUserIdentifier]];
+        
+        //Add the object to the base event
+        [event.eventItems addObject:sender];
+
+        //If the user is authenticated on the XMPP Server and timeline is not private
+        if ([Utility isUserAuthenticatedOnXMPPServer]){
             
-            //New BaseEvent
-            event = [[Event alloc] initEventWithLocation:((AppDelegate *)[[UIApplication sharedApplication] delegate]).userLocation date:[NSDate date] shared:NO creator:[Utility settingField:kXMPPUserIdentifier]];
-            
-            //Add the object to the base event
-            [event.eventItems addObject:sender];
-            
-            //If there's connectivity
-            if ([Utility isHostReachable]){
+            if ([[Utility databaseController]isTimelineShared:self.timeline.tId]) {
                 
-                //If the user is authenticated on the XMPP Server
-                if ([Utility isUserAuthenticatedOnXMPPServer]){
-                    
-                    //Set the event stored
-                    event.stored = YES;
-                    event.post = YES;
-                    
-                    //Get the XMPPRequestController
-                    XMPPRequestController *rc = [Utility xmppRequestController];
-                    [rc sendEventItem:event toSpaceWithId:self.timeline.tId];
-                    
-                }
-                //Otherwise
-                else{
-                   // [Utility showAlertViewWithTitle:@"Mirror Space Service" message:@"Not connected to the Mirror Space Service" cancelButtonTitle:@"Dismiss"];
-                }
+                //Set the event stored
+                event.stored = YES;
+                event.post = YES;
+                
+                //Get the XMPPRequestController
+                XMPPRequestController *rc = [Utility xmppRequestController];
+                [rc sendEventItem:event toSpaceWithId:self.timeline.tId];
             }
-            //If there's no connection
             else{
-                
-                //Set the key Share to YES in the standard user defaults 
-                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"Share"];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                
-                event.stored = NO;
-                event.post = NO;
-                
                 //Insert the object at the beginning of the array
                 [self.eventsArray insertObject:event atIndex:0];
                 
                 //Update the TableView (If when connection duplicate on tableview)
                 [self.contentTableView reloadData];
-  
-                
-              //  [Utility showAlertViewWithTitle:@"Connection Error" message:@"Not Connected to a Network" cancelButtonTitle:@"Dismiss"];
             }
-                       
-            //Update the DB
-            [[Utility databaseController] insertEvent:event inTimeline:self.timeline];
+        }
+        //If there's no connection
+        else{
+            
+            if ([[Utility databaseController]isTimelineShared:self.timeline.tId]){
+                
+                //Set the key Share to YES in the standard user defaults
+                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"Share"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                
+                event.stored = NO;
+                event.post = NO;
+            }
+            else{
+                event.stored = YES;
+                event.post = YES;
+            }
+            
+            //Insert the object at the beginning of the array
+            [self.eventsArray insertObject:event atIndex:0];
+            
+            //Update the TableView (If when connection duplicate on tableview)
+            [self.contentTableView reloadData];
             
         }
-    }];
+        
+        //Update the DB
+        [[Utility databaseController] insertEvent:event inTimeline:self.timeline];
+    }
 }
 
 #pragma mark -
@@ -376,12 +443,12 @@
     
     //If the user wants to take a picture or record a video
     if (buttonIndex==0) {
-        //Save it in the phone
-        self.newMedia = YES;
         
         //If the user wants to take a still picture
         if (self.mediaTypePicture) {
             [self presentModalViewController:[Utility imagePickerControllerWithDelegate:self media:(NSString *) kUTTypeImage] animated:YES];
+            //Save it in the phone
+            self.newMedia = YES;
         }
         //If the user wants to record a video
         else{
@@ -410,70 +477,103 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
     
-    UIImage *originalImage = (UIImage *) [info objectForKey:
-                                          UIImagePickerControllerOriginalImage];
-    NSURL *videoURL;
-    SimplePicture *sp = nil;
+   __block UIImage *originalImage = nil;
+   __block  NSURL *imageURL = nil;
+    NSURL *videoURL = nil;
+   __block SimplePicture *sp = nil;
     SimpleVideo *sv = nil;
-    
-    //If a new picture has taken save in the photoalbum
-    if (self.newMedia) {
-        //Save the photo in the Photoalbum
-        
-        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-        
-        // Request to save the image to camera roll
-        [library writeImageToSavedPhotosAlbum:[originalImage CGImage] orientation:(ALAssetOrientation)[originalImage imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error){
-            if (error) {
-                NSLog(@"error");
-            } else {
-                NSLog(@"url %@", assetURL);
-            }  
-        }];  
-       
-        
-        //UIImageWriteToSavedPhotosAlbum (originalImage, nil, nil , nil);
-    }
-
     
     //Get the mediaType
     NSString *mediaType = [info objectForKey: UIImagePickerControllerMediaType];
     
-    //If Media is an image
-    if ([mediaType isEqualToString:(NSString *)kUTTypeImage])
-    {
-        //Get the original image (without editing)
-        originalImage = (UIImage *) [info objectForKey:
-                                     UIImagePickerControllerOriginalImage];
+    //If a new picture has taken save in the photoalbum
+    if (self.newMedia) {
         
-        //Resize the picture to its 5%
-        UIImage *small = [UIImage imageWithCGImage:originalImage.CGImage scale:8 orientation:originalImage.imageOrientation];
-        
-        //Get the new image compressed
-        small = [Utility imageWithImage:small scaledToSize:small.size];
-                
-        //Initialize a SimplePicture object
-        //sp = [[SimplePicture alloc] initSimplePictureWithImage:small eventItemCreator:nil];
-#warning no eventID
-        sp = [[SimplePicture alloc] initSimplePictureWithEventId:nil image:small eventItemCreator:nil];
-        
-        //Tells the delegate to perform a task with the object received
-        [self addEventItem:sp toBaseEvent:nil];
+        if([mediaType isEqualToString:(NSString *)kUTTypeImage]){
+            //Save the photo in the Photoalbum
+            ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+            
+            //Get the original image (without editing)
+            originalImage = (UIImage *) [info objectForKey:
+                                         UIImagePickerControllerOriginalImage];
+            
+            //Orientation: (ALAssetOrientation)[originalImage imageOrientation]
+            
+            // Request to save the image to camera roll
+            [library writeImageToSavedPhotosAlbum:[originalImage CGImage] orientation:0 completionBlock:^(NSURL *assetURL, NSError *error){
+                if (error) {
+                    NSLog(@"error: %@",error.description);
+                } else {
+                    imageURL = assetURL;
+                    NSLog(@"url %@", assetURL);
+                    
+                    
+                    
+                    /*
+                    //Resize the picture to its 5%
+                    UIImage *small = [UIImage imageWithCGImage:originalImage.CGImage scale:8 orientation:originalImage.imageOrientation];
+                    
+                    //Get the new image compressed
+                    small = [Utility imageWithImage:small scaledToSize:small.size];
+                    
+                    //Initialize a SimplePicture object
+                    //sp = [[SimplePicture alloc] initSimplePictureWithImage:small eventItemCreator:nil];
+                    */
+                    sp = [[SimplePicture alloc] initSimplePictureWithEventId:nil imagePath:imageURL.absoluteString image:originalImage eventItemCreator:[Utility settingField:kXMPPUserIdentifier]];
+                    
+                    //Tells the delegate to perform a task with the object received
+                    [self addEventItem:sp toBaseEvent:nil];
 
+                }
+            }];  
+        }
     }
+
     
-    //If Media is a video
-    else if ([mediaType isEqualToString:(NSString *)kUTTypeMovie])
-    {
-        //Get the url of the video
-        videoURL = [info objectForKey:UIImagePickerControllerMediaURL];
+    else{
+   
+        //If Media is an image
+        if ([mediaType isEqualToString:(NSString *)kUTTypeImage])
+        {
+            
+            //Get the original image (without editing)
+            originalImage = (UIImage *) [info objectForKey:
+                                         UIImagePickerControllerOriginalImage];
+            
+            imageURL = [info valueForKey:UIImagePickerControllerReferenceURL];
+            
+            /*
+            //Resize the picture to its 5%
+            UIImage *small = [UIImage imageWithCGImage:originalImage.CGImage scale:8 orientation:originalImage.imageOrientation];
+            
+            //Get the new image compressed
+            small = [Utility imageWithImage:small scaledToSize:small.size];
+            
+            //Initialize a SimplePicture object
+            //sp = [[SimplePicture alloc] initSimplePictureWithImage:small eventItemCreator:nil];
+            
+            */
+            sp = [[SimplePicture alloc] initSimplePictureWithEventId:imageURL.absoluteString imagePath:imageURL.absoluteString image:originalImage eventItemCreator:[Utility settingField:kXMPPUserIdentifier]];
+            
+            //Tells the delegate to perform a task with the object received
+            [self addEventItem:sp toBaseEvent:nil];
+            
+        }
         
-        //Initialize a SimpleVideo object
-      //  sv = [[SimpleVideo alloc] initSimpleVideoWithURL:videoURL eventItemCreator:nil];
-        sv = [[SimpleVideo alloc] initSimpleVideoWithEventId:nil URL:videoURL eventItemCreator:nil];
-        //Tells the delegate to perform a task with the object received
-        [self addEventItem:sv toBaseEvent:nil];
         
+        //If Media is a video
+        else if ([mediaType isEqualToString:(NSString *)kUTTypeMovie])
+        {
+            //Get the url of the video
+            videoURL = [info objectForKey:UIImagePickerControllerMediaURL];
+            
+            //Initialize a SimpleVideo object
+            //  sv = [[SimpleVideo alloc] initSimpleVideoWithURL:videoURL eventItemCreator:nil];
+            sv = [[SimpleVideo alloc] initSimpleVideoWithEventId:nil URL:videoURL eventItemCreator:nil];
+            //Tells the delegate to perform a task with the object received
+            [self addEventItem:sv toBaseEvent:nil];
+            
+        }
     }
 }
 
@@ -485,6 +585,13 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    
+    if ([self.eventsArray count]==0) {
+        self.noItemLabel.hidden = NO;    }
+    else{
+        self.noItemLabel.hidden = YES;
+    }
+    
     return [self.eventsArray count];
 }
 
@@ -536,12 +643,51 @@
             
             //Get a reusable cell
             cell = [tableView dequeueReusableCellWithIdentifier:@"pictureCellIdentifier"];
+           
+            //if (((PictureViewCell *)cell).pictureImageView.image == nil) {
+                
+              //  NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:cell,@"cell",((SimplePicture *)objectInTimeline).imagePath,@"url", nil];
+                
+               // [self performSelectorInBackground:@selector(performAsset:) withObject:dict];
+                
             
+            
+            ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *myasset)
+            {
+                ALAssetRepresentation *rep = [myasset defaultRepresentation];
+                CGImageRef iref = [rep fullResolutionImage];
+                if (iref) {
+                    ((PictureViewCell *)cell).placeHolderImageView.hidden = YES;
+                    ((PictureViewCell *)cell).pictureImageView.image =  [UIImage imageWithCGImage:[rep fullResolutionImage]  scale:[rep scale] orientation:(UIImageOrientation)[rep orientation]];
+                    
+                }
+            };
+            
+            //
+            ALAssetsLibraryAccessFailureBlock failureblock  = ^(NSError *myerror)
+            {
+                [Utility showAlertViewWithTitle:@"Location Error" message:@"You must activate Location Services to access the photo" cancelButtonTitle:@"Dismiss"];
+                //NSLog(@"Cant get image - %@",[myerror localizedDescription]);
+            };
+            
+            
+            ALAssetsLibrary* assetslibrary = [[ALAssetsLibrary alloc] init];
+           
+            
+                [assetslibrary assetForURL:[NSURL URLWithString:((SimplePicture *)objectInTimeline).imagePath]
+                           resultBlock:resultblock
+                          failureBlock:failureblock];
+            
+          //  }
+             
+             
+            //[((SimplePicture *)objectInTimeline) imageFromAssetURL];
             //Set the image for the cell
-            ((PictureViewCell *)cell).pictureImageView.image = ((SimplePicture *)objectInTimeline).image;
+            //((PictureViewCell *)cell).pictureImageView.image = ((SimplePicture *)objectInTimeline).image ;
             
             //Set the background for the cell
             cell.backgroundView = iv;
+            
         }
         
         else if ([objectInTimeline isMemberOfClass:[SimpleVideo class]]){
@@ -563,7 +709,18 @@
             //Set the background for the cell
             cell.backgroundView = iv;
         }
+        
+        else if ([objectInTimeline isMemberOfClass:[Emotion class]]){
+
+            //Get a reusable cell
+            cell = [tableView dequeueReusableCellWithIdentifier:@"emotionCellIdentifier"];
             
+            //Set the image for the cell
+            ((EmotionViewCell *)cell).emotionImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@",[((Emotion *)objectInTimeline) emotionImagePath]]];
+            
+            //Set the background for the cell
+            cell.backgroundView = iv; 
+        }
         //No of the above specified objects
         else{
             cell = [tableView dequeueReusableCellWithIdentifier:@"timelineCellIndentifier"];
@@ -571,7 +728,8 @@
     }
     
     if (cell) {
-       cell.timestampLabel.text = [Utility dateTimeDescriptionWithLocaleIdentifier:event.date];
+        cell.userLabel.text = event.creator;
+        cell.timestampLabel.text = [Utility dateTimeDescriptionWithLocaleIdentifier:event.date];
     }
     
     //Set the cell not selectable
@@ -614,10 +772,47 @@
     else if ([objectInTimeline isMemberOfClass:[SimpleRecording class]]){
         height = AUDIOCELL_SIZE;
     }
+    
+    else if ([objectInTimeline isMemberOfClass:[Emotion class]]){
+        height = AUDIOCELL_SIZE;
+    }
      
     //Return the height for the cell
     return height;
     
 }
+
+/*
+- (void)performAsset:(NSDictionary *)param{
+    
+    PictureViewCell *cell = (PictureViewCell *)[param objectForKey:@"cell"];
+    NSString *urlPath = [param objectForKey:@"url"];
+    
+    ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *myasset)
+    {
+        ALAssetRepresentation *rep = [myasset defaultRepresentation];
+        CGImageRef iref = [rep fullResolutionImage];
+        if (iref) {
+            cell.pictureImageView.image =  [UIImage imageWithCGImage:[rep fullResolutionImage]  scale:[rep scale] orientation:(UIImageOrientation)[rep orientation]];
+            
+        }
+    };
+    
+    //
+    ALAssetsLibraryAccessFailureBlock failureblock  = ^(NSError *myerror)
+    {
+        [Utility showAlertViewWithTitle:@"Location Error" message:@"You must activate Location Services to access the photo" cancelButtonTitle:@"Dismiss"];
+        //NSLog(@"Cant get image - %@",[myerror localizedDescription]);
+    };
+    
+    
+    ALAssetsLibrary* assetslibrary = [[ALAssetsLibrary alloc] init];
+    
+    
+    [assetslibrary assetForURL:[NSURL URLWithString:urlPath]
+                   resultBlock:resultblock
+                  failureBlock:failureblock];
+}
+ */
 
 @end

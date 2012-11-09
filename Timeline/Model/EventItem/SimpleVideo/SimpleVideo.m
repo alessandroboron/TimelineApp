@@ -18,7 +18,7 @@
 //The designated initializer
 - (id)initSimpleVideoWithEventId:(NSString *)eventId URL:(NSURL *)url eventItemCreator:(NSString *)eventCreator{
     
-    self = [super initEventItemWithHashedId:[[NSString stringWithFormat:@"%@%@",url,eventCreator] MD5] creator:eventCreator];
+    self = [super initEventItemWithHashedId:[NSString stringWithFormat:@"%@%@%@",url,eventCreator,[NSDate date]] creator:eventCreator];
     
     if (self) {
         if (eventId) {

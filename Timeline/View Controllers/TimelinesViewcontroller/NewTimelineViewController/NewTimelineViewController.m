@@ -8,6 +8,7 @@
 
 #import "NewTimelineViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "Timeline.h"
 
 @interface NewTimelineViewController ()
 
@@ -102,7 +103,6 @@
 - (IBAction)doneButtonPressed:(id)sender{
  
     //Check if the name of the timeline is not empty or if share at least one group is selected
-    
     if (self.timelineTitleTextField.text.length == 0) {
         [Utility showAlertViewWithTitle:@"New Timeline Error" message:@"The timeline name cannot be blank." cancelButtonTitle:@"Dismiss"];
     }
@@ -110,8 +110,11 @@
         [Utility showAlertViewWithTitle:@"New Timeline Error" message:@"A shared timeline must have at least one group associated." cancelButtonTitle:@"Dismiss"];
     }
     else{
+        
+        Timeline *t = [[Timeline alloc] initTimelineWithTitle:self.timelineTitleTextField.text creator:[Utility settingField:kXMPPUserIdentifier] shared:NO];
+        
         //Tells the delegate to dismiss the presented view controller
-        [self.delegate dismissModalViewController];
+        [self.delegate newTimeline:t];
     }
 }
 

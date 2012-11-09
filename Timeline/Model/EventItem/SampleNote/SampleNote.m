@@ -17,7 +17,7 @@
 //The designated initializer
 - (id)initSampleNoteWithEventId:(NSString *)eventId title:(NSString *)title text:(NSString *)text eventItemCreator:(NSString *)eventCreator{
         
-    self = [super initEventItemWithHashedId:[NSString stringWithFormat:@"%@%@%@",title,text,eventCreator] creator:eventCreator];
+    self = [super initEventItemWithHashedId:[NSString stringWithFormat:@"%@%@%@%@",title,text,eventCreator,[NSDate date]] creator:eventCreator];
     
     if (self) {
         if (eventId) {

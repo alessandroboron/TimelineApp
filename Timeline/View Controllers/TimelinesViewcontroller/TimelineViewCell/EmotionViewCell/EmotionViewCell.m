@@ -1,17 +1,16 @@
 //
-//  TimelineViewCell.m
+//  EmotionViewCell.m
 //  Timeline
 //
-//  Created by Alessandro Boron on 15/08/2012.
+//  Created by Alessandro Boron on 05/11/2012.
 //  Copyright (c) 2012 Alessandro Boron. All rights reserved.
 //
 
-#import "TimelineViewCell.h"
+#import "EmotionViewCell.h"
 
-@implementation TimelineViewCell
+@implementation EmotionViewCell
 
-@synthesize timestampLabel = _timestampLabel;
-@synthesize userLabel = _userLabel;
+@synthesize emotionImageView = _emotionImageView;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

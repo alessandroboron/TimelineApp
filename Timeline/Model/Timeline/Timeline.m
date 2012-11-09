@@ -23,7 +23,7 @@
     self = [super init];
     
     if (self) {
-        _tId = [Utility MD5ForString:[NSString stringWithFormat:@"%@%@%i",title,creator,shared]];
+        _tId = [Utility MD5ForString:[NSString stringWithFormat:@"%@%@%i%@",title,creator,shared,[NSDate date]]];
         _title = title;
         _creator = creator;
         _baseEvents = [[NSMutableArray alloc] init];

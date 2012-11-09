@@ -11,5 +11,5 @@
 @interface TimelineViewCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *timestampLabel;
-
+@property (weak, nonatomic) IBOutlet UILabel *userLabel;
 @end

@@ -130,6 +130,26 @@
     NSString *dateString;
     
     if (watchIt) {
+       
+        if (!splittedTimestamp || [splittedTimestamp count]==0 || [splittedTimestamp count]==1) {
+            return date;
+        }
+        
+        //Remove the timezone
+        NSArray *splittedSeconds= [((NSString *)[splittedTimestamp objectAtIndex:1]) componentsSeparatedByString:@"."];
+
+        
+        if ([splittedSeconds count]>1) {
+            NSArray *splittedTimezone = [((NSString *)[splittedTimestamp objectAtIndex:1]) componentsSeparatedByString:@"+"];
+            
+            //Add the +0000 Timezone
+            dateString = [NSString stringWithFormat:@"%@ %@ +%@",[splittedTimestamp objectAtIndex:0],[splittedSeconds objectAtIndex:0],[splittedTimezone objectAtIndex:1]];
+        }
+        else{
+            dateString = [NSString stringWithFormat:@"%@ %@",[splittedTimestamp objectAtIndex:0],[splittedTimestamp objectAtIndex:1]];
+        }
+        
+        /*
         //Remove the milliseconds
         NSArray *splittedSeconds= [((NSString *)[splittedTimestamp objectAtIndex:1]) componentsSeparatedByString:@"."];
         
@@ -137,6 +157,7 @@
         
         //Add the +ZZZZ Timezone
         dateString = [NSString stringWithFormat:@"%@ %@ +%@",[splittedTimestamp objectAtIndex:0],[splittedSeconds objectAtIndex:0],[splittedTimezone objectAtIndex:1]];
+         */
     }
     else{
         NSArray *splittedTimezone = [((NSString *)[splittedTimestamp objectAtIndex:1]) componentsSeparatedByString:@"+"];
@@ -195,6 +216,7 @@
     NSDate *date = [dateFormatter dateFromString:timestamp];
     
     return date;
+    
 }
 
 //This method is used to get a date object from a timestamp string
@@ -548,6 +570,8 @@
     AVAsset *asset = [AVAsset assetWithURL:url];
     
     AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
+    //Set the right orientation for image thumbnail
+    imageGenerator.appliesPreferredTrackTransform = YES;
     CMTime time = CMTimeMake(1, 1);
     
     UIImage *thumbnail = [UIImage imageWithCGImage:[imageGenerator copyCGImageAtTime:time actualTime:NULL error:NULL]];

@@ -17,7 +17,7 @@
 //The designated initializer
 - (id)initSimpleRecordingWithEventId:(NSString *)eventId URLPath:(NSString *)urlPath eventCreator:(NSString *)eventCreator{
     
-    self = [super initEventItemWithHashedId:[[NSString stringWithFormat:@"%@%@",urlPath,eventCreator] MD5] creator:eventCreator];
+    self = [super initEventItemWithHashedId:[NSString stringWithFormat:@"%@%@%@",urlPath,eventCreator,[NSDate date]] creator:eventCreator];
     
     if (self) {
         if (eventId) {

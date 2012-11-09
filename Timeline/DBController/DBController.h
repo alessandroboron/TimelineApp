@@ -32,6 +32,18 @@
 
 - (NSMutableArray *)fetchEventsFromDBForTimelineId:(Timeline *)timeline;
 
+- (BOOL)isTimelineInDB:(NSString *)timelineId;
+
+- (void)insertTimeline:(Timeline *)timeline;
+
+- (BOOL)isTimeline:(NSString *)timelineId titleEqualTo:(NSString *)timelineTitle;
+
+- (BOOL)isTimeline:(NSString *)timelineId sharedEqualTo:(BOOL)shared;
+
+- (void)updateTimeline:(NSString *)timelineId withTitle:(NSString *)title;
+
+- (void)updateTimeline:(NSString *)timelineId withShared:(BOOL)shared;
+
 - (void)updateEvent:(NSString *)eventId withStorage:(BOOL)storage;
 
 - (void)insertEvent:(Event *)event inTimeline:(Timeline *)timeline;
@@ -41,6 +53,8 @@
 - (BOOL)isEventToPost:(NSString *)eventId;
 
 - (void)updateEvent:(NSString *)eventId withPost:(BOOL)post;
+
+- (BOOL)isTimelineShared:(NSString *)timelineId;
 
 ////////////////////////////////////////////CATEGORY METHODS/////////////////////////////////////////////////////////
 

@@ -32,7 +32,6 @@
 - (void)checkAndCreateDB;
 - (NSString *)databasePath;
 
-- (BOOL)isTimelineInDB:(NSString *)timelineId;
 - (void)insertTimeline:(Timeline *)timeline;
 - (NSArray *)timelines;
 - (void)insertEventInDB:(Event *)event;
@@ -116,6 +115,124 @@
     
     //Return the dictionary
     return eventsArray;
+    
+}
+
+- (BOOL)isTimeline:(NSString *)timelineId titleEqualTo:(NSString *)timelineTitle{
+    
+    BOOL same = YES;
+    
+    //Get the database
+    FMDatabase *db = [FMDatabase databaseWithPath:[self databasePath]];
+    
+    @try {
+        //Open the connection
+        [db open];
+        
+        //Select the category with a given name
+        FMResultSet *result = [db executeQuery:@"SELECT * FROM Timelines WHERE Id = ?",timelineId];
+        
+        //If the category is present
+        if ([result next]) {
+            NSString *title = [result stringForColumn:@"Title"];
+            same = [timelineTitle isEqualToString:title];
+        }
+    }
+    
+    @catch (NSException *exception) {
+        NSLog(@"Error: %@",[exception description]);
+    }
+    
+    @finally {
+        //Close the connection
+        [db close];
+    }
+    
+    return same;
+}
+
+- (BOOL)isTimeline:(NSString *)timelineId sharedEqualTo:(BOOL)shared{
+    
+    BOOL same = YES;
+    
+    //Get the database
+    FMDatabase *db = [FMDatabase databaseWithPath:[self databasePath]];
+    
+    @try {
+        //Open the connection
+        [db open];
+        
+        //Select the category with a given name
+        FMResultSet *result = [db executeQuery:@"SELECT * FROM Timelines WHERE Id = ?",timelineId];
+        
+        //If the category is present
+        if ([result next]) {
+            BOOL sh = [result boolForColumn:@"Shared"];
+            if (sh != shared) {
+                same = NO;
+            }
+        }
+    }
+    
+    @catch (NSException *exception) {
+        NSLog(@"Error: %@",[exception description]);
+    }
+    
+    @finally {
+        //Close the connection
+        [db close];
+    }
+    
+    return same;
+}
+
+- (void)updateTimeline:(NSString *)timelineId withTitle:(NSString *)title{
+    
+    //Get the database
+    FMDatabase *db = [FMDatabase databaseWithPath:[self databasePath]];
+    
+    @try {
+        [db open];
+        
+        [db executeUpdate:@"UPDATE Timelines SET Title = ? WHERE Id = ?",title, timelineId];
+        
+        if ([db hadError]) {
+            NSLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+        }
+    }
+    
+    @catch (NSException *exception) {
+        NSLog(@"Error: %@",[exception description]);
+    }
+    
+    @finally {
+        [db close];
+    }
+    
+}
+
+- (void)updateTimeline:(NSString *)timelineId withShared:(BOOL)shared{
+    
+    //Get the database
+    FMDatabase *db = [FMDatabase databaseWithPath:[self databasePath]];
+    
+    @try {
+        [db open];
+        
+        [db executeUpdate:@"UPDATE Timelines SET Shared = ? WHERE Id = ?",[NSString stringWithFormat:@"%i",shared], timelineId];
+        
+        if ([db hadError]) {
+            NSLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+        }
+    }
+    
+    @catch (NSException *exception) {
+        NSLog(@"Error: %@",[exception description]);
+    }
+    
+    @finally {
+        [db close];
+    }
     
 }
 
@@ -275,6 +392,38 @@
         }
         
     }
+}
+
+- (BOOL)isTimelineShared:(NSString *)timelineId{
+    
+    BOOL shared = NO;
+    
+    //Get the database
+    FMDatabase *db = [FMDatabase databaseWithPath:[self databasePath]];
+    
+    @try {
+        //Open the connection
+        [db open];
+        
+        //Select the category with a given name
+        FMResultSet *result = [db executeQuery:@"SELECT * FROM Timelines WHERE Id = ?",timelineId];
+        
+        //If the category is present
+        if ([result next]) {
+           shared = [result boolForColumn:@"Shared"];
+        }
+    }
+    
+    @catch (NSException *exception) {
+        NSLog(@"Error: %@",[exception description]);
+    }
+    
+    @finally {
+        //Close the connection
+        [db close];
+    }
+    
+    return shared;
 }
 
 #pragma mark -
@@ -597,7 +746,7 @@
             //Initialize the Timeline object
             NSString *eventItemId = [result stringForColumn:@"Id"];
             NSString *eventId = [result stringForColumn:@"Event_Id"];
-            NSString *type = [result stringForColumn:@"Type"];
+            //NSString *type = [result stringForColumn:@"Type"];
             NSString *creator = [result stringForColumn:@"Creator"];
             
             item = [[EventItem alloc] initEventItemWithId:eventItemId eventId:eventId creator:creator];
@@ -631,14 +780,18 @@
         item = [self fetchSimplePictureForEventItem:eventItem];
     }
     
-    else if (!item){
+    if (!item){
         item = [self fetchSimpleVideoForEventItem:eventItem];
     }
     
-    else if (!item){
+    if (!item){
         item = [self fetchSimpleRecordingForEventItem:eventItem];
     }
     
+    if (!item){
+        item = [self fetchSimpleEmotionForEventItem:eventItem];
+    }
+
     return item;
 }
 
@@ -798,9 +951,10 @@
     return sr;
     
 }
+
 - (Emotion *)fetchSimpleEmotionForEventItem:(EventItem *)eventItem{
     
-    id item = nil;
+    Emotion *e = nil;
     
     //Get the DB
     FMDatabase *db = [FMDatabase databaseWithPath:[self databasePath]];
@@ -815,12 +969,9 @@
         //For each element
         while ([result next]) {
             //Initialize the Timeline object
-            NSString *eventItemId = [result stringForColumn:@"Id"];
-            NSString *eventId = [result stringForColumn:@"Event_Id"];
-            NSString *type = [result stringForColumn:@"Type"];
-            NSString *creator = [result stringForColumn:@"Creator"];
+            NSInteger type = [result intForColumn:@"Type"];
             
-            item = [[EventItem alloc] initEventItemWithId:eventItemId eventId:eventId creator:creator];
+            e = [[Emotion alloc] initEmotionWithEventItem:eventItem emotion:type];
             
         }
     }
@@ -837,7 +988,7 @@
     }
     
     //Return the event
-    return item;
+    return e;
 }
 
 
@@ -908,7 +1059,7 @@
     
     @try {
         [db open];
-        
+
         [db executeUpdate:@"INSERT INTO Items (Id,Event_Id,Type,Creator) VALUES (?,?,?,?)",((EventItem *)objectInTimeline).eventItemId,event.baseEventId,NSStringFromClass([Event class]),event.creator];
         
         if ([db hadError]) {
@@ -944,7 +1095,7 @@
     
     else if ([objectInTimeline isMemberOfClass:[SimplePicture class]]){
         
-        argsDict = [NSDictionary dictionaryWithObjectsAndKeys:((EventItem *)objectInTimeline).eventItemId,@"Item_Id",[NSNull null],@"Url", nil];
+        argsDict = [NSDictionary dictionaryWithObjectsAndKeys:((EventItem *)objectInTimeline).eventItemId,@"Item_Id",((SimplePicture *)objectInTimeline).imagePath,@"Url", nil];
         query = @"INSERT INTO SimplePicture (Item_Id,Url) VALUES (:Item_Id,:Url)";
 
     }
@@ -964,8 +1115,8 @@
     
     else if ([objectInTimeline isMemberOfClass:[Emotion class]]){
         
-        argsDict = [NSDictionary dictionaryWithObjectsAndKeys:((EventItem *)objectInTimeline).eventItemId,@"Item_Id",((SimpleVideo *)objectInTimeline).videoURL ,@"Url", nil];
-        query = @"INSERT INTO SimpleNote (Item_Id,Url) VALUES (:Item_Id,:Url)";
+        argsDict = [NSDictionary dictionaryWithObjectsAndKeys:((EventItem *)objectInTimeline).eventItemId,@"Item_Id",[NSString stringWithFormat:@"%d",[((Emotion *)objectInTimeline) emotionType]],@"Type", nil];
+        query = @"INSERT INTO Emotion (Item_Id,Type) VALUES (:Item_Id,:Type)";
     }
     
     @try {
@@ -987,659 +1138,5 @@
     }
 }
 
-#pragma mark -
-#pragma mark Categories Methods
-/*
-//This method is used to retrieve the categories stored in the DB
-- (NSArray *)getCategories{
-    
-    //Initialize a mutable array to store the fetched result
-    NSMutableArray *categories = [[NSMutableArray alloc] init];
-    
-    //Get the DB
-    FMDatabase *db = [FMDatabase databaseWithPath:[Utility databasePath]];
-    
-    @try {
-        //Open a connection
-        [db open];
-        
-        //Fetch the categories
-        FMResultSet *result = [db executeQuery:@"SELECT * FROM categories"];
-        
-        //For each element
-        while ([result next]) {
-            [categories addObject:[result stringForColumn:@"name"]];
-            NSLog(@"Category: %@",[result stringForColumn:@"name"]);
-        }
-    }
-    
-    //Exception catched
-    @catch (NSException *exception) {
-        NSLog(@"Error: %@",[exception description]);
-    }
-    
-    //Close the connection
-    @finally {
-        //Close the connection
-        [db close];
-    }
-    
-    //Return a immutable version of the array
-    return [categories copy];
-}
 
-- (void)insertCategory:(NSString *)name{
-    
-    //Get the database
-    FMDatabase *db = [FMDatabase databaseWithPath:[Utility databasePath]];
-    
-    @try {
-        [db open];
-        
-        [db executeUpdate:@"INSERT INTO categories (name) VALUES (?)",name];
-        
-        if ([db hadError]) {
-             NSLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-        }
-    }
-    
-    @catch (NSException *exception) {
-        NSLog(@"Error: %@",[exception description]);
-    }
-    
-    @finally {
-        [db close];
-    }
-    
-}
-
-//This method is used to check if a category is present or not in the DB
-- (BOOL)isCategoryPresent:(NSString *)name{
-    
-    BOOL present = NO;
-    
-    //Get the database
-    FMDatabase *db = [FMDatabase databaseWithPath:[Utility databasePath]];
-   
-    @try {
-        //Open the connection
-        [db open];
-        
-        //Select the category with a given name
-        FMResultSet *result = [db executeQuery:@"SELECT * FROM categories WHERE name = ?",name];
-        
-        //If the category is present
-        if ([result next]) {
-            present = YES;
-        }
-    }
-    
-    @catch (NSException *exception) {
-        NSLog(@"Error: %@",[exception description]);
-    }
-    
-    @finally {
-        //Close the connection
-        [db close];
-    }
-    
-    return present;
-}
-
-//This method is used to retrieve the name of a category according to its id
-- (NSString *)categoryNameForId:(NSInteger)catId{
- 
-    //Get the database
-    FMDatabase *db = [FMDatabase databaseWithPath:[Utility databasePath]];
-    
-    @try {
-        //Open the connection
-        [db open];
-        
-        //Select the category with a given name
-        FMResultSet *result = [db executeQuery:@"SELECT * FROM categories WHERE id = ?",[NSString stringWithFormat:@"%d",catId]];
-        
-        //If the category is present
-        while ([result next]) {
-            return [result stringForColumn:@"name"];
-        }
-    }
-    
-    @catch (NSException *exception) {
-        NSLog(@"Error: %@",[exception description]);
-    }
-    
-    @finally {
-        //Close the connection
-        [db close];
-    }
-}
-
-//This method is used to retrieve all the categories for a 
-- (NSArray *)categoriesForNote:(NSString *)noteId{
-    
-    NSMutableArray *cat = [[NSMutableArray alloc] init];
-    
-    //Get the database
-    FMDatabase *db = [FMDatabase databaseWithPath:[Utility databasePath]];
-    
-    @try {
-        //Open the connection
-        [db open];
-        
-        //Select the category with a given name
-        FMResultSet *result = [db executeQuery:@"SELECT * FROM notesxcat WHERE id_note = ?",noteId];
-        
-        //If the category is present
-        while ([result next]) {
-            //Get the name of the category
-            NSString *catName = [self categoryNameForId:[result intForColumn:@"id_cat"]];
-            [cat addObject:catName];
-        }
-    }
-    
-    @catch (NSException *exception) {
-        NSLog(@"Error: %@",[exception description]);
-    }
-    
-    @finally {
-        //Close the connection
-        [db close];
-    }
-    
-    return [cat copy];
-}
-
-#pragma mark -
-#pragma mark Note Methods
-
-//This method is used to insert a category in the DB
-- (void)insertNote:(Note *)note forCategory:(NSString *)categoryName{
-    
-    if (![self isNotePresent:note.noteId]) {
-        
-        //Get the database
-        FMDatabase *db = [FMDatabase databaseWithPath:[Utility databasePath]];
-        
-        //If the category is not present in the DB
-        if (![self isCategoryPresent:categoryName]) {
-            //Insert the category in the db
-            [self insertCategory:categoryName];
-        }
-        
-        //If the user is not present in the DB
-        if (![self isUserPresent:note.authorString]) {
-            //Insert the user in the DB
-            [self insertUser:note.authorString];
-        }
-        
-        //Get the user id
-        
-        NSInteger userId = [self userIdForName:note.authorString];
-        
-        //Insert the note in notes
-        @try {
-            [db open];
-            
-            [db executeUpdate:@"INSERT INTO notes VALUES (?,?,?,?)",note.noteId,[NSString stringWithFormat:@"%d",userId],note.timeStampDate,note.contentString];
-            
-            if ([db hadError]) {
-                NSLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-            }
-            
-        }
-        @catch (NSException *exception) {
-            NSLog(@"Error: %@",[exception description]);
-        }
-        @finally {
-            [db close];
-        }
-    }
-    
-    //Get the category id for name
-    NSInteger categoryId = [self categoryIdForName:categoryName]; 
-   
-    //Insert the note in notescat table
-    [self insertInRelTableNoteId:note.noteId categoryId:categoryId];
-}
-
-//This method is used to remove a note in the Database
-- (void)removeNote:(Note *)note inCategory:(NSString *)categoryName{
-    
-    NSInteger categoryId = [self categoryIdForName:categoryName];
-    
-    //Get the database
-    FMDatabase *db = [FMDatabase databaseWithPath:[Utility databasePath]];
-    
-    //Delete the note from notes
-    @try {
-        [db open];
-        
-        [db executeUpdate:@"DELETE FROM notesxcat WHERE id_note = ? AND id_cat = ?", note.noteId, [NSString stringWithFormat:@"%d",categoryId]];
-        
-        if ([db hadError]) {
-            NSLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-        }
-    }
-    
-    @catch (NSException *exception) {
-        NSLog(@"Error: %@",[exception description]);
-    }
-    
-    @finally {
-        [db close];
-    }
-
-    [self removeNoteFromNotes:note.noteId];
-}
-
-- (BOOL)isNotePresent:(NSString *)noteId{
-    
-    BOOL ret = NO;
-    
-    //Get the database
-    FMDatabase *db = [FMDatabase databaseWithPath:[Utility databasePath]];
-    
-    //Delete the note from notes
-    @try {
-        [db open];
-        
-        FMResultSet *result = [db executeQuery:@"SELECT * FROM notes WHERE id = ?",noteId];
-        
-        if (![db hadError]) {
-            if ([result next]) {
-                ret = YES;
-            }
-        }
-        else
-            NSLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-
-    }
-    
-    @catch (NSException *exception) {
-        NSLog(@"Error: %@",[exception description]);
-    }
-    
-    @finally {
-        [db close];
-    }
-
-    return ret;
-}
-
-#pragma mark -
-#pragma mark Private Methods
-
-//This method is used to check if the DB exist. If not it copy the database file in the Document directory
-- (void)checkAndCreateDB{
-    
-    BOOL exist;
-    
-    //Get the path of the file
-    NSString *dbPathString = [Utility databasePath];
-    NSLog(@"DBPATH: %@",dbPathString);
-    
-    //Get the default file manager
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    
-    //Check if the file already exist at the path otherwise it copy it
-    exist = [fileManager fileExistsAtPath:dbPathString];
-    
-    self.hostReachable = [Reachability reachabilityWithHostName:@"www.google.com"];
-
-    if (exist) {
-        if ([self.hostReachable isReachable] && exist) {
-            [[RESTClient sharedRESTClient].restClient loadFile:[NSString stringWithFormat:@"%@%@",kDropboxFolder,kDBName] intoPath:[Utility databasePath]];
-        }
-        else{
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"InternetNotReachableNotification" object:nil];            
-        }
-    }
-    
-    else{
-        
-        [[NSUserDefaults standardUserDefaults] setObject:nil forKey:kDropboxRev];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        //Get the path name
-        NSString *databasePathFromApp = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:kDBName];
-        NSLog(@"DB PATH FROM APP: %@", databasePathFromApp);
-        
-        NSError *error = nil;
-        //Copy the file in the Document folder
-        [fileManager copyItemAtPath:databasePathFromApp toPath:dbPathString error:&error];
-        
-        if (error) {
-            NSLog(@"Error: %@", [error description]);
-        }
-        else{
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"InternetNotReachableNotification" object:nil];
-        }
-    }
-
-    //[self checkOutDBFile];
-}
-
-//This method is used to fetch the Notes from the DB
-- (NSMutableDictionary *)fetchDBNotes{
-    
-    //Initialize the dictionary
-    NSMutableDictionary *notes = [[NSMutableDictionary alloc] init];
-    //Get the categories name as keys for the dictionary
-    NSArray *keys = [self getCategories];
-    //Initialize the array that will store an array for each category
-    NSMutableArray *objectsForKeys = [[NSMutableArray alloc] init];
-    
-    //Initialize an array for each category
-    for (int i = 0; i < [keys count]; i++) {
-        [objectsForKeys addObject:[[NSMutableArray alloc] init]];
-    }
-    
-    //Set the dictionary with categories as keys and arrays for objects
-    notes = [[NSMutableDictionary alloc] initWithObjects:[objectsForKeys copy] forKeys:keys];
-    
-    //Get the database
-    FMDatabase *db = [FMDatabase databaseWithPath:[Utility databasePath]];
-    
-    @try {
-        //Open the connection with the DB
-        [db open];
-        
-        //Execute the query
-        FMResultSet *result = [db executeQuery:@"SELECT * FROM notesxcat ORDER BY rowid DESC"];
-        
-        if (![db hadError]) {
-            while ([result next]) {
-                NSString *idNote = [result stringForColumn:@"id_note"];
-                NSInteger idCat = [result intForColumn:@"id_cat"];
-             
-                //Get the note according to its id
-                Note *note = [self noteForId:idNote];
-                //Get the category name for the note
-                NSString *catName = [self categoryNameForId:idCat];
-                
-                //Insert the note in the array
-                [[notes objectForKey:catName] addObject:note];
-            }
-        }
-    }
-    
-    @catch (NSException *exception) {
-        NSLog(@"Error: %@",[exception description]);
-    }
-    
-    @finally {
-        //Close the connection with the DB
-        [db close];
-    }
-    
-    return notes;
-}
-
-//This method is used to get a note from its Id
-- (Note *)noteForId:(NSString *)noteId{
-    
-    //Get the database
-    FMDatabase *db = [FMDatabase databaseWithPath:[Utility databasePath]];
-    
-    @try {
-        //Open a connection
-        [db open];
-        
-        //Fetch the categories
-        FMResultSet *result = [db executeQuery:@"SELECT * FROM notes WHERE id = ?",noteId];
-        
-        //Get the result 
-        if ([result next]) {
-            NSInteger authorId = [result intForColumn:@"user_id"];
-            NSString *content = [result stringForColumn:@"content"];
-            NSDate *date = [result dateForColumn:@"timestamp"];
-            
-            //Get the author name
-            NSString *userName = [self userNameForId:authorId];
-            
-            //Get the categories for the Note
-            NSArray *tags = [self categoriesForNote:noteId];
-            
-            return [[Note alloc] initNoteWithId:noteId author:userName content:content timestamp:date tags:tags];
-        }
-    }
-    
-    //Exception catched
-    @catch (NSException *exception) {
-        NSLog(@"Error: %@",[exception description]);
-    }
-    
-    //Close the connection
-    @finally {
-        //Close the connection
-        [db close];
-    }
-
-}
-
-//This method is used to delete a note from the 'Notes' table
-- (void)removeNoteFromNotes:(NSString *)noteId{
-    
-    //Get the database
-    FMDatabase *db = [FMDatabase databaseWithPath:[Utility databasePath]];
-    
-    //Insert the note in notes
-    @try {
-        [db open];
-        
-        [db executeUpdate:@"DELETE FROM notes WHERE id = ?", noteId];
-        
-        if ([db hadError]) {
-            NSLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-        }
-        
-    }
-    
-    @catch (NSException *exception) {
-        NSLog(@"Error: %@",[exception description]);
-    }
-    
-    @finally {
-        [db close];
-    }
-
-    
-}
-
-//This method is used to get the id of a category for name;
-- (NSInteger)categoryIdForName:(NSString *)name{
-    
-    NSInteger categoryId;
-    
-    //Get the database
-    FMDatabase *db = [FMDatabase databaseWithPath:[Utility databasePath]];
-    
-    @try {
-        //Open a connection
-        [db open];
-        
-        //Fetch the categories
-        FMResultSet *result = [db executeQuery:@"SELECT * FROM categories WHERE name = ?",name];
-        
-        //Get the result 
-        if ([result next]) {
-            categoryId = [result intForColumn:@"id"];
-        }
-    }
-    
-    //Exception catched
-    @catch (NSException *exception) {
-        NSLog(@"Error: %@",[exception description]);
-    }
-    
-    //Close the connection
-    @finally {
-        //Close the connection
-        [db close];
-    }
-    
-    //Return a immutable version of the array
-    return categoryId;
-    
-}
-
-//This method is used to get the Id of a user according to its name
-- (NSInteger)userIdForName:(NSString *)name{
-    
-    //Get the database
-    FMDatabase *db = [FMDatabase databaseWithPath:[Utility databasePath]];
-    
-    @try {
-        [db open];
-        
-        FMResultSet *result = [db executeQuery:@"SELECT * FROM users WHERE name = ?",name];
-        
-        if (![db hadError]) {
-            if ([result next]) {
-                return [result intForColumn:@"id_user"];
-            }
-        }
-    }
-    
-    @catch (NSException *exception) {
-        NSLog(@"Error: %@",[exception description]);
-    }
-    
-    @finally {
-        [db close];
-    }
-}
-
-//This method is used to get the name of a user from its id
-- (NSString *)userNameForId:(NSInteger)userId{
-    
-    //Get the database
-    FMDatabase *db = [FMDatabase databaseWithPath:[Utility databasePath]];
-    
-    @try {
-        [db open];
-        
-        FMResultSet *result = [db executeQuery:@"SELECT * FROM users WHERE id_user = ?",[NSString stringWithFormat:@"%d",userId]];
-        
-        if (![db hadError]) {
-            if ([result next]) {
-                return [result stringForColumn:@"name"];
-            }
-        }
-    }
-    
-    @catch (NSException *exception) {
-        NSLog(@"Error: %@",[exception description]);
-    }
-    
-    @finally {
-        [db close];
-    }
-
-    return nil;
-}
-
-//This method is used to check if a user already exist in the DB
-- (BOOL)isUserPresent:(NSString *)name{
-    
-    BOOL present = NO;
-    
-    //Get the database
-    FMDatabase *db = [FMDatabase databaseWithPath:[Utility databasePath]];
-    
-    @try {
-        //Open the connection
-        [db open];
-        
-        //Select the category with a given name
-        FMResultSet *result = [db executeQuery:@"SELECT * FROM users WHERE name = ?",name];
-        
-        //If the category is present
-        if (![db hadError]) {
-            if ([result next]) {
-                present = YES;
-            }
-        }
-        else{
-            NSLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-        }
-    }
-    
-    @catch (NSException *exception) {
-        NSLog(@"Error: %@",[exception description]);
-    }
-    
-    @finally {
-        //Close the connection
-        [db close];
-    }
-    
-    return present;
-}
-
-//This method is used to insert a user in the system
-- (void)insertUser:(NSString *)name{
-    
-    //Get the database
-    FMDatabase *db = [FMDatabase databaseWithPath:[Utility databasePath]];
-    
-    @try {
-        //Open the connection with the DB
-        [db open];
-        
-        //Execute the query
-        [db executeUpdate:@"INSERT INTO users (name) values (?)",name];
-        
-        //If an error happened
-        if ([db hadError]) {
-            NSLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-        }
-    }
-    
-    @catch (NSException *exception) {
-        NSLog(@"Error: %@",[exception description]);
-    }
-    
-    @finally {
-        //Close the connection
-        [db close];
-    }
-
-}
-
-//This method is used to insert in the notescat table the note_id with the category_id
-- (void)insertInRelTableNoteId:(NSString *)noteId categoryId:(NSInteger)categoryId{
-    
-    //Get the database
-    FMDatabase *db = [FMDatabase databaseWithPath:[Utility databasePath]];
-    
-    @try {
-        [db open];
-        
-       
-        [db executeUpdate:@"INSERT INTO notesxcat (id_note,id_cat) values (?,?)" withArgumentsInArray:[NSArray arrayWithObjects:noteId,[NSString stringWithFormat:@"%d",categoryId], nil]];
-        
-        
-        if ([db hadError]) {
-            NSLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-        }
-    }
-    
-    @catch (NSException *exception) {
-        NSLog(@"Error: %@",[exception description]);
-    }
-    
-    @finally {
-        [db close];
-    }    
-}
-
-//This method is used to check if the db file is already present in Dropbox
-- (void)checkOutDBFile{
-    
-    [[RESTClient sharedRESTClient].restClient loadMetadata:kDropboxFolder];
-}
-*/
 @end

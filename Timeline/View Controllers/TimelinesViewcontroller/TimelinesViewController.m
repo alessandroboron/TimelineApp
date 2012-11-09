@@ -20,7 +20,6 @@
 
 @interface TimelinesViewController ()
 
-@property (strong, nonatomic) NSMutableDictionary *dataDictionary;
 @property (strong, nonatomic) NSMutableArray *timelinesAppArray;
 @property (strong, nonatomic) Reachability *hostReachable;
 
@@ -28,7 +27,6 @@
 
 @implementation TimelinesViewController
 
-@synthesize dataDictionary = _dataDictionary;
 @synthesize timelinesArray = _timelinesArray;
 @synthesize timelinesAppArray = _timelinesAppArray;
 
@@ -123,15 +121,16 @@
         [rc spacesListRequest];
         //Show activity indicator
         [Utility showActivityIndicatorWithView:self.tableView label:@"Loading Timelines..."];
-        
-        //Update the DB
     }
     
     //Otherwise retrieve the timelines from DB
     else{
         self.timelinesArray = [[Utility databaseController] fetchTimelinesFromDB];
+        NSLog(@"ARRAY COUNT %d",[self.timelinesArray count]);
+        [Utility sortArray:self.timelinesArray withKey:@"title" ascending:YES];
         [self.tableView reloadData];
     }
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -185,12 +184,6 @@
     return _timelinesArray;
 }
 
-- (NSMutableDictionary *)dataDictionary{
-    if (!_dataDictionary) {
-        _dataDictionary = [[NSMutableDictionary alloc] init];
-    }
-    return _dataDictionary;
-}
 
 #pragma mark -
 #pragma mark Notification Methods (XMPPRequestController)
@@ -201,16 +194,12 @@
     if (self.isViewLoaded && self.view.window) {
         //Set the timelines array to nil. It prevents to duplicate timelines
         self.timelinesArray = nil;
-        //self.dataDictionary = nil;
         
         //Get the spaces list
         self.timelinesAppArray = [notification.userInfo objectForKey:@"userInfo"];
        
         //Get the XMPPRequestController
         XMPPRequestController *rc = [Utility xmppRequestController];
-        
-        //Order the array in alphabetically order
-        [Utility sortArray:self.timelinesAppArray withKey:@"spaceName" ascending:YES];
         
         //Walk-through the spaces
         for (Space *sp in self.timelinesAppArray) {
@@ -241,16 +230,36 @@
         //Initialize the timeline object
         Timeline *t = [[Timeline alloc] initTimelineWithId:sp.spaceId title:sp.spaceName creator:nil shared:shared];
         
-        [self.dataDictionary setObject:t forKey:sp.spaceId];
-        
-        //Map the space object in a timeline object
-        [self.timelinesArray addObject:t];
-        
-        //Update the tableview
-        [self.tableView reloadData];
+        //If the timeline is not in the DB insert the timeline
+        if (![[Utility databaseController] isTimelineInDB:t.tId]) {
+            //Insert the timeline in the DB
+            [[Utility databaseController] insertTimeline:t];
+        }
+        //If it is present check that title and shared are not changed
+        else{
+            //If the title has changed
+            if (![[Utility databaseController] isTimeline:t.tId titleEqualTo:t.title]){
+                //Update the title
+                [[Utility databaseController] updateTimeline:t.tId withTitle:t.title];
+            }
+            //If the sharing condition has changed
+            if (![[Utility databaseController] isTimeline:t.tId sharedEqualTo:t.shared]) {
+                //Update the sharing condition
+                [[Utility databaseController] updateTimeline:t.tId withShared:t.shared];
+            }
+        }
         
         //If the request number is equal 1 it means that is the last request thereby the activity indicator can be dismissed
         if (requestNumber==1) {
+            //Load Private Timelines From the DB
+            NSMutableArray *offlineTimeline = [[Utility databaseController] fetchTimelinesFromDB];
+            for (Timeline *t in offlineTimeline) {
+                [self.timelinesArray addObject:t];
+            }
+            //Order the array in alphabetically order
+            [Utility sortArray:self.timelinesArray withKey:@"title" ascending:YES];
+            [self.tableView reloadData];
+            
             [Utility dismissActivityIndicator:self.tableView];
             nodeIdRequestNumber=0;
             //Set the timelinesAPPArray to nil
@@ -301,16 +310,19 @@
         NSMutableArray *timelines = [db fetchTimelinesFromDB];
         
         for (Timeline *tl in timelines) {
-            //Get the events for each timeline
-            NSMutableArray *events = [db fetchEventsFromDBForTimelineId:tl];
-            //Get the events
-            for (Event *ev in events) {
-                //If the event is not stored
-                if (ev.stored == NO) {
-                    //Update the Event
-                    [db updateEvent:ev.baseEventId withStorage:YES];
-                    //Send the event to the xmpp Server
-                    [rc sendEventItem:ev toSpaceWithId:tl.tId];
+            //Only if the timeline is not shared
+            if ([[Utility databaseController]isTimelineShared:tl.tId]){
+                //Get the events for each timeline
+                NSMutableArray *events = [db fetchEventsFromDBForTimelineId:tl];
+                //Get the events
+                for (Event *ev in events) {
+                    //If the event is not stored
+                    if (ev.stored == NO) {
+                        //Update the Event
+                        [db updateEvent:ev.baseEventId withStorage:YES];
+                        //Send the event to the xmpp Server
+                        [rc sendEventItem:ev toSpaceWithId:tl.tId];
+                    }
                 }
             }
         }
@@ -324,6 +336,14 @@
 #pragma mark DismissModalViewControllerProtocol
 
 - (void)dismissModalViewController{
+    
+    //Dismiss the modal view controller
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)newTimeline:(id)sender{
+    //Insert the new timeline in the db
+    [[Utility databaseController] insertTimeline:(Timeline *)sender];
     
     //Dismiss the modal view controller
     [self dismissViewControllerAnimated:YES completion:nil];

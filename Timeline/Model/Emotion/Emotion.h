@@ -7,20 +7,29 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "EventItem.h"
 
 typedef enum{
-   
-    EventEmotionBad = 0,
+    EventEmotionUnknown = 0,
+    EventEmotionBad,
     EventEmotionOk,
     EventEmotionGood,
     EventEmotionSuper
 
 }EmotionItem;
 
-@interface Emotion : NSObject
+@interface Emotion : EventItem
 
 @property (strong, nonatomic) NSString *eventId;
-@property (assign) EmotionItem *emotionItem;
+@property (assign) EmotionItem emotionItem;
+@property (strong, nonatomic) NSString *creator;
 
+- (id)initEmotionWithEventId:(NSString *)eventId emotion:(EmotionItem)emotion eventItemCreator:(NSString *)eventCreator;
+
+- (id)initEmotionWithEventItem:(EventItem *)eventItem emotion:(EmotionItem)emotion;
+
+- (NSUInteger)emotionType;
+
+- (NSString *)emotionImagePath;
 
 @end

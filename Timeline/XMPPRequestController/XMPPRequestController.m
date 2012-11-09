@@ -12,7 +12,9 @@
 #import "User.h"
 #import "SampleNote.h"
 #import "SimplePicture.h"
+#import "SimpleVideo.h"
 #import "SimpleRecording.h"
+#import "Emotion.h"
 #import "Event.h"
 #import "DBController.h"
 
@@ -351,13 +353,26 @@
         [content addAttributeWithName:@"mimeType" stringValue:@"image/png"];
         [content setStringValue:[Utility base64StringFromImage:((SimplePicture *)[event.eventItems objectAtIndex:0]).image]];
     }
+#warning fix it for videos
+    //If it is an audio
+    else if ([[event.eventItems objectAtIndex:0] isMemberOfClass:[SimpleVideo class]]){
+        [attachment addAttributeWithName:@"type" stringValue:@"video"];
+        [content addAttributeWithName:@"mimeType" stringValue:@"audio/x-caf"];
+        [content setStringValue:[Utility base64StringForAttachment:((SimpleRecording *)[event.eventItems objectAtIndex:0]).urlPath]];
+    }
    
     //If it is an audio
-    if ([[event.eventItems objectAtIndex:0] isMemberOfClass:[SimpleRecording class]]){
+    else if ([[event.eventItems objectAtIndex:0] isMemberOfClass:[SimpleRecording class]]){
         [attachment addAttributeWithName:@"type" stringValue:@"audio"];
         [content addAttributeWithName:@"mimeType" stringValue:@"audio/x-caf"];
         [content setStringValue:[Utility base64StringForAttachment:((SimpleRecording *)[event.eventItems objectAtIndex:0]).urlPath]];
     }
+    else if ([[event.eventItems objectAtIndex:0] isMemberOfClass:[Emotion class]]){
+        [attachment addAttributeWithName:@"type" stringValue:@"emoticon"];
+        [content addAttributeWithName:@"mimeType" stringValue:@"text/x-mms-emoticon"];
+        [content setStringValue:[NSString stringWithFormat:@"%d",[((Emotion *)[event.eventItems objectAtIndex:0]) emotionType]]];
+    }
+
    
     [attachment addChild:content];
 
@@ -644,14 +659,41 @@
     //Get the unit
  //   NSString *valueUnit = [value attributeStringValueForName:@"unit"];
     //Get the value
+
     NSString *valueString = [value stringValue];
-#warning put unit in case WatchIt defines it
-    return [NSString stringWithFormat:@"%@",valueString];
+    
+    if ([valueString isEqualToString:@" MD1"] || [valueString isEqualToString:@" MD1\n"]) {
+        
+        return @"Mood: Positive";
+    }
+    
+    else if ([valueString isEqualToString:@" MD2"] || [valueString isEqualToString:@" MD2\n"]){
+        
+        return @"Mood: So and So";
+    }
+    
+    else if ([valueString isEqualToString:@" MD3"] || [valueString isEqualToString:@" MD3\n"]){
+        
+        return @"Mood: Negative";
+    }
+    
+    else if ([valueString isEqualToString:@" MSG"] || [valueString isEqualToString:@" MSG\n"]){
+        return @"Missing Person Found!";
+    }
+    
+    else if ([valueString isEqualToString:@"VECH"] || [valueString isEqualToString:@"VECH\n"])
+        return @"Veichle Location";
+    
+    else{
+        return @"Unknown message";
+    }
 }
+
 
 //This method is used to parse a WatchIt Data
 - (void)parseSensorDataFromWatchIt:(NSXMLElement *)item node:(NSString *)node update:(BOOL)update{
     
+    /* INITIAL VERSION
     //Get the genericSensorData element
     NSXMLElement *data = [item elementForName:@"genericSensorData"];
     
@@ -661,6 +703,30 @@
     
     //Get the publisher of the data
     NSString *eventCreator = [[[data attributeStringValueForName:@"publisher"] componentsSeparatedByString:@"/"] objectAtIndex:0];
+    */
+    
+    //Gry the genericSensorData element
+    NSXMLElement *data = [item elementForName:@"genericSensorData"];
+    
+    //Get the timestamp
+    //NSString *timestamp = [data attributeStringValueForName:@"timestamp"];
+    
+    //Get the publisher of the data
+    // NSString *publisher = [data attributeStringValueForName:@"publisher"];
+    
+    //Get the user
+    // NSString *user = (NSString *)[[publisher componentsSeparatedByString:@"@"] objectAtIndex:0];
+    
+    NSXMLElement *creationInfoXML = [data elementForName:@"creationInfo"];
+    
+    NSXMLElement *dateXML = [creationInfoXML elementForName:@"cdt:date"];
+    
+    NSString *eventDate = [dateXML stringValue];
+    
+    NSXMLElement *personXML = [creationInfoXML elementForName:@"cdt:person"];
+    
+    NSString *eventCreator = [personXML stringValue];
+
     
     //Get the location element
     NSXMLElement *location = [data elementForName:@"location"];
@@ -671,7 +737,9 @@
     NSString *eventLongitude = [location attributeStringValueForName:@"longitude"];
     
     //Get the name of its child
-    NSString *valueName = [[[data children] objectAtIndex:1] name];
+   // NSString *valueName = [[[data children] objectAtIndex:1] name];
+    //Get the name of its child
+    NSString *valueName = [[[data children] objectAtIndex:2] name];
     
     NSString *valuesString;
     
@@ -694,7 +762,8 @@
             
             //Get the value
             valuesString = [self valueFromXMLElement:value];
-            valuesString = [NSString stringWithFormat:@"%@-",valuesString];
+            //valuesString = [NSString stringWithFormat:@"%@-",valuesString];
+            valuesString = [[NSString alloc] stringByAppendingFormat:@"%@ \n",valuesString];
         }
     }
     
@@ -725,9 +794,8 @@
         //Send the data and update the timeline
         [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateTimelineNotification" object:nil userInfo:userInfo];
     }
-    
-    
 }
+
 
 //This method is used to parse a Recommendation from CroMAR
 - (void)parseRecommendationFromCroMAR:(NSXMLElement *)item node:(NSString *)node update:(BOOL)update{
@@ -801,25 +869,59 @@
         NSXMLElement *attachment = [eventXML elementForName:@"attachment"];
         NSString *type = [attachment attributeStringValueForName:@"type"];
         
-        UIImage *img = nil;
-        NSString *contentBase64 = nil;
-        if ([type isEqualToString:@"photo"]) {
-            contentBase64 = [[attachment elementForName:@"content"] stringValue];
-        }
-        if (contentBase64) {
-            img = [Utility imageFromBase64String:contentBase64];
-            NSData *dataImg = UIImagePNGRepresentation(img);
-            NSLog(@"d: %d",dataImg.length);
-        }
-        
-        SampleNote *sn = nil;
-        SimplePicture *sp = nil;
-        
         CLLocation *loc = [[CLLocation alloc] initWithLatitude:[eventLatitude doubleValue] longitude:[eventLongitude doubleValue]];
         
         //New BaseEvent
-        Event *event = [[Event alloc] initEventWithLocation:loc date:[Utility dateFromTimestamp:eventDate watchIT:NO] shared:NO creator:eventCreator];
+      //  Event *event = [[Event alloc] initEventWithLocation:loc date:[Utility dateFromTimestamp:eventDate watchIT:NO] shared:NO creator:eventCreator];
         
+        Event *event = [[Event alloc] initEventWithId:eventId location:loc date:[Utility dateFromTimestamp:eventDate watchIT:NO] creator:eventCreator shared:NO stored:YES post:YES];
+        
+        SampleNote *sn = nil;
+        SimplePicture *sp = nil;
+        SimpleVideo *sv = nil;
+        SimpleRecording *sr = nil;
+        Emotion *e = nil;
+
+        UIImage *img = nil;
+        NSString *contentBase64 = nil;
+        
+        if ([type isEqualToString:@"photo"]) {
+            contentBase64 = [[attachment elementForName:@"content"] stringValue];
+            
+            if (contentBase64) {
+                img = [Utility imageFromBase64String:contentBase64];
+                NSData *dataImg = UIImagePNGRepresentation(img);
+                NSLog(@"d: %d",dataImg.length);
+            }
+#warning review it
+             sp = [[SimplePicture alloc] initSimplePictureWithEventId:event.baseEventId imagePath:nil image:img eventItemCreator:eventCreator];
+            [event.eventItems addObject:sp];
+        }
+        
+        else if ([type isEqualToString:@"video"]) {
+        
+            [event.eventItems addObject:sv];
+        }
+        
+        else if ([type isEqualToString:@"audio"]) {
+            
+            [event.eventItems addObject:sr];
+        }
+        
+        else if ([type isEqualToString:@"emoticon"]) {
+            //Get the emotion type
+            NSInteger emotionType = [[[attachment elementForName:@"content"] stringValue] integerValue];
+            //Initialize the emotion
+            e = [[Emotion alloc] initEmotionWithEventId:event.baseEventId emotion:emotionType eventItemCreator:eventCreator];
+            [event.eventItems addObject:e];
+        }
+        
+        else{
+            sn = [[SampleNote alloc] initSampleNoteWithEventId:event.baseEventId title:subject text:body eventItemCreator:eventCreator];
+            [event.eventItems addObject:sn];
+        }
+        
+        /*
         if (!img) {
             //sn = [[SampleNote alloc] initSampleNoteWithTitle:subject text:body eventItemCreator:eventCreator];
             sn = [[SampleNote alloc] initSampleNoteWithEventId:event.baseEventId title:subject text:body eventItemCreator:eventCreator];
@@ -829,7 +931,8 @@
             sp = [[SimplePicture alloc] initSimplePictureWithEventId:event.baseEventId image:img eventItemCreator:eventCreator];
             
         }
-        
+        */
+        /*
         if (img) {
             //Add the simple picture to the base event
             [event.eventItems addObject:sp];
@@ -839,6 +942,7 @@
             [event.eventItems addObject:sn];
             
         }
+         */
 #warning review this method when defined xML schemata for each eventItem are defined
         
         //Send the data

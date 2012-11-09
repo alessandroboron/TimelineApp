@@ -13,10 +13,13 @@
 
 @property (strong, nonatomic) NSString *eventId;
 @property (strong, nonatomic) UIImage *image;
+@property (strong, nonatomic) NSString *imagePath;
 
 //The designated initializer
-- (id)initSimplePictureWithEventId:(NSString *)eventId image:(UIImage *)image eventItemCreator:(NSString *)eventCreator;
+- (id)initSimplePictureWithEventId:(NSString *)eventId imagePath:(NSString *)imagePath image:(UIImage *)image eventItemCreator:(NSString *)eventCreator;
 
 - (id)initSimplePictureWithEventItem:(EventItem *)eventItem url:(NSString *)urlImgPath;
+
+- (UIImage *)imageFromAssetURL;
 
 @end

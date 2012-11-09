@@ -11,6 +11,7 @@
 @implementation PictureViewCell
 
 @synthesize pictureImageView = _pictureImageView;
+@synthesize placeHolderImageView = _placeHolderImageView;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

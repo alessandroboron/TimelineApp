@@ -7,6 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D207E41B164A68B2002A160E /* VideoDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D207E41A164A68B1002A160E /* VideoDetailsViewController.m */; };
+		D207E423164A6DF2002A160E /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D207E422164A6DF2002A160E /* MediaPlayer.framework */; };
+		D207E425164AA197002A160E /* loading.png in Resources */ = {isa = PBXBuildFile; fileRef = D207E424164AA197002A160E /* loading.png */; };
+		D217ED9B1647F44C006A6312 /* NewEmotionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D217ED9A1647F44C006A6312 /* NewEmotionViewController.m */; };
+		D217EDBA1647F9B1006A6312 /* glad.png in Resources */ = {isa = PBXBuildFile; fileRef = D217EDB01647F9B1006A6312 /* glad.png */; };
+		D217EDBB1647F9B1006A6312 /* glad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D217EDB11647F9B1006A6312 /* glad@2x.png */; };
+		D217EDBC1647F9B1006A6312 /* happy.png in Resources */ = {isa = PBXBuildFile; fileRef = D217EDB21647F9B1006A6312 /* happy.png */; };
+		D217EDBD1647F9B1006A6312 /* happy@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D217EDB31647F9B1006A6312 /* happy@2x.png */; };
+		D217EDBE1647F9B1006A6312 /* happyButton.png in Resources */ = {isa = PBXBuildFile; fileRef = D217EDB41647F9B1006A6312 /* happyButton.png */; };
+		D217EDBF1647F9B1006A6312 /* happyButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D217EDB51647F9B1006A6312 /* happyButton@2x.png */; };
+		D217EDC01647F9B1006A6312 /* mad.png in Resources */ = {isa = PBXBuildFile; fileRef = D217EDB61647F9B1006A6312 /* mad.png */; };
+		D217EDC11647F9B1006A6312 /* mad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D217EDB71647F9B1006A6312 /* mad@2x.png */; };
+		D217EDC21647F9B1006A6312 /* soandso.png in Resources */ = {isa = PBXBuildFile; fileRef = D217EDB81647F9B1006A6312 /* soandso.png */; };
+		D217EDC31647F9B1006A6312 /* soandso@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D217EDB91647F9B1006A6312 /* soandso@2x.png */; };
+		D217EDCA164825DD006A6312 /* EmotionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D217EDC9164825DD006A6312 /* EmotionViewCell.m */; };
 		D222ECDB15F8AB4A00616F88 /* microphone.png in Resources */ = {isa = PBXBuildFile; fileRef = D222ECDA15F8AB4A00616F88 /* microphone.png */; };
 		D222ECDD15F8B2B000616F88 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D222ECDC15F8B2B000616F88 /* AVFoundation.framework */; };
 		D222ECE515F8CC6400616F88 /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = D222ECDF15F8CC6400616F88 /* pause.png */; };
@@ -157,6 +172,24 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D207E419164A68B1002A160E /* VideoDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VideoDetailsViewController.h; path = TimelineViewController/EventDetailViewController/VideoDetailsViewController/VideoDetailsViewController.h; sourceTree = "<group>"; };
+		D207E41A164A68B1002A160E /* VideoDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VideoDetailsViewController.m; path = TimelineViewController/EventDetailViewController/VideoDetailsViewController/VideoDetailsViewController.m; sourceTree = "<group>"; };
+		D207E422164A6DF2002A160E /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		D207E424164AA197002A160E /* loading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = loading.png; sourceTree = "<group>"; };
+		D217ED991647F44C006A6312 /* NewEmotionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NewEmotionViewController.h; path = TimelineViewController/NewEmotionViewController/NewEmotionViewController.h; sourceTree = "<group>"; };
+		D217ED9A1647F44C006A6312 /* NewEmotionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NewEmotionViewController.m; path = TimelineViewController/NewEmotionViewController/NewEmotionViewController.m; sourceTree = "<group>"; };
+		D217EDB01647F9B1006A6312 /* glad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = glad.png; sourceTree = "<group>"; };
+		D217EDB11647F9B1006A6312 /* glad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "glad@2x.png"; sourceTree = "<group>"; };
+		D217EDB21647F9B1006A6312 /* happy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = happy.png; sourceTree = "<group>"; };
+		D217EDB31647F9B1006A6312 /* happy@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "happy@2x.png"; sourceTree = "<group>"; };
+		D217EDB41647F9B1006A6312 /* happyButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = happyButton.png; sourceTree = "<group>"; };
+		D217EDB51647F9B1006A6312 /* happyButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "happyButton@2x.png"; sourceTree = "<group>"; };
+		D217EDB61647F9B1006A6312 /* mad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mad.png; sourceTree = "<group>"; };
+		D217EDB71647F9B1006A6312 /* mad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mad@2x.png"; sourceTree = "<group>"; };
+		D217EDB81647F9B1006A6312 /* soandso.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = soandso.png; sourceTree = "<group>"; };
+		D217EDB91647F9B1006A6312 /* soandso@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "soandso@2x.png"; sourceTree = "<group>"; };
+		D217EDC8164825DC006A6312 /* EmotionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmotionViewCell.h; path = TimelineViewCell/EmotionViewCell/EmotionViewCell.h; sourceTree = "<group>"; };
+		D217EDC9164825DD006A6312 /* EmotionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmotionViewCell.m; path = TimelineViewCell/EmotionViewCell/EmotionViewCell.m; sourceTree = "<group>"; };
 		D222ECD615F8A7EA00616F88 /* AudioViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioViewController.h; path = "View Controllers/TimelinesViewcontroller/TimelineViewController/NewAudioViewController/AudioViewController.h"; sourceTree = "<group>"; };
 		D222ECDA15F8AB4A00616F88 /* microphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = microphone.png; sourceTree = "<group>"; };
 		D222ECDC15F8B2B000616F88 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -402,6 +435,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D207E423164A6DF2002A160E /* MediaPlayer.framework in Frameworks */,
 				D2CD65AA16398AB600F4AF56 /* AssetsLibrary.framework in Frameworks */,
 				D2CD65751636B16400F4AF56 /* libsqlite3.0.dylib in Frameworks */,
 				D24A21EB16020B3000F6E8B7 /* CoreMedia.framework in Frameworks */,
@@ -423,6 +457,50 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D207E41D164A68B8002A160E /* VideoDetailsViewController */ = {
+			isa = PBXGroup;
+			children = (
+				D207E419164A68B1002A160E /* VideoDetailsViewController.h */,
+				D207E41A164A68B1002A160E /* VideoDetailsViewController.m */,
+			);
+			name = VideoDetailsViewController;
+			sourceTree = "<group>";
+		};
+		D217ED9D1647F453006A6312 /* NewEmotionViewController */ = {
+			isa = PBXGroup;
+			children = (
+				D217ED991647F44C006A6312 /* NewEmotionViewController.h */,
+				D217ED9A1647F44C006A6312 /* NewEmotionViewController.m */,
+			);
+			name = NewEmotionViewController;
+			sourceTree = "<group>";
+		};
+		D217EDAF1647F9B1006A6312 /* Emotion */ = {
+			isa = PBXGroup;
+			children = (
+				D217EDB01647F9B1006A6312 /* glad.png */,
+				D217EDB11647F9B1006A6312 /* glad@2x.png */,
+				D217EDB21647F9B1006A6312 /* happy.png */,
+				D217EDB31647F9B1006A6312 /* happy@2x.png */,
+				D217EDB41647F9B1006A6312 /* happyButton.png */,
+				D217EDB51647F9B1006A6312 /* happyButton@2x.png */,
+				D217EDB61647F9B1006A6312 /* mad.png */,
+				D217EDB71647F9B1006A6312 /* mad@2x.png */,
+				D217EDB81647F9B1006A6312 /* soandso.png */,
+				D217EDB91647F9B1006A6312 /* soandso@2x.png */,
+			);
+			path = Emotion;
+			sourceTree = "<group>";
+		};
+		D217EDCB16482647006A6312 /* EmotionViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				D217EDC8164825DC006A6312 /* EmotionViewCell.h */,
+				D217EDC9164825DD006A6312 /* EmotionViewCell.m */,
+			);
+			name = EmotionViewCell;
+			sourceTree = "<group>";
+		};
 		D222ECD915F8A82300616F88 /* NewAudioViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -547,6 +625,7 @@
 				D226D1F515DAD38B00227FAF /* PictureViewCell */,
 				D24A21E91601EF4200F6E8B7 /* VideoViewCell */,
 				D222ECF615F8DD9600616F88 /* AudioViewCell */,
+				D217EDCB16482647006A6312 /* EmotionViewCell */,
 			);
 			name = TimelineViewCell;
 			sourceTree = "<group>";
@@ -631,6 +710,7 @@
 				D262252815E7A36100F55FB1 /* EventDetailViewController.h */,
 				D262252915E7A36100F55FB1 /* EventDetailViewController.m */,
 				D230E7D915F77D5E0059CC3D /* PictureDetailsViewController */,
+				D207E41D164A68B8002A160E /* VideoDetailsViewController */,
 				D2ED087315FA14C600BDF6E3 /* AudioDetailsViewController */,
 				D2EA0C2915EB72C20084B587 /* ShareEventViewController */,
 			);
@@ -640,6 +720,8 @@
 		D285B52F15D5301D00AFC1C7 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				D207E424164AA197002A160E /* loading.png */,
+				D217EDAF1647F9B1006A6312 /* Emotion */,
 				D222ECF715F8E04900616F88 /* mic.png */,
 				D222ECDE15F8CC6400616F88 /* NewAudioViewController */,
 				D222ECDA15F8AB4A00616F88 /* microphone.png */,
@@ -667,6 +749,7 @@
 				D285B55015D5444500AFC1C7 /* NewTimelineViewController */,
 				D226D1E215DAB6ED00227FAF /* NewNoteViewController */,
 				D222ECD915F8A82300616F88 /* NewAudioViewController */,
+				D217ED9D1647F453006A6312 /* NewEmotionViewController */,
 				D226D1FD15DBAB3300227FAF /* TimelineViewCell */,
 			);
 			name = TimelinesViewcontroller;
@@ -1112,7 +1195,6 @@
 		D2CD814E15D2AEC000094D72 = {
 			isa = PBXGroup;
 			children = (
-				D2CD65A916398AB400F4AF56 /* AssetsLibrary.framework */,
 				D2AA185F15ECF8330024BFF9 /* timeline_icon@2x.png */,
 				D2AA185D15ECF82E0024BFF9 /* timeline_icon.png */,
 				D2CD816315D2AEC100094D72 /* Timeline */,
@@ -1132,6 +1214,8 @@
 		D2CD815C15D2AEC000094D72 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D207E422164A6DF2002A160E /* MediaPlayer.framework */,
+				D2CD65A916398AB400F4AF56 /* AssetsLibrary.framework */,
 				D2CD65741636B16400F4AF56 /* libsqlite3.0.dylib */,
 				D24A21EA16020B3000F6E8B7 /* CoreMedia.framework */,
 				D222ECDC15F8B2B000616F88 /* AVFoundation.framework */,
@@ -1333,6 +1417,17 @@
 				D222ECEE15F8CDDA00616F88 /* record@2x.png in Resources */,
 				D222ECF815F8E04900616F88 /* mic.png in Resources */,
 				D25DDB4D1646E34400F9D773 /* TimelineApp.sqlite in Resources */,
+				D217EDBA1647F9B1006A6312 /* glad.png in Resources */,
+				D217EDBB1647F9B1006A6312 /* glad@2x.png in Resources */,
+				D217EDBC1647F9B1006A6312 /* happy.png in Resources */,
+				D217EDBD1647F9B1006A6312 /* happy@2x.png in Resources */,
+				D217EDBE1647F9B1006A6312 /* happyButton.png in Resources */,
+				D217EDBF1647F9B1006A6312 /* happyButton@2x.png in Resources */,
+				D217EDC01647F9B1006A6312 /* mad.png in Resources */,
+				D217EDC11647F9B1006A6312 /* mad@2x.png in Resources */,
+				D217EDC21647F9B1006A6312 /* soandso.png in Resources */,
+				D217EDC31647F9B1006A6312 /* soandso@2x.png in Resources */,
+				D207E425164AA197002A160E /* loading.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1421,6 +1516,9 @@
 				D2CD65881636B38C00F4AF56 /* FMDatabasePool.m in Sources */,
 				D2CD65891636B38C00F4AF56 /* FMDatabaseQueue.m in Sources */,
 				D2CD658B1636B38C00F4AF56 /* FMResultSet.m in Sources */,
+				D217ED9B1647F44C006A6312 /* NewEmotionViewController.m in Sources */,
+				D217EDCA164825DD006A6312 /* EmotionViewCell.m in Sources */,
+				D207E41B164A68B2002A160E /* VideoDetailsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

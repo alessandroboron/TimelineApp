@@ -14,19 +14,22 @@
 #import "PictureViewCell.h"
 #import "VideoViewCell.h"
 #import "AudioViewCell.h"
+#import "EmotionViewCell.h"
 #import "Event.h"
 #import "NewNoteViewController.h"
 #import "SampleNote.h"
 #import "SimplePicture.h"
 #import "SimpleVideo.h"
 #import "SimpleRecording.h"
+#import "Emotion.h"
 #import "PictureDetailsViewController.h"
+#import "VideoDetailsViewController.h"
 #import "AudioDetailsViewController.h"
 #import "ShareEventViewController.h"
 #import "XMPPRequestController.h"
 
 #define FONT_SIZE 16.0f
-#define CELL_CONTENT_WIDTH 265.0f
+#define CELL_CONTENT_WIDTH 260.0f
 #define CELL_CONTENT_MARGIN 10.0f
 #define CELL_CONTENT_MARGIN_X 10.0f
 #define CELL_CONTENT_MARGIN_Y 10.0f
@@ -41,6 +44,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *eventDateLabel;
 @property (weak, nonatomic) IBOutlet UILabel *eventLocationLabel;
 @property (weak, nonatomic) IBOutlet UITableView *itemsTableView;
+@property (weak, nonatomic) IBOutlet UILabel *eventCreatorLabel;
 @property (strong, nonatomic) NSIndexPath *indexPath;
 
 - (IBAction)doneButtonPressed:(id)sender;
@@ -86,6 +90,9 @@
     //Set the location label of the event
     [self performReverseGeocoding];
     
+    //Set the event creator
+    self.eventCreatorLabel.text = self.event.creator;
+    
     //Make rounded corner to the tableview
     self.itemsTableView.clipsToBounds = YES;
     self.itemsTableView.layer.cornerRadius = 7.0;
@@ -126,6 +133,19 @@
         pdvc.img = ((SimplePicture *)[self.event.eventItems objectAtIndex:self.indexPath.row]).image;
         
     }
+    
+    //If a picture detail
+    else if ([segue.identifier isEqualToString:@"videoDetailsSegue"]){
+        
+        //Get the controller
+        VideoDetailsViewController *vdvc = (VideoDetailsViewController *)segue.destinationViewController;
+        //Set the delegate
+        vdvc.delegate = self;
+        //Set the image
+        vdvc.urlPath = ((SimpleVideo *)[self.event.eventItems objectAtIndex:self.indexPath.row]).videoURL;
+        
+    }
+    
     
     //If a picture detail
     else if ([segue.identifier isEqualToString:@"audioDetailsSegue"]){
@@ -172,7 +192,7 @@
     }
 }
 
-//This method is used to show the eventItem detail when the long pressure is recognized
+//This method is used to show the eventItem detail when the tap  is recognized
 - (IBAction)showEventItemDetails:(UITapGestureRecognizer *)recognizer{
     if (recognizer.state == UIGestureRecognizerStateEnded) {
         
@@ -192,7 +212,12 @@
         }
         
         //If the cell contains a picture
-        if ([cell isMemberOfClass:[AudioViewCell class]]){
+        if ([cell isMemberOfClass:[VideoViewCell class]]){
+            [self performSegueWithIdentifier:@"videoDetailsSegue" sender:self];
+        }
+        
+        //If the cell contains a picture
+        else if ([cell isMemberOfClass:[AudioViewCell class]]){
             [self performSegueWithIdentifier:@"audioDetailsSegue" sender:self];
         }
 
@@ -326,6 +351,15 @@
         //Get a reusable cell
         cell = [tableView dequeueReusableCellWithIdentifier:@"audioCellIdentifier"];
     }
+    
+    //If the cell contains an emoticon
+    else if([objectInTimeline isMemberOfClass:[Emotion class]]){
+        
+        //Get a reusable cell
+        cell = [tableView dequeueReusableCellWithIdentifier:@"emotionCellIdentifier"];
+       
+        ((EmotionViewCell *)cell).emotionImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@",[((Emotion *)objectInTimeline) emotionImagePath]]];
+    }
 
     
     //No of the above specified objects
@@ -367,6 +401,10 @@
     }
     
     else if ([objectInTimeline isMemberOfClass:[SimpleRecording class]]){
+        height = AUDIOCELL_SIZE;
+    }
+    
+    else if ([objectInTimeline isMemberOfClass:[Emotion class]]){
         height = AUDIOCELL_SIZE;
     }
      

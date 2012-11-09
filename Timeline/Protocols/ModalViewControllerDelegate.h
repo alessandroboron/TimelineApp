@@ -12,6 +12,7 @@
 @protocol ModalViewControllerDelegate <NSObject>
 - (void)dismissModalViewController;
 @optional
+- (void)newTimeline:(id)sender;
 - (void)addEventItem:(id)sender toBaseEvent:(BaseEvent *)baseEvent;
 - (void)addGroup:(id)sender;
 - (void)dismissModalViewControllerAndUpdate;

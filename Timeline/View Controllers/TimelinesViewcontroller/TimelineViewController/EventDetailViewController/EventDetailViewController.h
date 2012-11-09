@@ -16,4 +16,5 @@
 
 @property (weak, nonatomic) id<ModalViewControllerDelegate> delegate;
 @property (strong, nonatomic) Event *event;
+
 @end
