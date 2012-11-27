@@ -1,3 +1,5 @@
+//"This work is licensed under the Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+// To view a copy of the license, visit http://http://creativecommons.org/licenses/by-nc-sa/3.0/ "
 //
 //  TimelineViewController.m
 //  Timeline
@@ -45,6 +47,7 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *contentTableView;
 @property (strong, nonatomic) NSIndexPath *indexPathForSelectedRow;
+@property (strong, nonatomic) ALAssetsLibrary *assetsLibrary;
 @property (weak, nonatomic) IBOutlet UILabel *noItemLabel;
 @property (weak, nonatomic) IBOutlet UIButton *pictureButton;
 @property (weak, nonatomic) IBOutlet UIButton *videoButton;
@@ -163,6 +166,12 @@
     return _eventsArray;
 }
 
+- (ALAssetsLibrary *)assetsLibrary{
+    if (!_assetsLibrary) {
+        _assetsLibrary = [[ALAssetsLibrary alloc] init];
+    }
+    return _assetsLibrary;
+}
 
 #pragma mark -
 #pragma mark Segue Method
@@ -318,6 +327,7 @@
         //Insert the data in tableview animated
         [self.contentTableView insertRowsAtIndexPaths:insertIndexPath withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.contentTableView endUpdates];
+       // [self.contentTableView reloadData];
     }
 }
 
@@ -610,9 +620,23 @@
     insets.bottom = 37;
     insets.right = 0;
     
-    UIImage *backgroundImg = [[UIImage imageNamed:@"cellContainer.png"] resizableImageWithCapInsets:insets];
+    //
     
+    /*
+    UIImage *backgroundImg = nil;
+    
+    if (event.post == 1) {
+        backgroundImg = [[UIImage imageNamed:@"shared.png"] resizableImageWithCapInsets:insets];
+    }
+    else{
+        backgroundImg = [[UIImage imageNamed:@"local.png"] resizableImageWithCapInsets:insets];
+    }
+    */
+    
+     UIImage *backgroundImg = [[UIImage imageNamed:@"cellContainer.png"] resizableImageWithCapInsets:insets];
+     
     UIImageView *iv = [[UIImageView alloc] initWithImage:backgroundImg];
+    
 
     if ([event.eventItems count]>1) {
         
@@ -644,6 +668,11 @@
             //Get a reusable cell
             cell = [tableView dequeueReusableCellWithIdentifier:@"pictureCellIdentifier"];
            
+            NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:[tableView indexPathForCell:cell],@"indexPath",((SimplePicture *)objectInTimeline).imagePath,@"url", nil];
+            
+            [self performSelectorInBackground:@selector(performAsset:) withObject:dict];
+            
+            
             //if (((PictureViewCell *)cell).pictureImageView.image == nil) {
                 
               //  NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:cell,@"cell",((SimplePicture *)objectInTimeline).imagePath,@"url", nil];
@@ -651,7 +680,11 @@
                // [self performSelectorInBackground:@selector(performAsset:) withObject:dict];
                 
             
+                
             
+                
+           
+            /*
             ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *myasset)
             {
                 ALAssetRepresentation *rep = [myasset defaultRepresentation];
@@ -679,6 +712,8 @@
                           failureBlock:failureblock];
             
           //  }
+                 
+           */     
              
              
             //[((SimplePicture *)objectInTimeline) imageFromAssetURL];
@@ -782,18 +817,24 @@
     
 }
 
-/*
+
 - (void)performAsset:(NSDictionary *)param{
     
-    PictureViewCell *cell = (PictureViewCell *)[param objectForKey:@"cell"];
+    NSIndexPath *indexPath = [param objectForKey:@"indexPath"];
     NSString *urlPath = [param objectForKey:@"url"];
     
     ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *myasset)
     {
         ALAssetRepresentation *rep = [myasset defaultRepresentation];
-        CGImageRef iref = [rep fullResolutionImage];
+        CGImageRef iref = [rep fullScreenImage];
         if (iref) {
-            cell.pictureImageView.image =  [UIImage imageWithCGImage:[rep fullResolutionImage]  scale:[rep scale] orientation:(UIImageOrientation)[rep orientation]];
+            
+            UIImage *img = [UIImage imageWithCGImage:[rep fullResolutionImage]  scale:[rep scale] orientation:(UIImageOrientation)[rep orientation]];
+            
+            NSDictionary *result = [NSDictionary dictionaryWithObjectsAndKeys:img,@"image",indexPath,@"indexPath", nil];
+            
+            // Show the image on main thread
+            [self performSelectorOnMainThread:@selector(imageReady:) withObject:result waitUntilDone:NO];
             
         }
     };
@@ -802,17 +843,24 @@
     ALAssetsLibraryAccessFailureBlock failureblock  = ^(NSError *myerror)
     {
         [Utility showAlertViewWithTitle:@"Location Error" message:@"You must activate Location Services to access the photo" cancelButtonTitle:@"Dismiss"];
-        //NSLog(@"Cant get image - %@",[myerror localizedDescription]);
     };
     
-    
-    ALAssetsLibrary* assetslibrary = [[ALAssetsLibrary alloc] init];
-    
-    
-    [assetslibrary assetForURL:[NSURL URLWithString:urlPath]
+    [self.assetsLibrary assetForURL:[NSURL URLWithString:urlPath]
                    resultBlock:resultblock
                   failureBlock:failureblock];
 }
- */
+
+-(void) imageReady:(NSDictionary *)param
+{
+    
+    //Get the indexPath
+    NSIndexPath *indexPath = [param objectForKey:@"indexPath"];
+    UIImage *img = [param objectForKey:@"image"];
+    // Get the cell using index path
+    PictureViewCell *cell = (PictureViewCell *) [self.contentTableView cellForRowAtIndexPath:indexPath];
+    // Show the image in the cell
+    cell.pictureImageView.image =  img;
+}
+ 
 
 @end

@@ -1,3 +1,5 @@
+//"This work is licensed under the Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+// To view a copy of the license, visit http://http://creativecommons.org/licenses/by-nc-sa/3.0/ "
 //
 //  TimelinesViewController.m
 //  Timeline
@@ -228,7 +230,14 @@
         }
         
         //Initialize the timeline object
-        Timeline *t = [[Timeline alloc] initTimelineWithId:sp.spaceId title:sp.spaceName creator:nil shared:shared];
+        Timeline *t = [[Timeline alloc] initTimelineWithId:sp.spaceId title:sp.spaceName creator:[Utility settingField:kXMPPUserIdentifier] shared:shared];
+        
+        //If the user is not in the DB insert the user
+        if (![[Utility databaseController] isUserInDB:[Utility settingField:kXMPPUserIdentifier]]) {
+            //Insert the timeline in the DB
+            [[Utility databaseController] insertUser:[Utility settingField:kXMPPUserIdentifier]];
+        }
+        [[Utility databaseController] insertUser:[Utility settingField:kXMPPUserIdentifier] inTimeline:t.tId];
         
         //If the timeline is not in the DB insert the timeline
         if (![[Utility databaseController] isTimelineInDB:t.tId]) {
@@ -275,6 +284,7 @@
     [Utility dismissActivityIndicator:self.tableView];
 }
 
+//This method is used to fetch timelines when the device connects to the XMPP Server
 - (void)fetchTimelines:(NSNotification *)notification{
     
     //If Online and Authenticathed retrieve timelines

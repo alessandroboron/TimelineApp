@@ -33,7 +33,9 @@
 - (NSString *)databasePath;
 
 - (void)insertTimeline:(Timeline *)timeline;
+- (NSArray *)timelinesForUser:(NSString *)user;
 - (NSArray *)timelines;
+- (Timeline *)timelineWithId:(NSString *)timeline_Id;
 - (void)insertEventInDB:(Event *)event;
 - (NSArray *)eventsInTimeline:(Timeline *)timeline;
 - (Event *)eventWithId:(NSString *)event_Id;
@@ -82,8 +84,18 @@
 //This method is used to fetch the Timelines from the DB
 - (NSMutableArray *)fetchTimelinesFromDB{
     
+    NSArray *timelinesForUser = [self timelinesForUser:[Utility settingField:kXMPPUserIdentifier]];
+    
+    NSMutableArray *timelines = [[NSMutableArray alloc] initWithCapacity:[timelinesForUser count]];
+    
+    for (NSString *tId in timelinesForUser) {
+        Timeline *t = [self timelineWithId:tId];
+        [timelines addObject:t];
+    }
+    
+    
     //Get timelines
-    NSMutableArray *timelines = [[self timelines] mutableCopy];
+   // NSMutableArray *timelines = [[self timelines] mutableCopy];
     
     return timelines;
 }
@@ -509,6 +521,7 @@
     
 }
 
+
 //This method is used to insert a timeline in the DB
 - (void)insertTimeline:(Timeline *)timeline{
     
@@ -534,6 +547,163 @@
     }
 }
 
+- (BOOL)isUserInDB:(NSString *)user{
+    
+    BOOL present = NO;
+    
+    //Get the database
+    FMDatabase *db = [FMDatabase databaseWithPath:[self databasePath]];
+    
+    @try {
+        //Open the connection
+        [db open];
+        
+        //Select the category with a given name
+        FMResultSet *result = [db executeQuery:@"SELECT * FROM Users WHERE Username = ?",user];
+        
+        //If the category is present
+        if ([result next]) {
+            present = YES;
+        }
+    }
+    
+    @catch (NSException *exception) {
+        NSLog(@"Error: %@",[exception description]);
+    }
+    
+    @finally {
+        //Close the connection
+        [db close];
+    }
+    
+    return present;
+    
+}
+
+- (void)insertUser:(NSString *)user{
+    
+    //Get the database
+    FMDatabase *db = [FMDatabase databaseWithPath:[self databasePath]];
+    
+    @try {
+        [db open];
+        
+        [db executeUpdate:@"INSERT INTO Users (Username) VALUES (?)",user];
+        
+        if ([db hadError]) {
+            NSLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+        }
+    }
+    
+    @catch (NSException *exception) {
+        NSLog(@"Error: %@",[exception description]);
+    }
+    
+    @finally {
+        [db close];
+    }
+
+}
+
+- (BOOL)isUser:(NSString *)user inTimeline:(NSString *)timelineId{
+    
+    BOOL present = NO;
+    
+    //Get the database
+    FMDatabase *db = [FMDatabase databaseWithPath:[self databasePath]];
+    
+    @try {
+        //Open the connection
+        [db open];
+        
+        //Select the category with a given name
+        FMResultSet *result = [db executeQuery:@"SELECT * FROM UsersInTimeline WHERE Id_User = ? AND Id_Timeline = ?",user,timelineId];
+        
+        //If the category is present
+        if ([result next]) {
+            present = YES;
+        }
+    }
+    
+    @catch (NSException *exception) {
+        NSLog(@"Error: %@",[exception description]);
+    }
+    
+    @finally {
+        //Close the connection
+        [db close];
+    }
+    
+    return present;
+}
+
+- (void)insertUser:(NSString *)user inTimeline:(NSString *)timelineId{
+    
+    if (![self isUser:user inTimeline:timelineId]) {
+        
+        //Get the database
+        FMDatabase *db = [FMDatabase databaseWithPath:[self databasePath]];
+        
+        @try {
+            [db open];
+            
+            [db executeUpdate:@"INSERT INTO UsersInTimeline (Id_Timeline,Id_User) VALUES (?,?)",timelineId,user];
+            
+            if ([db hadError]) {
+                NSLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+            }
+        }
+        
+        @catch (NSException *exception) {
+            NSLog(@"Error: %@",[exception description]);
+        }
+        
+        @finally {
+            [db close];
+        }
+    }
+}
+
+
+- (NSArray *)timelinesForUser:(NSString *)user{
+    
+    //Initialize a mutable array to store the timelines result
+    NSMutableArray *timelinesForUser = [[NSMutableArray alloc] init];
+    
+    //Get the DB
+    FMDatabase *db = [FMDatabase databaseWithPath:[self databasePath]];
+    
+    @try {
+        //Open a connection
+        [db open];
+        
+        //Fetch the categories
+        FMResultSet *result = [db executeQuery:@"SELECT * FROM UsersInTimeline WHERE Id_User = ?",user];
+        
+        //For each element
+        while ([result next]) {
+            //Initialize the Timeline object
+            NSString *tId = [result stringForColumn:@"Id_Timeline"];
+            [timelinesForUser addObject:tId];
+        }
+    }
+    
+    //Exception catched
+    @catch (NSException *exception) {
+        NSLog(@"Error: %@",[exception description]);
+    }
+    
+    //Close the connection
+    @finally {
+        //Close the connection
+        [db close];
+    }
+    
+    //Return a immutable version of the array
+    return [timelinesForUser copy];
+    
+}
+
 - (NSArray *)timelines{
     
     //Initialize a mutable array to store the timelines result
@@ -547,7 +717,7 @@
         [db open];
         
         //Fetch the categories
-        FMResultSet *result = [db executeQuery:@"SELECT * FROM Timelines"];
+        FMResultSet *result = [db executeQuery:@"SELECT * FROM Timelines WHERE Creator = ?",[Utility settingField:kXMPPUserIdentifier]];
         
         //For each element
         while ([result next]) {
@@ -578,6 +748,47 @@
     //Return a immutable version of the array
     return [timelines copy];
     
+}
+
+- (Timeline *)timelineWithId:(NSString *)timeline_Id{
+    
+    Timeline *timeline = nil;
+    
+    //Get the DB
+    FMDatabase *db = [FMDatabase databaseWithPath:[self databasePath]];
+    
+    @try {
+        //Open a connection
+        [db open];
+        
+        //Fetch the categories
+        FMResultSet *result = [db executeQuery:@"SELECT * FROM Timelines WHERE Id = ?",timeline_Id];
+        
+        //For each element
+        while ([result next]) {
+            //Initialize the Timeline object
+            NSString *tId = [result stringForColumn:@"Id"];
+            NSString *title = [result stringForColumn:@"Title"];
+            NSString *creator = [result stringForColumn:@"Creator"];
+            BOOL shared = [result boolForColumn:@"Shared"];
+            //Insert into timelines array
+            timeline = [[Timeline alloc] initTimelineWithId:tId title:title creator:creator shared:shared];
+        }
+    }
+    
+    //Exception catched
+    @catch (NSException *exception) {
+        NSLog(@"Error: %@",[exception description]);
+    }
+    
+    //Close the connection
+    @finally {
+        //Close the connection
+        [db close];
+    }
+    
+    //Return the event
+    return timeline;
 }
 
 - (BOOL)isEventInDB:(NSString *)eventId{

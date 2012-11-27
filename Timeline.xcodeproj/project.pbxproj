@@ -64,13 +64,13 @@
 		D24EC0D615F62D0E0031F5D3 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = D24EC0D515F62D0E0031F5D3 /* NSData+Base64.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D24EC0DC15F639DF0031F5D3 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D24EC0DB15F639DF0031F5D3 /* MobileCoreServices.framework */; };
 		D24EC0E215F6425B0031F5D3 /* SimplePicture.m in Sources */ = {isa = PBXBuildFile; fileRef = D24EC0E115F6425B0031F5D3 /* SimplePicture.m */; };
-		D25DDB4D1646E34400F9D773 /* TimelineApp.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = D25DDB4C1646E34400F9D773 /* TimelineApp.sqlite */; };
 		D262252A15E7A36100F55FB1 /* EventDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D262252915E7A36100F55FB1 /* EventDetailViewController.m */; };
 		D262253615EA550500F55FB1 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D262253515EA550500F55FB1 /* AddressBook.framework */; };
 		D262253815EA676000F55FB1 /* eventDetailContainer.png in Resources */ = {isa = PBXBuildFile; fileRef = D262253715EA676000F55FB1 /* eventDetailContainer.png */; };
 		D262253A15EA758100F55FB1 /* eventItemContainer.png in Resources */ = {isa = PBXBuildFile; fileRef = D262253915EA758100F55FB1 /* eventItemContainer.png */; };
 		D262253C15EA75AF00F55FB1 /* eventItemContainer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D262253B15EA75AF00F55FB1 /* eventItemContainer@2x.png */; };
 		D262253E15EA7E9F00F55FB1 /* folderPS.png in Resources */ = {isa = PBXBuildFile; fileRef = D262253D15EA7E9F00F55FB1 /* folderPS.png */; };
+		D2711C72165BF72B00C47D91 /* TimelineApp.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = D2711C71165BF72B00C47D91 /* TimelineApp.sqlite */; };
 		D285B53A15D5301D00AFC1C7 /* groups.png in Resources */ = {isa = PBXBuildFile; fileRef = D285B53215D5301D00AFC1C7 /* groups.png */; };
 		D285B53B15D5301D00AFC1C7 /* groups@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D285B53315D5301D00AFC1C7 /* groups@2x.png */; };
 		D285B53C15D5301D00AFC1C7 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = D285B53415D5301D00AFC1C7 /* settings.png */; };
@@ -79,8 +79,6 @@
 		D285B53F15D5301D00AFC1C7 /* timelines@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D285B53715D5301D00AFC1C7 /* timelines@2x.png */; };
 		D285B54C15D543E800AFC1C7 /* TimelinesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D285B54B15D543E800AFC1C7 /* TimelinesViewController.m */; };
 		D285B54F15D5443F00AFC1C7 /* NewTimelineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D285B54E15D5443F00AFC1C7 /* NewTimelineViewController.m */; };
-		D285B55915D5498700AFC1C7 /* GroupsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D285B55815D5498700AFC1C7 /* GroupsViewController.m */; };
-		D285B55D15D549B100AFC1C7 /* NewGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D285B55C15D549B100AFC1C7 /* NewGroupViewController.m */; };
 		D285B56015D54E2100AFC1C7 /* Timeline.m in Sources */ = {isa = PBXBuildFile; fileRef = D285B55F15D54E2000AFC1C7 /* Timeline.m */; };
 		D285B56515D5509B00AFC1C7 /* BaseEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = D285B56415D5509B00AFC1C7 /* BaseEvent.m */; };
 		D285B56915D550CD00AFC1C7 /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = D285B56815D550CD00AFC1C7 /* Event.m */; };
@@ -138,9 +136,12 @@
 		D294745215E261A60016A093 /* greenButton.png in Resources */ = {isa = PBXBuildFile; fileRef = D294745015E261A60016A093 /* greenButton.png */; };
 		D294745315E261A60016A093 /* redButton.png in Resources */ = {isa = PBXBuildFile; fileRef = D294745115E261A60016A093 /* redButton.png */; };
 		D294745A15E29A950016A093 /* navigationBarBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = D294745915E29A950016A093 /* navigationBarBackground.png */; };
+		D2A36C24164D49A400C707B9 /* local.png in Resources */ = {isa = PBXBuildFile; fileRef = D2A36C20164D49A400C707B9 /* local.png */; };
+		D2A36C25164D49A400C707B9 /* local@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2A36C21164D49A400C707B9 /* local@2x.png */; };
+		D2A36C26164D49A400C707B9 /* shared.png in Resources */ = {isa = PBXBuildFile; fileRef = D2A36C22164D49A400C707B9 /* shared.png */; };
+		D2A36C27164D49A400C707B9 /* shared@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2A36C23164D49A400C707B9 /* shared@2x.png */; };
 		D2AA185E15ECF82E0024BFF9 /* timeline_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D2AA185D15ECF82E0024BFF9 /* timeline_icon.png */; };
 		D2AA186015ECF8330024BFF9 /* timeline_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2AA185F15ECF8330024BFF9 /* timeline_icon@2x.png */; };
-		D2B0A46115E4E82D00150CC6 /* GroupMembersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B0A46015E4E82D00150CC6 /* GroupMembersViewController.m */; };
 		D2B0A46615E4ECDC00150CC6 /* user.png in Resources */ = {isa = PBXBuildFile; fileRef = D2B0A46415E4ECDC00150CC6 /* user.png */; };
 		D2B0A46715E4ECDC00150CC6 /* user@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2B0A46515E4ECDC00150CC6 /* user@2x.png */; };
 		D2B0A47015E4F98600150CC6 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B0A46F15E4F98600150CC6 /* MBProgressHUD.m */; };
@@ -248,7 +249,6 @@
 		D24EC0DB15F639DF0031F5D3 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		D24EC0E015F6425B0031F5D3 /* SimplePicture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimplePicture.h; path = Model/EventItem/SimplePicture/SimplePicture.h; sourceTree = "<group>"; };
 		D24EC0E115F6425B0031F5D3 /* SimplePicture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimplePicture.m; path = Model/EventItem/SimplePicture/SimplePicture.m; sourceTree = "<group>"; };
-		D25DDB4C1646E34400F9D773 /* TimelineApp.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = TimelineApp.sqlite; sourceTree = "<group>"; };
 		D262252815E7A36100F55FB1 /* EventDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventDetailViewController.h; path = TimelineViewController/EventDetailViewController/EventDetailViewController.h; sourceTree = "<group>"; };
 		D262252915E7A36100F55FB1 /* EventDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EventDetailViewController.m; path = TimelineViewController/EventDetailViewController/EventDetailViewController.m; sourceTree = "<group>"; };
 		D262253515EA550500F55FB1 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
@@ -256,6 +256,7 @@
 		D262253915EA758100F55FB1 /* eventItemContainer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = eventItemContainer.png; sourceTree = "<group>"; };
 		D262253B15EA75AF00F55FB1 /* eventItemContainer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "eventItemContainer@2x.png"; sourceTree = "<group>"; };
 		D262253D15EA7E9F00F55FB1 /* folderPS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = folderPS.png; sourceTree = "<group>"; };
+		D2711C71165BF72B00C47D91 /* TimelineApp.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = TimelineApp.sqlite; sourceTree = "<group>"; };
 		D285B53215D5301D00AFC1C7 /* groups.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = groups.png; sourceTree = "<group>"; };
 		D285B53315D5301D00AFC1C7 /* groups@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "groups@2x.png"; sourceTree = "<group>"; };
 		D285B53415D5301D00AFC1C7 /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
@@ -267,10 +268,6 @@
 		D285B54D15D5443F00AFC1C7 /* NewTimelineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NewTimelineViewController.h; path = NewTimelineViewController/NewTimelineViewController.h; sourceTree = "<group>"; };
 		D285B54E15D5443F00AFC1C7 /* NewTimelineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NewTimelineViewController.m; path = NewTimelineViewController/NewTimelineViewController.m; sourceTree = "<group>"; };
 		D285B55115D5457A00AFC1C7 /* ModalViewControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ModalViewControllerDelegate.h; path = Protocols/ModalViewControllerDelegate.h; sourceTree = "<group>"; };
-		D285B55715D5498600AFC1C7 /* GroupsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GroupsViewController.h; path = "View Controllers/GroupsViewController/GroupsViewController.h"; sourceTree = "<group>"; };
-		D285B55815D5498700AFC1C7 /* GroupsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GroupsViewController.m; path = "View Controllers/GroupsViewController/GroupsViewController.m"; sourceTree = "<group>"; };
-		D285B55B15D549B100AFC1C7 /* NewGroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewGroupViewController.h; sourceTree = "<group>"; };
-		D285B55C15D549B100AFC1C7 /* NewGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewGroupViewController.m; sourceTree = "<group>"; };
 		D285B55E15D54E2000AFC1C7 /* Timeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timeline.h; path = Model/Timeline/Timeline.h; sourceTree = "<group>"; };
 		D285B55F15D54E2000AFC1C7 /* Timeline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Timeline.m; path = Model/Timeline/Timeline.m; sourceTree = "<group>"; };
 		D285B56315D5509B00AFC1C7 /* BaseEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseEvent.h; path = Model/BaseEvent/BaseEvent.h; sourceTree = "<group>"; };
@@ -382,10 +379,12 @@
 		D294745015E261A60016A093 /* greenButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greenButton.png; sourceTree = "<group>"; };
 		D294745115E261A60016A093 /* redButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redButton.png; sourceTree = "<group>"; };
 		D294745915E29A950016A093 /* navigationBarBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navigationBarBackground.png; sourceTree = "<group>"; };
+		D2A36C20164D49A400C707B9 /* local.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = local.png; sourceTree = "<group>"; };
+		D2A36C21164D49A400C707B9 /* local@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "local@2x.png"; sourceTree = "<group>"; };
+		D2A36C22164D49A400C707B9 /* shared.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shared.png; sourceTree = "<group>"; };
+		D2A36C23164D49A400C707B9 /* shared@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shared@2x.png"; sourceTree = "<group>"; };
 		D2AA185D15ECF82E0024BFF9 /* timeline_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = timeline_icon.png; sourceTree = "<group>"; };
 		D2AA185F15ECF8330024BFF9 /* timeline_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "timeline_icon@2x.png"; sourceTree = "<group>"; };
-		D2B0A45F15E4E82D00150CC6 /* GroupMembersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GroupMembersViewController.h; path = "View Controllers/GroupsViewController/GroupMembers/GroupMembersViewController.h"; sourceTree = "<group>"; };
-		D2B0A46015E4E82D00150CC6 /* GroupMembersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GroupMembersViewController.m; path = "View Controllers/GroupsViewController/GroupMembers/GroupMembersViewController.m"; sourceTree = "<group>"; };
 		D2B0A46415E4ECDC00150CC6 /* user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user.png; sourceTree = "<group>"; };
 		D2B0A46515E4ECDC00150CC6 /* user@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user@2x.png"; sourceTree = "<group>"; };
 		D2B0A46E15E4F98600150CC6 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
@@ -774,27 +773,6 @@
 			name = Protocols;
 			sourceTree = "<group>";
 		};
-		D285B55615D5494A00AFC1C7 /* GroupsViewController */ = {
-			isa = PBXGroup;
-			children = (
-				D285B55715D5498600AFC1C7 /* GroupsViewController.h */,
-				D285B55815D5498700AFC1C7 /* GroupsViewController.m */,
-				D285B55A15D549B100AFC1C7 /* NewGroupViewController */,
-				D2B0A46315E4E83400150CC6 /* GroupMembers */,
-			);
-			name = GroupsViewController;
-			sourceTree = "<group>";
-		};
-		D285B55A15D549B100AFC1C7 /* NewGroupViewController */ = {
-			isa = PBXGroup;
-			children = (
-				D285B55B15D549B100AFC1C7 /* NewGroupViewController.h */,
-				D285B55C15D549B100AFC1C7 /* NewGroupViewController.m */,
-			);
-			name = NewGroupViewController;
-			path = "View Controllers/GroupsViewController/NewGroupViewController";
-			sourceTree = "<group>";
-		};
 		D285B56115D5505300AFC1C7 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -1148,15 +1126,6 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
-		D2B0A46315E4E83400150CC6 /* GroupMembers */ = {
-			isa = PBXGroup;
-			children = (
-				D2B0A45F15E4E82D00150CC6 /* GroupMembersViewController.h */,
-				D2B0A46015E4E82D00150CC6 /* GroupMembersViewController.m */,
-			);
-			name = GroupMembers;
-			sourceTree = "<group>";
-		};
 		D2B0A46D15E4F98600150CC6 /* MBProgressHUD */ = {
 			isa = PBXGroup;
 			children = (
@@ -1240,7 +1209,6 @@
 				D2CD816D15D2AEC100094D72 /* AppDelegate.m */,
 				D2CD816F15D2AEC100094D72 /* MainStoryboard.storyboard */,
 				D285B54915D543E800AFC1C7 /* TimelinesViewcontroller */,
-				D285B55615D5494A00AFC1C7 /* GroupsViewController */,
 				D285B58315D6754A00AFC1C7 /* SettingsViewController */,
 				D285B56115D5505300AFC1C7 /* Model */,
 				D226D20115DBAD8200227FAF /* Utility */,
@@ -1261,7 +1229,7 @@
 		D2CD816415D2AEC100094D72 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				D25DDB4C1646E34400F9D773 /* TimelineApp.sqlite */,
+				D2711C71165BF72B00C47D91 /* TimelineApp.sqlite */,
 				D2CD816515D2AEC100094D72 /* Timeline-Info.plist */,
 				D2CD816615D2AEC100094D72 /* InfoPlist.strings */,
 				D2CD816915D2AEC100094D72 /* main.m */,
@@ -1282,6 +1250,10 @@
 		D2E622B215DCF5B0009FCEBB /* TimelineBackground */ = {
 			isa = PBXGroup;
 			children = (
+				D2A36C20164D49A400C707B9 /* local.png */,
+				D2A36C21164D49A400C707B9 /* local@2x.png */,
+				D2A36C22164D49A400C707B9 /* shared.png */,
+				D2A36C23164D49A400C707B9 /* shared@2x.png */,
 				D262253B15EA75AF00F55FB1 /* eventItemContainer@2x.png */,
 				D262253915EA758100F55FB1 /* eventItemContainer.png */,
 				D262253715EA676000F55FB1 /* eventDetailContainer.png */,
@@ -1416,7 +1388,6 @@
 				D222ECED15F8CDDA00616F88 /* record.png in Resources */,
 				D222ECEE15F8CDDA00616F88 /* record@2x.png in Resources */,
 				D222ECF815F8E04900616F88 /* mic.png in Resources */,
-				D25DDB4D1646E34400F9D773 /* TimelineApp.sqlite in Resources */,
 				D217EDBA1647F9B1006A6312 /* glad.png in Resources */,
 				D217EDBB1647F9B1006A6312 /* glad@2x.png in Resources */,
 				D217EDBC1647F9B1006A6312 /* happy.png in Resources */,
@@ -1428,6 +1399,11 @@
 				D217EDC21647F9B1006A6312 /* soandso.png in Resources */,
 				D217EDC31647F9B1006A6312 /* soandso@2x.png in Resources */,
 				D207E425164AA197002A160E /* loading.png in Resources */,
+				D2A36C24164D49A400C707B9 /* local.png in Resources */,
+				D2A36C25164D49A400C707B9 /* local@2x.png in Resources */,
+				D2A36C26164D49A400C707B9 /* shared.png in Resources */,
+				D2A36C27164D49A400C707B9 /* shared@2x.png in Resources */,
+				D2711C72165BF72B00C47D91 /* TimelineApp.sqlite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1442,8 +1418,6 @@
 				D2CD816E15D2AEC100094D72 /* AppDelegate.m in Sources */,
 				D285B54C15D543E800AFC1C7 /* TimelinesViewController.m in Sources */,
 				D285B54F15D5443F00AFC1C7 /* NewTimelineViewController.m in Sources */,
-				D285B55915D5498700AFC1C7 /* GroupsViewController.m in Sources */,
-				D285B55D15D549B100AFC1C7 /* NewGroupViewController.m in Sources */,
 				D285B56015D54E2100AFC1C7 /* Timeline.m in Sources */,
 				D285B56515D5509B00AFC1C7 /* BaseEvent.m in Sources */,
 				D285B56915D550CD00AFC1C7 /* Event.m in Sources */,
@@ -1496,7 +1470,6 @@
 				D294743B15E238810016A093 /* Space.m in Sources */,
 				D294743C15E238810016A093 /* XMPPRequestController.m in Sources */,
 				D294744C15E247410016A093 /* Reachability.m in Sources */,
-				D2B0A46115E4E82D00150CC6 /* GroupMembersViewController.m in Sources */,
 				D2B0A47015E4F98600150CC6 /* MBProgressHUD.m in Sources */,
 				D262252A15E7A36100F55FB1 /* EventDetailViewController.m in Sources */,
 				D2EA0C2815EB72BC0084B587 /* ShareEventViewController.m in Sources */,

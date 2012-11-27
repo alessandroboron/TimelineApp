@@ -1,3 +1,5 @@
+//"This work is licensed under the Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+// To view a copy of the license, visit http://http://creativecommons.org/licenses/by-nc-sa/3.0/ "
 //
 //  XMPPRequestController.m
 //  Timeline
@@ -93,6 +95,7 @@
 - (void)parseSensorDataFromWatchIt:(NSXMLElement *)item node:(NSString *)node update:(BOOL)update;
 - (void)parseRecommendationFromCroMAR:(NSXMLElement *)item node:(NSString *)node update:(BOOL)update;
 - (void)parseEventItemFromTimelineApp:(NSXMLElement *)item node:(NSString *)node update:(BOOL)update;
+- (void)parseUnknownData:(NSXMLElement *)item node:(NSString *)node update:(BOOL)update;
 
 @end
 
@@ -640,13 +643,20 @@
                 //Parse eventItem data
                 [self parseEventItemFromTimelineApp:item node:nil update:NO];
             }
+          /*
+            else{
+                infoPresent = YES;
+                [self parseUnknownData:item node:nil update:NO];
+                
+            }
+        */
         }
         if (!infoPresent) {
             [Utility showAlertViewWithTitle:@"Mirror Space Service" message:@"Datatype not recognized by TimelineApp." cancelButtonTitle:@"Dismiss"];
         }
     }
     else{
-        [Utility showAlertViewWithTitle:@"Mirror Space Service" message:@"No information present in the selected space." cancelButtonTitle:@"Dismiss"];
+        //[Utility showAlertViewWithTitle:@"Mirror Space Service" message:@"No information present in the selected space." cancelButtonTitle:@"Dismiss"];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"DismissActivityIndicatorNotification" object:nil];
 }
@@ -660,6 +670,9 @@
  //   NSString *valueUnit = [value attributeStringValueForName:@"unit"];
     //Get the value
 
+    
+   // return [value stringValue];
+    
     NSString *valueString = [value stringValue];
     
     if ([valueString isEqualToString:@" MD1"] || [valueString isEqualToString:@" MD1\n"]) {
@@ -687,6 +700,7 @@
     else{
         return @"Unknown message";
     }
+     
 }
 
 
@@ -964,6 +978,78 @@
         //Set the Post to 1 after received the message
         [[Utility databaseController] updateEvent:eventId withPost:YES];
     }
+}
+
+- (void)parseUnknownData:(NSXMLElement *)item node:(NSString *)node update:(BOOL)update{
+    
+    /*
+    
+    //New BaseEvent
+    Event *event = [[Event alloc] initEventWithLocation:nil date:[Utility dateFromCroMARTimestampString:eventDate] shared:NO creator:eventCreator];
+    
+    SampleNote *sn = [[SampleNote alloc] initSampleNoteWithEventId:event.baseEventId title:@"Unknown" text:notebody eventItemCreator:eventCreator];
+    
+    //Add the object to the base event
+    [event.eventItems addObject:sn];
+    
+    //Send the data
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:event,@"userInfo",node,@"nodeId", nil];
+    
+    //If retrieving all the data from a space
+    if (!update) {
+        //Send the data
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"EventDidLoadNotification" object:nil userInfo:userInfo];
+    }
+    //If the app received a real-time notification from another app
+    else{
+        //Send the data and update the timeline
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateTimelineNotification" object:nil userInfo:userInfo];
+    }
+     */
+    
+    /*
+    //Get the recommendation element
+    NSXMLElement *recommendation = [item elementForName:@"recommendation"];
+    
+    NSXMLElement *creationInfo = [recommendation elementForName:@"creationInfo"];
+    
+    NSString *eventDate = [[creationInfo elementForName:@"cdt:date"] stringValue];
+    
+    NSString *eventCreator = [[creationInfo elementForName:@"cdt:person"] stringValue];
+    
+    NSXMLElement *location = [recommendation elementForName:@"location"];
+    NSString *eventLatitude = [location attributeStringValueForName:@"latitude"];
+    NSString *eventLongitude = [location attributeStringValueForName:@"longitude"];
+    
+    NSString *notebody = [[recommendation elementForName:@"noteBody"] stringValue];
+    
+    CLLocation *loc = [[CLLocation alloc] initWithLatitude:[eventLatitude doubleValue] longitude:[eventLongitude doubleValue]];
+    
+    //New BaseEvent
+    Event *event = [[Event alloc] initEventWithLocation:loc date:[Utility dateFromCroMARTimestampString:eventDate] shared:NO creator:eventCreator];
+    
+    // SampleNote *sn = [[SampleNote alloc] initSampleNoteWithTitle:@"CroMAR" text:notebody eventItemCreator:eventCreator];
+    
+    SampleNote *sn = [[SampleNote alloc] initSampleNoteWithEventId:event.baseEventId title:@"CroMAR" text:notebody eventItemCreator:eventCreator];
+    
+    //Add the object to the base event
+    [event.eventItems addObject:sn];
+    
+    //Send the data
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:event,@"userInfo",node,@"nodeId", nil];
+    
+    //If retrieving all the data from a space
+    if (!update) {
+        //Send the data
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"EventDidLoadNotification" object:nil userInfo:userInfo];
+    }
+    //If the app received a real-time notification from another app
+    else{
+        //Send the data and update the timeline
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateTimelineNotification" object:nil userInfo:userInfo];
+    }
+*/
+    
 }
 
 #pragma mark -

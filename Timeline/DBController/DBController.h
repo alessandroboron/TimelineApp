@@ -36,6 +36,14 @@
 
 - (void)insertTimeline:(Timeline *)timeline;
 
+- (BOOL)isUserInDB:(NSString *)user;
+
+- (void)insertUser:(NSString *)user;
+
+- (BOOL)isUser:(NSString *)user inTimeline:(NSString *)timelineId;
+
+- (void)insertUser:(NSString *)user inTimeline:(NSString *)timelineId;
+
 - (BOOL)isTimeline:(NSString *)timelineId titleEqualTo:(NSString *)timelineTitle;
 
 - (BOOL)isTimeline:(NSString *)timelineId sharedEqualTo:(BOOL)shared;
